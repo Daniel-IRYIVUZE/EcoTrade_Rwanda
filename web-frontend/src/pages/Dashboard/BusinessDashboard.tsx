@@ -29,8 +29,8 @@ const ImageWithFallback = ({ src, alt, className }: { src?: string; alt: string;
   
   if (!src || hasError) {
     return (
-      <div className={`${className} bg-gradient-to-br from-green-100 to-cyan-100 flex items-center justify-center`}>
-        <Leaf className="text-green-600 opacity-30" size={40} />
+      <div className={`${className} bg-gradient-to-br from-cyan-100 to-cyan-100 flex items-center justify-center`}>
+        <Leaf className="text-cyan-600 opacity-30" size={40} />
       </div>
     );
   }
@@ -148,7 +148,7 @@ const BusinessDashboard = () => {
         <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 max-w-3xl w-full shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <Settings className="text-green-600" size={28} />
+              <Settings className="text-cyan-600" size={28} />
               <h3 className="text-2xl font-bold">Business Settings</h3>
             </div>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg">
@@ -167,7 +167,7 @@ const BusinessDashboard = () => {
                   type="text" 
                   value={settings.name}
                   onChange={(e) => setSettings({...settings, name: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -180,7 +180,7 @@ const BusinessDashboard = () => {
                   type="email" 
                   value={settings.email}
                   onChange={(e) => setSettings({...settings, email: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -193,7 +193,7 @@ const BusinessDashboard = () => {
                   type="tel" 
                   value={settings.phone}
                   onChange={(e) => setSettings({...settings, phone: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -202,7 +202,7 @@ const BusinessDashboard = () => {
                 <select 
                   value={settings.businessType}
                   onChange={(e) => setSettings({...settings, businessType: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
                   <option>Hotel</option>
                   <option>Restaurant</option>
@@ -221,7 +221,7 @@ const BusinessDashboard = () => {
               <textarea 
                 value={settings.address}
                 onChange={(e) => setSettings({...settings, address: e.target.value})}
-                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 rows={2}
               />
             </div>
@@ -232,7 +232,7 @@ const BusinessDashboard = () => {
                 type="number" 
                 value={settings.minListingAmount}
                 onChange={(e) => setSettings({...settings, minListingAmount: parseInt(e.target.value)})}
-                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>
 
@@ -250,7 +250,7 @@ const BusinessDashboard = () => {
                       type="checkbox" 
                       checked={settings[pref.key as keyof typeof settings] as boolean}
                       onChange={(e) => setSettings({...settings, [pref.key]: e.target.checked})}
-                      className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
+                      className="w-5 h-5 text-cyan-600 rounded focus:ring-cyan-500"
                     />
                   </label>
                 ))}
@@ -262,7 +262,7 @@ const BusinessDashboard = () => {
             <button onClick={onClose} className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50">
               Cancel
             </button>
-            <button onClick={() => { setBusinessProfile(settings); handleSaveSettings(); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-cyan-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-cyan-600 flex items-center justify-center space-x-2">
+            <button onClick={() => { setBusinessProfile(settings); handleSaveSettings(); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-cyan-600 flex items-center justify-center space-x-2">
               <Save size={20} />
               <span>Save Settings</span>
             </button>
@@ -291,9 +291,9 @@ const BusinessDashboard = () => {
 
           <div className="p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-bold text-green-600">{listing.material}</h3>
+              <h3 className="text-3xl font-bold text-cyan-600">{listing.material}</h3>
               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                listing.status === 'active' ? 'bg-green-100 text-green-800' :
+                listing.status === 'active' ? 'bg-cyan-100 text-cyan-800' :
                 listing.status === 'pending' ? 'bg-cyan-100 text-cyan-800' :
                 listing.status === 'sold' ? 'bg-cyan-100 text-cyan-800' :
                 'bg-gray-100 text-gray-800'
@@ -302,14 +302,14 @@ const BusinessDashboard = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 bg-gradient-to-br from-green-50 to-cyan-50 rounded-xl">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 bg-gradient-to-br from-cyan-50 to-cyan-50 rounded-xl">
               <div>
                 <p className="text-sm text-gray-600">Quantity</p>
                 <p className="text-lg font-bold text-cyan-600">{listing.quantity}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Price</p>
-                <p className="text-lg font-bold text-green-600">RWF {listing.price.toLocaleString()}</p>
+                <p className="text-lg font-bold text-cyan-600">RWF {listing.price.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Date Listed</p>
@@ -329,7 +329,7 @@ const BusinessDashboard = () => {
             </div>
 
             <div className="flex gap-3">
-              <button onClick={() => alert('Edit listing')} className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition">
+              <button onClick={() => alert('Edit listing')} className="flex-1 px-4 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 font-semibold transition">
                 Edit Listing
               </button>
               <button onClick={() => alert('Delete listing')} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition">
@@ -348,7 +348,7 @@ const BusinessDashboard = () => {
         <StatCard 
           title="Total Listings"
           value={stats.totalListings}
-          icon={<Package className="text-green-500" size={24} />}
+          icon={<Package className="text-cyan-500" size={24} />}
           change="+8 this month"
         />
         <StatCard 
@@ -372,7 +372,7 @@ const BusinessDashboard = () => {
         <StatCard 
           title="Waste Reduction"
           value={`${stats.wasteReduction}kg`}
-          icon={<Leaf className="text-green-600" size={24} />}
+          icon={<Leaf className="text-cyan-600" size={24} />}
           change="+420kg"
         />
       </div>
@@ -392,7 +392,7 @@ const BusinessDashboard = () => {
                 { key: 'price', label: 'Price (RWF)', render: (value) => value.toLocaleString() },
                 { key: 'status', label: 'Status', render: (value) => (
                   <span className={`px-2 py-1 rounded text-xs ${
-                    value === 'active' ? 'bg-green-100 text-green-800' :
+                    value === 'active' ? 'bg-cyan-100 text-cyan-800' :
                     value === 'pending' ? 'bg-cyan-100 text-cyan-800' :
                     value === 'sold' ? 'bg-cyan-100 text-cyan-800' :
                     'bg-gray-100 text-gray-800'
@@ -418,8 +418,8 @@ const BusinessDashboard = () => {
             />
             <SimpleBarChart data={[120, 150, 180, 160, 200]} />
             <div className="grid grid-cols-3 gap-3 mt-4">
-              <div className="text-center p-3 bg-green-50 rounded-lg">
-                <p className="text-2xl font-bold text-green-600">RWF 450K</p>
+              <div className="text-center p-3 bg-cyan-50 rounded-lg">
+                <p className="text-2xl font-bold text-cyan-600">RWF 450K</p>
                 <p className="text-xs text-gray-600">Total</p>
               </div>
               <div className="text-center p-3 bg-cyan-50 rounded-lg">
@@ -451,7 +451,7 @@ const BusinessDashboard = () => {
               { key: 'buyer', label: 'Buyer' },
               { key: 'status', label: 'Status', render: (value) => (
                 <span className={`px-2 py-1 rounded text-xs ${
-                  value === 'completed' ? 'bg-green-100 text-green-800' :
+                  value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
                   'bg-cyan-100 text-cyan-800'
                 }`}>{value}</span>
               )}
@@ -474,7 +474,7 @@ const BusinessDashboard = () => {
             <Filter size={16} />
             <span>Filter</span>
           </button>
-          <button onClick={handleCreateNewListing} className="px-4 py-2 bg-green-600 text-white rounded-lg">
+          <button onClick={handleCreateNewListing} className="px-4 py-2 bg-cyan-600 text-white rounded-lg">
             + New Listing
           </button>
         </div>
@@ -482,7 +482,7 @@ const BusinessDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total" value={stats.totalListings} icon={<Package className="text-gray-500" size={24} />} change="" />
-        <StatCard title="Active" value={stats.activeListings} icon={<TrendingUp className="text-green-500" size={24} />} change="" />
+        <StatCard title="Active" value={stats.activeListings} icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Sold" value="28" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Expired" value="5" icon={<AlertCircle className="text-red-500" size={24} />} change="" />
       </div>
@@ -495,7 +495,7 @@ const BusinessDashboard = () => {
           { key: 'price', label: 'Price (RWF)', render: (value) => value.toLocaleString() },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'active' ? 'bg-green-100 text-green-800' :
+              value === 'active' ? 'bg-cyan-100 text-cyan-800' :
               value === 'pending' ? 'bg-cyan-100 text-cyan-800' :
               value === 'sold' ? 'bg-cyan-100 text-cyan-800' :
               'bg-gray-100 text-gray-800'
@@ -519,14 +519,14 @@ const BusinessDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Transaction History</h2>
-        <button onClick={handleExportTransactions} className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={handleExportTransactions} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Revenue" value="RWF 450K" icon={<DollarSign className="text-green-500" size={24} />} change="+15%" />
+        <StatCard title="Total Revenue" value="RWF 450K" icon={<DollarSign className="text-cyan-500" size={24} />} change="+15%" />
         <StatCard title="This Month" value="RWF 90K" icon={<Calendar className="text-cyan-500" size={24} />} change="+8%" />
         <StatCard title="Completed" value="42" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Pending" value="3" icon={<Clock className="text-cyan-500" size={24} />} change="" />
@@ -542,7 +542,7 @@ const BusinessDashboard = () => {
           { key: 'buyer', label: 'Buyer' },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
@@ -592,7 +592,7 @@ const BusinessDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Active Listings" value={stats.activeListings} icon={<Package className="text-green-500" size={24} />} change="" />
+        <StatCard title="Active Listings" value={stats.activeListings} icon={<Package className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Pending Orders" value="6" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Avg. Price" value="RWF 28K" icon={<DollarSign className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Views" value="1.2K" icon={<Eye className="text-cyan-500" size={24} />} change="" />
@@ -605,7 +605,7 @@ const BusinessDashboard = () => {
           { key: 'price', label: 'Price (RWF)', render: (value) => value.toLocaleString() },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'active' ? 'bg-green-100 text-green-800' :
+              value === 'active' ? 'bg-cyan-100 text-cyan-800' :
               value === 'pending' ? 'bg-cyan-100 text-cyan-800' :
               'bg-gray-100 text-gray-800'
             }`}>{value}</span>
@@ -621,14 +621,14 @@ const BusinessDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Financial Dashboard</h2>
-        <button onClick={() => handleAction('Financial report exported.')} className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={() => handleAction('Financial report exported.')} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Revenue" value={`RWF ${stats.totalRevenue.toLocaleString()}`} icon={<DollarSign className="text-green-500" size={24} />} change="+15%" />
+        <StatCard title="Revenue" value={`RWF ${stats.totalRevenue.toLocaleString()}`} icon={<DollarSign className="text-cyan-500" size={24} />} change="+15%" />
         <StatCard title="Pending Payouts" value="RWF 60K" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Completed" value="42" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Avg. Order" value="RWF 22K" icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
@@ -643,7 +643,7 @@ const BusinessDashboard = () => {
           { key: 'buyer', label: 'Buyer' },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
@@ -657,11 +657,11 @@ const BusinessDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Schedule & Pickups</h2>
-        <button onClick={() => handleAction('Pickup scheduling opened.')} className="px-4 py-2 bg-green-600 text-white rounded-lg">+ New Pickup</button>
+        <button onClick={() => handleAction('Pickup scheduling opened.')} className="px-4 py-2 bg-cyan-600 text-white rounded-lg">+ New Pickup</button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Scheduled" value="3" icon={<Calendar className="text-green-500" size={24} />} change="" />
+        <StatCard title="Scheduled" value="3" icon={<Calendar className="text-cyan-500" size={24} />} change="" />
         <StatCard title="In Progress" value="1" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Completed" value="18" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Cancelled" value="0" icon={<AlertCircle className="text-red-500" size={24} />} change="" />
@@ -682,7 +682,7 @@ const BusinessDashboard = () => {
               </div>
               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                 pickup.status === 'in-progress' ? 'bg-cyan-100 text-cyan-800' :
-                'bg-green-100 text-green-800'
+                'bg-cyan-100 text-cyan-800'
               }`}>{pickup.status}</span>
             </div>
           ))}
@@ -695,7 +695,7 @@ const BusinessDashboard = () => {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Green Score</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Score" value="82" icon={<Leaf className="text-green-600" size={24} />} change="+4" />
+        <StatCard title="Score" value="82" icon={<Leaf className="text-cyan-600" size={24} />} change="+4" />
         <StatCard title="CO₂ Saved" value="1.2t" icon={<Leaf className="text-emerald-500" size={24} />} change="+0.3t" />
         <StatCard title="Waste Reduced" value="2,500kg" icon={<Package className="text-cyan-500" size={24} />} change="+320kg" />
         <StatCard title="Rank" value="Top 10%" icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
@@ -718,7 +718,7 @@ const BusinessDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Reports</h2>
-        <button onClick={() => handleAction('Reports downloaded.')} className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={() => handleAction('Reports downloaded.')} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Download All</span>
         </button>
@@ -735,7 +735,7 @@ const BusinessDashboard = () => {
               <p className="font-semibold">{report.title}</p>
               <p className="text-sm text-gray-600">{report.date}</p>
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">{report.status}</span>
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-800">{report.status}</span>
           </div>
         ))}
       </div>
@@ -748,7 +748,7 @@ const BusinessDashboard = () => {
         <h2 className="text-2xl font-bold">Business Profile</h2>
         <button 
           onClick={() => setShowSettingsModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          className="flex items-center space-x-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
         >
           <Settings size={20} />
           <span>Edit Settings</span>
@@ -792,25 +792,25 @@ const BusinessDashboard = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <span className="text-sm font-medium">Verified Account</span>
-              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.verified ? 'bg-green-100 text-green-800' : 'bg-cyan-100 text-cyan-800'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.verified ? 'bg-cyan-100 text-cyan-800' : 'bg-cyan-100 text-cyan-800'}`}>
                 {businessProfile.verified ? 'Verified' : 'Pending'}
               </span>
             </div>
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <span className="text-sm font-medium">Auto-listing</span>
-              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.autoListing ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.autoListing ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                 {businessProfile.autoListing ? 'Enabled' : 'Disabled'}
               </span>
             </div>
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <span className="text-sm font-medium">Pickup Notifications</span>
-              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.notifyPickup ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.notifyPickup ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                 {businessProfile.notifyPickup ? 'Enabled' : 'Disabled'}
               </span>
             </div>
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <span className="text-sm font-medium">Monthly Reports</span>
-              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.monthlyReports ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.monthlyReports ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                 {businessProfile.monthlyReports ? 'Enabled' : 'Disabled'}
               </span>
             </div>

@@ -23,6 +23,48 @@ EcoTrade  is a digital platform connecting waste generators (hotels, restaurants
 - State Management: React Context API
 - Animations: Framer Motion
 
+## Platform Screenshots
+
+### Public Pages
+
+#### Landing Page
+![EcoTrade Homepage](./web-frontend/src/assets/screeenshots/image-1.png)
+
+#### Login & Registration
+![Login Page](./web-frontend/src/assets/screeenshots/image-2.png)
+![Register Page](./web-frontend/src/assets/screeenshots/image-3.png)
+
+### Role-Based Dashboards
+
+#### Admin Dashboard
+![Admin Dashboard](./web-frontend/src/assets/screeenshots/image-4.png)
+*Platform statistics, user management, and system configuration*
+
+#### Business Dashboard
+![Business Dashboard](./web-frontend/src/assets/screeenshots/image-5.png)
+*Waste listings, marketplace, and revenue analytics*
+
+#### Recycler Dashboard
+![Recycler Dashboard](./web-frontend/src/assets/screeenshots/image-6.png)
+*Material procurement, inventory, and supplier network*
+
+#### Driver Dashboard
+![Driver Dashboard](./web-frontend/src/assets/screeenshots/image-7.png)
+*Route management, collections, and earnings tracking*
+
+#### Individual Dashboard
+![Individual Dashboard](./web-frontend/src/assets/screeenshots/image-8.png)
+*Personal listings, marketplace, and environmental impact*
+
+### Features
+
+#### Marketplace Listings
+![Marketplace](./web-frontend/src/assets/screeenshots/image-9.png)
+*Material-specific imagery for UCO, Glass, Paper, Plastic listings*
+
+#### Settings & Profile Management
+![Settings Modal](./web-frontend/src/assets/screeenshots/image-10.png)
+*Editable profile with notification preferences and role-specific options*
 ## Links
 
 - GitHub Repository: https://github.com/Daniel-IRYIVUZE/kcem_platform.git

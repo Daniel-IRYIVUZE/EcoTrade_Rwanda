@@ -28,8 +28,8 @@ const ImageWithFallback = ({ src, alt, className }: { src?: string; alt: string;
   
   if (!src || hasError) {
     return (
-      <div className={`${className} bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center`}>
-        <Leaf className="text-green-600 opacity-30" size={40} />
+      <div className={`${className} bg-gradient-to-br from-cyan-100 to-emerald-100 flex items-center justify-center`}>
+        <Leaf className="text-cyan-600 opacity-30" size={40} />
       </div>
     );
   }
@@ -142,7 +142,7 @@ const UserDashboard = () => {
         <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 max-w-3xl w-full shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <Settings className="text-green-600" size={28} />
+              <Settings className="text-cyan-600" size={28} />
               <h3 className="text-2xl font-bold">Profile Settings</h3>
             </div>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg">
@@ -153,11 +153,11 @@ const UserDashboard = () => {
           <div className="space-y-6">
             <div className="flex justify-center mb-4">
               <div className="relative">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
                   {settings.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                <button onClick={() => handleAction('Upload photo dialog opened.')} className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border-2 border-green-500">
-                  <Camera size={16} className="text-green-600" />
+                <button onClick={() => handleAction('Upload photo dialog opened.')} className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg border-2 border-cyan-500">
+                  <Camera size={16} className="text-cyan-600" />
                 </button>
               </div>
             </div>
@@ -172,7 +172,7 @@ const UserDashboard = () => {
                   type="text" 
                   value={settings.name}
                   onChange={(e) => setSettings({...settings, name: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -185,7 +185,7 @@ const UserDashboard = () => {
                   type="email" 
                   value={settings.email}
                   onChange={(e) => setSettings({...settings, email: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -198,7 +198,7 @@ const UserDashboard = () => {
                   type="tel" 
                   value={settings.phone}
                   onChange={(e) => setSettings({...settings, phone: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -221,7 +221,7 @@ const UserDashboard = () => {
               <textarea 
                 value={settings.address}
                 onChange={(e) => setSettings({...settings, address: e.target.value})}
-                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 rows={2}
               />
             </div>
@@ -263,7 +263,7 @@ const UserDashboard = () => {
                       type="checkbox" 
                       checked={settings[pref.key as keyof typeof settings] as boolean}
                       onChange={(e) => setSettings({...settings, [pref.key]: e.target.checked})}
-                      className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
+                      className="w-5 h-5 text-cyan-600 rounded focus:ring-cyan-500"
                     />
                   </label>
                 ))}
@@ -275,7 +275,7 @@ const UserDashboard = () => {
             <button onClick={onClose} className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50">
               Cancel
             </button>
-            <button onClick={() => { setUserProfile(settings); handleSaveSettings(); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 flex items-center justify-center space-x-2">
+            <button onClick={() => { setUserProfile(settings); handleSaveSettings(); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-emerald-600 flex items-center justify-center space-x-2">
               <Save size={20} />
               <span>Save Changes</span>
             </button>
@@ -304,22 +304,22 @@ const UserDashboard = () => {
 
           <div className="p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-bold text-green-600">{listing.material}</h3>
+              <h3 className="text-3xl font-bold text-cyan-600">{listing.material}</h3>
               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                listing.status === 'active' ? 'bg-green-100 text-green-800' :
+                listing.status === 'active' ? 'bg-cyan-100 text-cyan-800' :
                 listing.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                 'bg-cyan-100 text-cyan-800'
               }`}>{listing.status}</span>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gradient-to-br from-cyan-50 to-emerald-50 rounded-xl">
               <div>
                 <p className="text-sm text-gray-600">Quantity</p>
                 <p className="text-lg font-bold text-emerald-600">{listing.quantity}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Price</p>
-                <p className="text-lg font-bold text-green-600">RWF {listing.price.toLocaleString()}</p>
+                <p className="text-lg font-bold text-cyan-600">RWF {listing.price.toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Views</p>
@@ -340,7 +340,7 @@ const UserDashboard = () => {
             </div>
 
             <div className="flex gap-3">
-              <button onClick={() => { alert('Edit listing'); onClose(); }} className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition">
+              <button onClick={() => { alert('Edit listing'); onClose(); }} className="flex-1 px-4 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 font-semibold transition">
                 Edit Listing
               </button>
               <button onClick={() => { alert('Delete listing'); onClose(); }} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition">
@@ -359,7 +359,7 @@ const UserDashboard = () => {
         <StatCard 
           title="Total Earnings"
           value={`RWF ${stats.totalEarnings.toLocaleString()}`}
-          icon={<DollarSign className="text-green-500" size={24} />}
+          icon={<DollarSign className="text-cyan-500" size={24} />}
           change="+18% this month"
         />
         <StatCard 
@@ -371,7 +371,7 @@ const UserDashboard = () => {
         <StatCard 
           title="Carbon Saved"
           value={`${stats.carbonSaved}kg`}
-          icon={<Leaf className="text-green-600" size={24} />}
+          icon={<Leaf className="text-cyan-600" size={24} />}
           change="+120kg"
         />
         <StatCard 
@@ -408,7 +408,7 @@ const UserDashboard = () => {
                   </span>
                 )},
                 { key: 'actions', label: '', render: (_, row) => (
-                  <button onClick={() => handleViewListing(row)} className="text-green-600 hover:text-green-800 text-sm font-medium">
+                  <button onClick={() => handleViewListing(row)} className="text-cyan-600 hover:text-cyan-800 text-sm font-medium">
                     View
                   </button>
                 )}
@@ -426,9 +426,9 @@ const UserDashboard = () => {
               className="w-full h-32 rounded-lg object-cover"
             />
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 bg-green-50 rounded-lg">
-                <Leaf size={32} className="text-green-600 mx-auto mb-2" />
-                <p className="text-3xl font-bold text-green-600">{stats.carbonSaved}kg</p>
+              <div className="text-center p-4 bg-cyan-50 rounded-lg">
+                <Leaf size={32} className="text-cyan-600 mx-auto mb-2" />
+                <p className="text-3xl font-bold text-cyan-600">{stats.carbonSaved}kg</p>
                 <p className="text-sm text-gray-600">CO₂ Saved</p>
               </div>
               <div className="text-center p-4 bg-emerald-50 rounded-lg">
@@ -467,7 +467,7 @@ const UserDashboard = () => {
               { key: 'buyer', label: 'Buyer' },
               { key: 'status', label: 'Status', render: (value) => (
                 <span className={`px-2 py-1 rounded text-xs ${
-                  value === 'completed' ? 'bg-green-100 text-green-800' :
+                  value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
                   'bg-yellow-100 text-yellow-800'
                 }`}>{value}</span>
               )}
@@ -490,7 +490,7 @@ const UserDashboard = () => {
             <Filter size={16} />
             <span>Filter</span>
           </button>
-          <button onClick={handleCreateNewListing} className="px-4 py-2 bg-green-600 text-white rounded-lg">
+          <button onClick={handleCreateNewListing} className="px-4 py-2 bg-cyan-600 text-white rounded-lg">
             + New Listing
           </button>
         </div>
@@ -498,7 +498,7 @@ const UserDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total" value="24" icon={<Package className="text-gray-500" size={24} />} change="" />
-        <StatCard title="Active" value={stats.activeListings} icon={<TrendingUp className="text-green-500" size={24} />} change="" />
+        <StatCard title="Active" value={stats.activeListings} icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Sold" value="18" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Pending" value="3" icon={<Clock className="text-yellow-500" size={24} />} change="" />
       </div>
@@ -514,7 +514,7 @@ const UserDashboard = () => {
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-bold text-lg">{listing.material}</h3>
               <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                listing.status === 'active' ? 'bg-green-100 text-green-800' :
+                listing.status === 'active' ? 'bg-cyan-100 text-cyan-800' :
                 listing.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                 'bg-cyan-100 text-cyan-800'
               }`}>
@@ -533,7 +533,7 @@ const UserDashboard = () => {
               </span>
             </div>
             <div className="flex justify-between items-center pt-3 border-t">
-              <span className="text-2xl font-bold text-green-600">RWF {listing.price.toLocaleString()}</span>
+              <span className="text-2xl font-bold text-cyan-600">RWF {listing.price.toLocaleString()}</span>
             </div>
           </div>
         ))}
@@ -547,14 +547,14 @@ const UserDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Earnings & Transactions</h2>
-        <button onClick={handleExportEarnings} className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={handleExportEarnings} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Earnings" value={`RWF ${stats.totalEarnings.toLocaleString()}`} icon={<DollarSign className="text-green-500" size={24} />} change="+18%" />
+        <StatCard title="Total Earnings" value={`RWF ${stats.totalEarnings.toLocaleString()}`} icon={<DollarSign className="text-cyan-500" size={24} />} change="+18%" />
         <StatCard title="This Month" value="RWF 35K" icon={<DollarSign className="text-emerald-500" size={24} />} change="+12%" />
         <StatCard title="Pending" value="RWF 6K" icon={<Clock className="text-yellow-500" size={24} />} change="1 pending" />
         <StatCard title="Completed" value="18" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
@@ -592,7 +592,7 @@ const UserDashboard = () => {
           { key: 'buyer', label: 'Buyer' },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               'bg-yellow-100 text-yellow-800'
             }`}>{value}</span>
           )}
@@ -607,7 +607,7 @@ const UserDashboard = () => {
       <h2 className="text-2xl font-bold">Environmental Impact</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="CO₂ Saved" value={`${stats.carbonSaved}kg`} icon={<Leaf className="text-green-500" size={24} />} change="+120kg" />
+        <StatCard title="CO₂ Saved" value={`${stats.carbonSaved}kg`} icon={<Leaf className="text-cyan-500" size={24} />} change="+120kg" />
         <StatCard title="Items Recycled" value={stats.itemsSold} icon={<Package className="text-emerald-500" size={24} />} change="+5" />
         <StatCard title="Impact Points" value={stats.impactPoints} icon={<Award className="text-yellow-500" size={24} />} change="+95" />
         <StatCard title="Badge Level" value="Gold" icon={<Award className="text-yellow-600" size={24} />} change="Level 3" />
@@ -633,16 +633,16 @@ const UserDashboard = () => {
               { title: 'Recycling Master', desc: 'Sold 50 items', points: 300, achieved: false },
               { title: 'Community Leader', desc: 'Referred 5 users', points: 150, achieved: true },
             ].map((achievement, idx) => (
-              <div key={idx} className={`p-4 rounded-lg border-2 ${achievement.achieved ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+              <div key={idx} className={`p-4 rounded-lg border-2 ${achievement.achieved ? 'bg-cyan-50 border-cyan-200' : 'bg-gray-50 border-gray-200'}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Award className={achievement.achieved ? 'text-green-600' : 'text-gray-400'} size={24} />
+                    <Award className={achievement.achieved ? 'text-cyan-600' : 'text-gray-400'} size={24} />
                     <div>
                       <p className="font-bold">{achievement.title}</p>
                       <p className="text-sm text-gray-600">{achievement.desc}</p>
                     </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${achievement.achieved ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${achievement.achieved ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-600'}`}>
                     {achievement.points} pts
                   </span>
                 </div>
@@ -665,7 +665,7 @@ const UserDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Available" value="24" icon={<Package className="text-green-500" size={24} />} change="" />
+        <StatCard title="Available" value="24" icon={<Package className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Saved" value="6" icon={<Eye className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Avg. Price" value="RWF 4.5K" icon={<DollarSign className="text-emerald-500" size={24} />} change="" />
         <StatCard title="New Today" value="5" icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
@@ -678,7 +678,7 @@ const UserDashboard = () => {
           { key: 'price', label: 'Price (RWF)', render: (value) => value.toLocaleString() },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'active' ? 'bg-green-100 text-green-800' :
+              value === 'active' ? 'bg-cyan-100 text-cyan-800' :
               value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
               'bg-gray-100 text-gray-800'
             }`}>{value}</span>
@@ -694,7 +694,7 @@ const UserDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Orders</h2>
-        <button onClick={() => handleAction('Orders exported.')} className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={() => handleAction('Orders exported.')} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
@@ -709,7 +709,7 @@ const UserDashboard = () => {
           { key: 'buyer', label: 'Buyer' },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               'bg-yellow-100 text-yellow-800'
             }`}>{value}</span>
           )}
@@ -723,14 +723,14 @@ const UserDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Financial Dashboard</h2>
-        <button onClick={() => handleAction('Financial report exported.')} className="px-4 py-2 bg-green-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={() => handleAction('Financial report exported.')} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Earnings" value={`RWF ${stats.totalEarnings.toLocaleString()}`} icon={<DollarSign className="text-green-500" size={24} />} change="+18%" />
+        <StatCard title="Total Earnings" value={`RWF ${stats.totalEarnings.toLocaleString()}`} icon={<DollarSign className="text-cyan-500" size={24} />} change="+18%" />
         <StatCard title="This Month" value="RWF 35K" icon={<DollarSign className="text-emerald-500" size={24} />} change="+12%" />
         <StatCard title="Pending" value="RWF 6K" icon={<Clock className="text-yellow-500" size={24} />} change="1 pending" />
         <StatCard title="Completed" value="18" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
@@ -754,7 +754,7 @@ const UserDashboard = () => {
         <h2 className="text-2xl font-bold">Profile Settings</h2>
         <button 
           onClick={() => setShowSettingsModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          className="flex items-center space-x-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
         >
           <Settings size={20} />
           <span>Edit Profile</span>
@@ -765,7 +765,7 @@ const UserDashboard = () => {
         <div className="bg-white p-6 rounded-lg border">
           <h3 className="text-lg font-bold mb-4">Personal Information</h3>
           <div className="flex justify-center mb-4">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+            <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
               {userProfile.name.split(' ').map(n => n[0]).join('')}
             </div>
           </div>
@@ -797,9 +797,9 @@ const UserDashboard = () => {
           <div className="bg-white p-6 rounded-lg border">
             <h3 className="text-lg font-bold mb-4">Account Status</h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-cyan-50 rounded-lg">
                 <span className="text-sm font-medium">Verification Status</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${userProfile.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${userProfile.verified ? 'bg-cyan-100 text-cyan-800' : 'bg-yellow-100 text-yellow-800'}`}>
                   {userProfile.verified ? 'Verified' : 'Pending'}
                 </span>
               </div>
@@ -816,7 +816,7 @@ const UserDashboard = () => {
             <h3 className="text-lg font-bold mb-4">Preferred Categories</h3>
             <div className="flex flex-wrap gap-2">
               {userProfile.preferredCategories.map((cat, idx) => (
-                <span key={idx} className="px-3 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                <span key={idx} className="px-3 py-2 bg-cyan-100 text-cyan-800 rounded-full text-sm font-semibold">
                   {cat}
                 </span>
               ))}
@@ -828,19 +828,19 @@ const UserDashboard = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Sales Notifications</span>
-                <span className={`px-2 py-1 rounded text-xs ${userProfile.receiveNotifications ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${userProfile.receiveNotifications ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {userProfile.receiveNotifications ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Price Alerts</span>
-                <span className={`px-2 py-1 rounded text-xs ${userProfile.priceAlerts ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${userProfile.priceAlerts ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {userProfile.priceAlerts ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Sustainability Tips</span>
-                <span className={`px-2 py-1 rounded text-xs ${userProfile.sustainabilityTips ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${userProfile.sustainabilityTips ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {userProfile.sustainabilityTips ? 'Enabled' : 'Disabled'}
                 </span>
               </div>

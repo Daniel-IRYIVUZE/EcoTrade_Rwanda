@@ -116,7 +116,7 @@ const AdminDashboard = () => {
   };
   const mockUsers = [
     { id: 1, name: 'Kigali Hotel', email: 'hotel@kigali.com', role: 'business', status: 'active', joinDate: '2024-02-01' },
-    { id: 2, name: 'Green Recyclers', email: 'info@greenrecyclers.com', role: 'recycler', status: 'pending', joinDate: '2024-02-02' },
+    { id: 2, name: 'cyan Recyclers', email: 'info@cyanrecyclers.com', role: 'recycler', status: 'pending', joinDate: '2024-02-02' },
     { id: 3, name: 'John Driver', email: 'john@driver.com', role: 'driver', status: 'active', joinDate: '2024-02-03' },
     { id: 4, name: 'City Restaurant', email: 'city@restaurant.com', role: 'business', status: 'suspended', joinDate: '2024-01-28' },
     { id: 5, name: 'Plastic Solutions', email: 'contact@plastics.com', role: 'recycler', status: 'active', joinDate: '2024-01-30' },
@@ -124,7 +124,7 @@ const AdminDashboard = () => {
 
   const mockTransactions = [
     { id: 1, user: 'Kigali Hotel', type: 'payout', amount: 25000, status: 'completed', date: '2024-02-10' },
-    { id: 2, user: 'Green Recyclers', type: 'purchase', amount: 18000, status: 'pending', date: '2024-02-10' },
+    { id: 2, user: 'cyan Recyclers', type: 'purchase', amount: 18000, status: 'pending', date: '2024-02-10' },
     { id: 3, user: 'City Restaurant', type: 'payout', amount: 32000, status: 'completed', date: '2024-02-09' },
     { id: 4, user: 'Plastic Solutions', type: 'deposit', amount: 50000, status: 'failed', date: '2024-02-09' },
     { id: 5, user: 'John Driver', type: 'payout', amount: 15000, status: 'completed', date: '2024-02-08' },
@@ -607,7 +607,7 @@ const AdminDashboard = () => {
         data={[
           { id: 1, type: 'Listing', user: 'Kigali Hotel', material: 'UCO', status: 'pending', date: '2024-02-10' },
           { id: 2, type: 'Listing', user: 'City Restaurant', material: 'Glass', status: 'pending', date: '2024-02-10' },
-          { id: 3, type: 'Review', user: 'Green Recyclers', material: 'N/A', status: 'flagged', date: '2024-02-09' },
+          { id: 3, type: 'Review', user: 'cyan Recyclers', material: 'N/A', status: 'flagged', date: '2024-02-09' },
         ]}
       />
       </div>

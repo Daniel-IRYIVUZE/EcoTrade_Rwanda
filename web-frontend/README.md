@@ -39,6 +39,49 @@ npm run preview
 | Driver | driver@kcem.com | driver123 | /dashboard/driver |
 | Individual | user@kcem.com | user123 | /dashboard/individual |
 
+## Platform Screenshots
+
+### Public Pages
+
+#### Landing Page
+![EcoTrade Homepage](./src/assets/screeenshots/image-1.png)
+
+#### Login & Registration
+![Login Page](./src/assets/screeenshots/image-2.png)
+![Register Page](./src/assets/screeenshots/image-3.png)
+
+### Role-Based Dashboards
+
+#### Admin Dashboard
+![Admin Dashboard](./src/assets/screeenshots/image-4.png)
+*Platform statistics, user management, and system configuration*
+
+#### Business Dashboard
+![Business Dashboard](./src/assets/screeenshots/image-5.png)
+*Waste listings, marketplace, and revenue analytics*
+
+#### Recycler Dashboard
+![Recycler Dashboard](./src/assets/screeenshots/image-6.png)
+*Material procurement, inventory, and supplier network*
+
+#### Driver Dashboard
+![Driver Dashboard](./src/assets/screeenshots/image-7.png)
+*Route management, collections, and earnings tracking*
+
+#### Individual Dashboard
+![Individual Dashboard](./src/assets/screeenshots/image-8.png)
+*Personal listings, marketplace, and environmental impact*
+
+### Features
+
+#### Marketplace Listings
+![Marketplace](./src/assets/screeenshots/image-9.png)
+*Material-specific imagery for UCO, Glass, Paper, Plastic listings*
+
+#### Settings & Profile Management
+![Settings Modal](./src/assets/screeenshots/image-10.png)
+*Editable profile with notification preferences and role-specific options*
+
 ## Project Structure
 
 ```

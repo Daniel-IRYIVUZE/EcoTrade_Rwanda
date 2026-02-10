@@ -386,7 +386,7 @@ const DriverDashboard = () => {
                     <p className="text-sm text-gray-500">{stop.time}</p>
                   </div>
                   <p className="text-sm text-gray-600">{stop.material}</p>
-                  <p className="text-sm text-green-600 font-semibold">RWF {stop.amount.toLocaleString()}</p>
+                  <p className="text-sm text-cyan-600 font-semibold">RWF {stop.amount.toLocaleString()}</p>
                 </div>
                 {stop.status === 'in-progress' && (
                   <button onClick={(e) => { e.stopPropagation(); handleStartCollection(stop); }} className="ml-4 px-3 sm:px-4 py-2 bg-cyan-600 text-white rounded-lg text-xs sm:text-sm whitespace-nowrap hover:bg-cyan-700">
@@ -465,7 +465,7 @@ const DriverDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Active Routes" value="1" icon={<Navigation className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="Completed Today" value={currentRoute.stopsCompleted} icon={<CheckCircle className="text-green-500" size={24} />} change="" />
+        <StatCard title="Completed Today" value={currentRoute.stopsCompleted} icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Pending" value={currentRoute.totalStops - currentRoute.stopsCompleted} icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Distance" value="30km" icon={<Navigation className="text-cyan-500" size={24} />} change="" />
       </div>
@@ -479,7 +479,7 @@ const DriverDashboard = () => {
             <div key={stop.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-4">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  stop.status === 'completed' ? 'bg-green-500 text-white' :
+                  stop.status === 'completed' ? 'bg-cyan-500 text-white' :
                   stop.status === 'in-progress' ? 'bg-cyan-500 text-white' :
                   'bg-gray-300 text-gray-700'
                 }`}>
@@ -491,7 +491,7 @@ const DriverDashboard = () => {
                 </div>
               </div>
               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                stop.status === 'completed' ? 'bg-green-100 text-green-800' :
+                stop.status === 'completed' ? 'bg-cyan-100 text-cyan-800' :
                 stop.status === 'in-progress' ? 'bg-cyan-100 text-cyan-800' :
                 'bg-gray-100 text-gray-800'
               }`}>
@@ -515,7 +515,7 @@ const DriverDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Today" value={`RWF ${currentRoute.earningsToday.toLocaleString()}`} icon={<DollarSign className="text-green-500" size={24} />} change="+12%" />
+        <StatCard title="Today" value={`RWF ${currentRoute.earningsToday.toLocaleString()}`} icon={<DollarSign className="text-cyan-500" size={24} />} change="+12%" />
         <StatCard title="This Week" value="RWF 245K" icon={<DollarSign className="text-cyan-500" size={24} />} change="+8%" />
         <StatCard title="This Month" value="RWF 980K" icon={<DollarSign className="text-cyan-500" size={24} />} change="+15%" />
         <StatCard title="Total" value="RWF 2.5M" icon={<DollarSign className="text-purple-500" size={24} />} change="+20%" />
@@ -580,7 +580,7 @@ const DriverDashboard = () => {
           { key: 'amount', label: 'Earnings (RWF)', render: (value) => value.toLocaleString() },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               value === 'in-progress' ? 'bg-cyan-100 text-cyan-800' :
               'bg-gray-100 text-gray-800'
             }`}>{value}</span>
@@ -643,7 +643,7 @@ const DriverDashboard = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Status</span>
-              <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-green-100 text-green-800' : 'bg-cyan-100 text-cyan-800'}`}>
+              <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-cyan-100 text-cyan-800' : 'bg-cyan-100 text-cyan-800'}`}>
                 {driverProfile.verified ? 'Verified' : 'Pending'}
               </span>
             </div>
@@ -677,14 +677,14 @@ const DriverDashboard = () => {
           </div>
           <button
             onClick={() => setOfflineMode(!offlineMode)}
-            className={`px-4 py-2 rounded-lg text-white ${offlineMode ? 'bg-green-600' : 'bg-gray-500'}`}
+            className={`px-4 py-2 rounded-lg text-white ${offlineMode ? 'bg-cyan-600' : 'bg-gray-500'}`}
           >
             {offlineMode ? 'Enabled' : 'Disabled'}
           </button>
         </div>
 
         <div className="mt-6 flex items-center gap-3">
-          {offlineMode ? <WifiOff className="text-cyan-600" size={20} /> : <Wifi className="text-green-600" size={20} />}
+          {offlineMode ? <WifiOff className="text-cyan-600" size={20} /> : <Wifi className="text-cyan-600" size={20} />}
           <span className="text-sm text-gray-700">
             {offlineMode ? 'Currently offline - syncing paused' : 'Online - sync active'}
           </span>
@@ -761,7 +761,7 @@ const DriverDashboard = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Verification Status</span>
-                <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-green-100 text-green-800' : 'bg-cyan-100 text-cyan-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-cyan-100 text-cyan-800' : 'bg-cyan-100 text-cyan-800'}`}>
                   {driverProfile.verified ? 'Verified' : 'Pending'}
                 </span>
               </div>
@@ -784,19 +784,19 @@ const DriverDashboard = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Route Notifications</span>
-                <span className={`px-2 py-1 rounded text-xs ${driverProfile.routeNotifications ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${driverProfile.routeNotifications ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {driverProfile.routeNotifications ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Earnings Alerts</span>
-                <span className={`px-2 py-1 rounded text-xs ${driverProfile.earningsAlerts ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${driverProfile.earningsAlerts ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {driverProfile.earningsAlerts ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Offline Sync</span>
-                <span className={`px-2 py-1 rounded text-xs ${driverProfile.offlineSync ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${driverProfile.offlineSync ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {driverProfile.offlineSync ? 'Enabled' : 'Disabled'}
                 </span>
               </div>

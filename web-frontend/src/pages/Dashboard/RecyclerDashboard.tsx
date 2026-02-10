@@ -313,7 +313,7 @@ const RecyclerDashboard = () => {
             <div className="flex items-center justify-between">
               <h3 className="text-3xl font-bold text-cyan-600">{listing.material}</h3>
               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                listing.quality === 'High' ? 'bg-green-100 text-green-800' :
+                listing.quality === 'High' ? 'bg-cyan-100 text-cyan-800' :
                 listing.quality === 'Medium' ? 'bg-cyan-100 text-cyan-800' :
                 'bg-cyan-100 text-cyan-800'
               }`}>
@@ -393,13 +393,13 @@ const RecyclerDashboard = () => {
         <StatCard 
           title="Materials Processed"
           value={`${stats.materialsProcessed}kg`}
-          icon={<Package className="text-green-500" size={24} />}
+          icon={<Package className="text-cyan-500" size={24} />}
           change="+2500kg"
         />
         <StatCard 
           title="Saved Amount"
           value={`RWF ${(stats.savedAmount / 1000)}K`}
-          icon={<Leaf className="text-green-600" size={24} />}
+          icon={<Leaf className="text-cyan-600" size={24} />}
           change="vs market price"
         />
       </div>
@@ -454,7 +454,7 @@ const RecyclerDashboard = () => {
                 { key: 'amount', label: 'Amount', render: (value) => `RWF ${value.toLocaleString()}` },
                 { key: 'status', label: 'Status', render: (value) => (
                   <span className={`px-2 py-1 rounded text-xs ${
-                    value === 'completed' ? 'bg-green-100 text-green-800' :
+                    value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
                     value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
                     'bg-cyan-100 text-cyan-800'
                   }`}>{value}</span>
@@ -490,7 +490,7 @@ const RecyclerDashboard = () => {
         <StatCard title="Available" value="45" icon={<Package className="text-cyan-500" size={24} />} change="" />
         <StatCard title="My Bids" value={stats.activeBids} icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Watchlist" value="12" icon={<Eye className="text-purple-500" size={24} />} change="" />
-        <StatCard title="Saved" value="RWF 450K" icon={<DollarSign className="text-green-500" size={24} />} change="" />
+        <StatCard title="Saved" value="RWF 450K" icon={<DollarSign className="text-cyan-500" size={24} />} change="" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -545,7 +545,7 @@ const RecyclerDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Purchases" value={stats.totalPurchases} icon={<ShoppingCart className="text-cyan-500" size={24} />} change="+12%" />
         <StatCard title="This Month" value="12" icon={<Calendar className="text-cyan-500" size={24} />} change="+8%" />
-        <StatCard title="Completed" value="142" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
+        <StatCard title="Completed" value="142" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="In Transit" value="14" icon={<Clock className="text-cyan-500" size={24} />} change="" />
       </div>
 
@@ -560,7 +560,7 @@ const RecyclerDashboard = () => {
           { key: 'driver', label: 'Driver' },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
               'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
@@ -610,7 +610,7 @@ const RecyclerDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="In Transit" value="8" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Scheduled" value="5" icon={<Calendar className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="Completed" value="142" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
+        <StatCard title="Completed" value="142" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Avg. ETA" value="45 min" icon={<MapPin className="text-cyan-500" size={24} />} change="" />
       </div>
 
@@ -623,7 +623,7 @@ const RecyclerDashboard = () => {
           { key: 'driver', label: 'Driver' },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
               'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
@@ -642,7 +642,7 @@ const RecyclerDashboard = () => {
         <StatCard title="Total Stock" value="1,420kg" icon={<Package className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Low Stock" value="3" icon={<AlertCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Inbound" value="620kg" icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="Processed" value="780kg" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
+        <StatCard title="Processed" value="780kg" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
       </div>
 
       <DataTable
@@ -669,7 +669,7 @@ const RecyclerDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Spent" value={`RWF ${stats.totalSpent.toLocaleString()}`} icon={<DollarSign className="text-cyan-500" size={24} />} change="+10%" />
-        <StatCard title="Saved" value={`RWF ${stats.savedAmount.toLocaleString()}`} icon={<TrendingUp className="text-green-500" size={24} />} change="" />
+        <StatCard title="Saved" value={`RWF ${stats.savedAmount.toLocaleString()}`} icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Active Bids" value={stats.activeBids} icon={<Package className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Invoices" value="24" icon={<CheckCircle className="text-purple-500" size={24} />} change="" />
       </div>
@@ -682,7 +682,7 @@ const RecyclerDashboard = () => {
           { key: 'amount', label: 'Amount (RWF)', render: (value) => value.toLocaleString() },
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
-              value === 'completed' ? 'bg-green-100 text-green-800' :
+              value === 'completed' ? 'bg-cyan-100 text-cyan-800' :
               value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
               'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
@@ -703,7 +703,7 @@ const RecyclerDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Active Suppliers" value="18" icon={<User className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Top Rated" value="6" icon={<Star className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="New This Month" value="3" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
+        <StatCard title="New This Month" value="3" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Regions" value="4" icon={<MapPin className="text-cyan-500" size={24} />} change="" />
       </div>
 
@@ -775,8 +775,8 @@ const RecyclerDashboard = () => {
             <h3 className="text-lg font-bold mb-4">Certifications</h3>
             <div className="space-y-2">
               {recyclerProfile.certifications.map((cert, idx) => (
-                <div key={idx} className="flex items-center space-x-2 p-3 bg-green-50 rounded-lg">
-                  <CheckCircle className="text-green-600" size={20} />
+                <div key={idx} className="flex items-center space-x-2 p-3 bg-cyan-50 rounded-lg">
+                  <CheckCircle className="text-cyan-600" size={20} />
                   <span className="font-medium">{cert}</span>
                 </div>
               ))}
@@ -799,19 +799,19 @@ const RecyclerDashboard = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Material Alerts</span>
-                <span className={`px-2 py-1 rounded text-xs ${recyclerProfile.autoNotify ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${recyclerProfile.autoNotify ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {recyclerProfile.autoNotify ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Price Alerts</span>
-                <span className={`px-2 py-1 rounded text-xs ${recyclerProfile.priceAlerts ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${recyclerProfile.priceAlerts ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {recyclerProfile.priceAlerts ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Monthly Reports</span>
-                <span className={`px-2 py-1 rounded text-xs ${recyclerProfile.monthlyReports ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs ${recyclerProfile.monthlyReports ? 'bg-cyan-100 text-cyan-800' : 'bg-gray-100 text-gray-800'}`}>
                   {recyclerProfile.monthlyReports ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
