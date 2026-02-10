@@ -1,6 +1,6 @@
 // components/layout/TopNav.tsx
 import { useState } from 'react';
-import { Search, Bell, Leaf } from 'lucide-react';
+import { Search, Bell } from 'lucide-react';
 
 interface User {
   name: string;
@@ -27,10 +27,8 @@ const TopNav = ({ user }: TopNavProps) => {
       <div className="flex items-center justify-between gap-2 sm:gap-4">
         {/* Logo - visible on mobile when sidebar is collapsed */}
         <div className="flex items-center gap-2 md:hidden">
-          <div className="bg-cyan-600 p-2 rounded-lg">
-            <Leaf className="text-white" size={20} />
-          </div>
-          <span className="text-lg font-bold text-gray-900">KCEM</span>
+          <img src="/images/EcoTrade.png" alt="EcoTrade Rwanda" className="h-10" />
+          <span className="text-lg font-bold text-gray-900">EcoTrade Rwanda</span>
         </div>
 
         {/* Search */}

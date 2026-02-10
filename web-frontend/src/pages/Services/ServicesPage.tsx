@@ -733,7 +733,7 @@ const ServicesPage = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-slate-900 mb-4">Traditional vs KCEM Comparison</h2>
+              <h2 className="text-4xl font-bold text-slate-900 mb-4">Traditional vs EcoTrade  Comparison</h2>
               <p className="text-lg text-slate-600 max-w-2xl mx-auto">
                 See how our platform transforms waste management economics
               </p>
@@ -770,7 +770,7 @@ const ServicesPage = () => {
                     <tr>
                       <th className="text-left p-6 font-bold text-slate-900">Feature / Metric</th>
                       <th className="text-left p-6 font-bold text-slate-900">Traditional Method</th>
-                      <th className="text-left p-6 font-bold text-slate-900">KCEM Platform</th>
+                      <th className="text-left p-6 font-bold text-slate-900">EcoTrade Rwanda Platform</th>
                       <th className="text-left p-6 font-bold text-slate-900">Advantage</th>
                     </tr>
                   </thead>

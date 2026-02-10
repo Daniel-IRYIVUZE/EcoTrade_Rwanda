@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Instagram, Twitter, Mail, MapPin, Phone, Facebook, Linkedin, Youtube } from 'lucide-react';
+import { Instagram, Twitter, Mail, MapPin, Phone, Facebook, Linkedin, Youtube } from 'lucide-react';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -50,11 +50,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="bg-cyan-600 p-2 rounded-lg">
-                <Leaf className="text-white" size={24} />
-              </div>
-              <span className="text-2xl font-bold text-white">KCEM</span>
+            <div className="flex items-center gap-2 mb-2">
+              <img src="/images/EcoTrade1.png" alt="EcoTrade Rwanda" className="h-30 w-30 sm:h-24 sm:w-24 object-contain" />
             </div>
             <p className="text-sm leading-relaxed mb-6 max-w-xs">
               Empowering Kigali's HORECA industry through digital circular economy solutions.
@@ -151,7 +148,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-xs text-gray-400 text-center md:text-left">
-              &copy; {new Date().getFullYear()} Kigali Circular Economy Marketplace (KCEM). All rights reserved.
+              &copy; {new Date().getFullYear()} EcoTrade . All rights reserved.
             </div>
             <div className="flex gap-6 text-xs text-gray-400">
               <Link to="/terms-privacy" className="hover:text-gray-300 transition-colors">

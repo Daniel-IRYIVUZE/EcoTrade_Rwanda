@@ -1,4 +1,4 @@
-import { ArrowRight, Recycle, Truck, Wallet, Sparkles, TrendingUp, ChevronRight, Play, Quote, MapPin, CheckCircle, Shield } from 'lucide-react';
+import { ArrowRight, Recycle, Truck, Wallet, Sparkles,  ChevronRight, Play, Quote, MapPin, CheckCircle, Shield } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar/Navbar';
 import Footer from '../../components/common/Footer/Footer';
@@ -89,10 +89,6 @@ const HomePage = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                  <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                    <TrendingUp size={16} />
-                    Transforming HORECA Waste into Revenue
-                  </div>
                 </motion.div>
                 
                 <motion.h1 
@@ -101,9 +97,8 @@ const HomePage = () => {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
                 >
-                  Kigali Circular{' '}
-                  <span className="text-cyan-300">Economy</span>{' '}
-                  Marketplace
+                  EcoTrade{' '}
+                  <span className="text-cyan-300">Rwanda</span>
                 </motion.h1>
                 
                 <motion.p 
@@ -226,7 +221,7 @@ const HomePage = () => {
           </div>
         </motion.div>
 
-        {/* How KCEM Works */}
+        {/* How EcoTrade  Works */}
         <section className="py-16 sm:py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div 
@@ -236,7 +231,7 @@ const HomePage = () => {
               viewport={{ once: true }}
               className="text-center mb-12 sm:mb-16"
             >
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">How KCEM Works</h2>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">How EcoTrade  Works</h2>
               <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
                 Four simple steps to transform your waste management and unlock new revenue streams
               </p>
@@ -380,7 +375,7 @@ const HomePage = () => {
               
               <div className="space-y-6">
                 <Testimonial 
-                  quote="KCEM transformed our waste from an expense to a revenue stream. We're now earning Rwf 400,000 monthly from waste we used to pay to dispose."
+                  quote="EcoTrade  transformed our waste from an expense to a revenue stream. We're now earning Rwf 400,000 monthly from waste we used to pay to dispose."
                   author="Marie Uwase"
                   role="Operations Manager, Kigali Grand Hotel"
                   avatar=""

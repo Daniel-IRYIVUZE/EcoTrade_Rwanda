@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Menu, X, LogOut, User, LayoutDashboard } from 'lucide-react';
+import { Menu, X, LogOut, User, LayoutDashboard } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -83,10 +83,7 @@ const Navbar = () => {
         <div className="flex justify-between h-20 items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="bg-cyan-600 p-2 rounded-lg group-hover:rotate-12 transition-transform">
-              <Leaf className="text-white" size={24} />
-            </div>
-            <span className="text-2xl font-bold text-gray-900 tracking-tight">KCEM</span>
+            <img src="/images/EcoTrade.png" alt="EcoTrade Rwanda" className="h-14 group-hover:scale-110 transition-transform" />
           </Link>
 
           {/* Desktop Navigation */}

@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   Home, Users, Package, Truck, Settings, 
   BarChart3, DollarSign, Calendar, Map,
-  FileText, ShoppingCart, Recycle, Leaf,
+  FileText, ShoppingCart, Recycle,
   LogOut, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -86,15 +86,11 @@ const Sidebar = ({ userRole }: SidebarProps) => {
       <div className="p-4 border-b border-gray-800 flex items-center justify-between">
         {!collapsed ? (
           <div className="flex items-center space-x-3">
-            <div className="bg-cyan-600 p-2 rounded-lg">
-              <Leaf className="text-white" size={24} />
-            </div>
-            <span className="text-xl font-bold">KCEM</span>
+            <img src="/images/EcoTrade.png" alt="EcoTrade Rwanda" className="h-10" />
+            <span className="text-xl font-bold">EcoTrade Rwanda</span>
           </div>
         ) : (
-          <div className="bg-cyan-600 p-2 rounded-lg mx-auto">
-            <Leaf className="text-white" size={24} />
-          </div>
+          <img src="/images/EcoTrade.png" alt="EcoTrade Rwanda" className="h-10 mx-auto" />
         )}
         <button 
           onClick={() => setCollapsed(!collapsed)}

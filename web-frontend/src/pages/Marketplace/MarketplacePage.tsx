@@ -455,7 +455,7 @@ const MarketplacePage = () => {
   };
 
   const handleShareListing = (listing: any) => {
-    const shareText = `Check out this listing on KCEM Marketplace: ${listing.title} - ${listing.businessName}`;
+    const shareText = `Check out this listing on EcoTrade  Marketplace: ${listing.title} - ${listing.businessName}`;
     const shareUrl = window.location.href;
     
     if (navigator.share) {
@@ -508,7 +508,7 @@ const MarketplacePage = () => {
                   <Home size={14} />
                   Back to Home
                 </button>
-                <h1 className="text-2xl sm:text-3xl font-bold mb-2">KCEM Marketplace</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">EcoTrade  Marketplace</h1>
                 <p className="text-cyan-100 text-sm">Discover and trade recyclable materials across Kigali</p>
               </div>
               <div className="flex items-center gap-4">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, ShieldCheck, Home, Eye, EyeOff, Leaf } from 'lucide-react';
+import { Mail, Lock, LogIn, Home, Eye, EyeOff, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext'; // Add this import
 
@@ -131,11 +131,8 @@ const LoginPage = () => {
             {/* Top Content */}
             <div>
               <div className="flex items-center gap-3 mb-6 sm:mb-8">
-                <div className="bg-cyan-600 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center">
-                  <ShieldCheck size={24} className="sm:size-[28px]" />
-                </div>
+                <img src="/images/EcoTrade1.png" alt="EcoTrade Rwanda" className="w-30 h-30 sm:w-24 sm:h-24 object-contain" />
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-black">KCEM</h2>
                   <p className="text-cyan-300/80 text-xs font-medium uppercase tracking-widest">Secure Portal</p>
                 </div>
               </div>

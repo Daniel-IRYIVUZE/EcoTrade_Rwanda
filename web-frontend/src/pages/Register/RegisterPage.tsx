@@ -972,7 +972,7 @@ const RegisterPage = () => {
               <div>
                 <h3 className="text-lg font-bold text-slate-900 mb-3">1. Acceptance of Terms</h3>
                 <p className="text-slate-600">
-                  By accessing and using the Kigali Circular Economy Marketplace (KCEM) platform, you agree to be bound by these Terms of Service. These terms govern your use of our services for waste management and recycling transactions.
+                  By accessing and using the EcoTrade Rwanda   (KCEM) platform, you agree to be bound by these Terms of Service. These terms govern your use of our services for waste management and recycling transactions.
                 </p>
               </div>
               

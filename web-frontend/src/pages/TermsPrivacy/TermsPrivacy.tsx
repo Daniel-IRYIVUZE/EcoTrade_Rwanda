@@ -57,7 +57,7 @@ const TermsPrivacyPage = () => {
   const termsContent = [
     {
       title: '1. Acceptance of Terms',
-      content: 'By accessing and using the Kigali Circular Economy Marketplace (KCEM) platform, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.'
+      content: 'By accessing and using the EcoTrade Rwanda   (KCEM) platform, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.'
     },
     {
       title: '2. User Accounts',

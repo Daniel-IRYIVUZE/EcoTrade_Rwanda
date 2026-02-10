@@ -1,8 +1,8 @@
-# KCEM Platform - Web Frontend
+# EcoTrade  - Web Frontend
 
 ## Overview
 
-React + TypeScript frontend for the KCEM (Kigali Circular Economy Marketplace) platform. A fully responsive, multi-dashboard web application for waste-to-resource circular economy marketplace.
+React + TypeScript frontend for the EcoTrade  platform. A fully responsive, multi-dashboard web application for waste-to-resource circular economy marketplace.
 
 ## Quick Start
 
@@ -27,7 +27,7 @@ npm run preview
 
 - Development: http://localhost:5173
 - Production: https://kcem-platform.netlify.app
-- Demo Video: https://youtu.be/your-demo-video-id
+- Demo Video: https://youtu.be/
 
 ## Demo Login Credentials
 
@@ -45,7 +45,7 @@ npm run preview
 web-frontend/
 ├── public/
 │   ├── images/
-│   │   └── kCEM_Logo.png
+│   │   └── EcoTrade.png
 │   ├── manifest.json
 │   ├── robots.txt
 │   └── favicon.ico
@@ -202,6 +202,3 @@ MIT License - see LICENSE file
 - Email: support@kcem.rw
 - Website: https://kcem-platform.netlify.app
 - Demo Video: https://youtu.be/
-
-Version: 1.0.0
-Status: Production Ready

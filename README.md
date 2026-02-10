@@ -1,8 +1,8 @@
-# KCEM Platform - Kigali Circular Economy Marketplace
+# EcoTrade  Platform
 
 ## Project Description
 
-KCEM (Kigali Circular Economy Marketplace) is a digital platform connecting waste generators (hotels, restaurants, businesses) with recyclers, drivers, and individual collectors in Kigali, Rwanda. The platform enables transparent waste-to-resource transactions while promoting environmental sustainability and creating economic opportunities.
+EcoTrade  is a digital platform connecting waste generators (hotels, restaurants, businesses) with recyclers, drivers, and individual collectors in Kigali, Rwanda. The platform enables transparent waste-to-resource transactions while promoting environmental sustainability and creating economic opportunities.
 
 ### Key Features
 
@@ -25,7 +25,7 @@ KCEM (Kigali Circular Economy Marketplace) is a digital platform connecting wast
 
 - GitHub Repository: https://github.com/Daniel-IRYIVUZE/kcem_platform.git
 - Live Demo: https://kcem-platform.netlify.app
-- Demo Video: https://youtu.be/your-demo-video-id
+- Demo Video: https://youtu.be/
 
 ## Setup Instructions
 
@@ -61,7 +61,7 @@ kcem_platform/
 └── web-frontend/
     ├── public/
     │   ├── images/
-    │   │   └── kCEM_Logo.png
+    │   │   └── EcoTrade.png
     ├── src/
     │   ├── assets/
     │   │   ├── images/
@@ -118,4 +118,4 @@ MIT License - see LICENSE file for details.
 
 - Email: support@kcem.rw
 - Website: https://kcem-platform.netlify.app
-- Demo Video: https://youtu.be/your-demo-video-id
+- Demo Video: https://youtu.be/
