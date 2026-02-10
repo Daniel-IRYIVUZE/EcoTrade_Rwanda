@@ -138,7 +138,7 @@ const UserDashboard = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
         <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 max-w-3xl w-full shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">

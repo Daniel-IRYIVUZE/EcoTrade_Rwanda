@@ -139,7 +139,7 @@ const RecyclerDashboard = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
         <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 max-w-3xl w-full shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
@@ -314,8 +314,8 @@ const RecyclerDashboard = () => {
               <h3 className="text-3xl font-bold text-cyan-600">{listing.material}</h3>
               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 listing.quality === 'High' ? 'bg-green-100 text-green-800' :
-                listing.quality === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                'bg-orange-100 text-orange-800'
+                listing.quality === 'Medium' ? 'bg-cyan-100 text-cyan-800' :
+                'bg-cyan-100 text-cyan-800'
               }`}>
                 {listing.quality} Quality
               </span>
@@ -345,7 +345,7 @@ const RecyclerDashboard = () => {
                 <h4 className="font-semibold text-cyan-900">Quality Rating</h4>
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={18} className={i < (listing.quality === 'High' ? 5 : 3) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} />
+                    <Star key={i} size={18} className={i < (listing.quality === 'High' ? 5 : 3) ? 'text-cyan-400 fill-cyan-400' : 'text-gray-300'} />
                   ))}
                 </div>
               </div>
@@ -456,7 +456,7 @@ const RecyclerDashboard = () => {
                   <span className={`px-2 py-1 rounded text-xs ${
                     value === 'completed' ? 'bg-green-100 text-green-800' :
                     value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
-                    'bg-yellow-100 text-yellow-800'
+                    'bg-cyan-100 text-cyan-800'
                   }`}>{value}</span>
                 )}
               ]}
@@ -546,7 +546,7 @@ const RecyclerDashboard = () => {
         <StatCard title="Total Purchases" value={stats.totalPurchases} icon={<ShoppingCart className="text-cyan-500" size={24} />} change="+12%" />
         <StatCard title="This Month" value="12" icon={<Calendar className="text-cyan-500" size={24} />} change="+8%" />
         <StatCard title="Completed" value="142" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
-        <StatCard title="In Transit" value="14" icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="In Transit" value="14" icon={<Clock className="text-cyan-500" size={24} />} change="" />
       </div>
 
       <DataTable
@@ -562,7 +562,7 @@ const RecyclerDashboard = () => {
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'completed' ? 'bg-green-100 text-green-800' :
               value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
-              'bg-yellow-100 text-yellow-800'
+              'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
         ]}
@@ -608,7 +608,7 @@ const RecyclerDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="In Transit" value="8" icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="In Transit" value="8" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Scheduled" value="5" icon={<Calendar className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Completed" value="142" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
         <StatCard title="Avg. ETA" value="45 min" icon={<MapPin className="text-cyan-500" size={24} />} change="" />
@@ -625,7 +625,7 @@ const RecyclerDashboard = () => {
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'completed' ? 'bg-green-100 text-green-800' :
               value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
-              'bg-yellow-100 text-yellow-800'
+              'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
         ]}
@@ -640,7 +640,7 @@ const RecyclerDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Total Stock" value="1,420kg" icon={<Package className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="Low Stock" value="3" icon={<AlertCircle className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="Low Stock" value="3" icon={<AlertCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Inbound" value="620kg" icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Processed" value="780kg" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
       </div>
@@ -684,7 +684,7 @@ const RecyclerDashboard = () => {
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'completed' ? 'bg-green-100 text-green-800' :
               value === 'in-transit' ? 'bg-cyan-100 text-cyan-800' :
-              'bg-yellow-100 text-yellow-800'
+              'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
         ]}
@@ -702,7 +702,7 @@ const RecyclerDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Active Suppliers" value="18" icon={<User className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="Top Rated" value="6" icon={<Star className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="Top Rated" value="6" icon={<Star className="text-cyan-500" size={24} />} change="" />
         <StatCard title="New This Month" value="3" icon={<CheckCircle className="text-green-500" size={24} />} change="" />
         <StatCard title="Regions" value="4" icon={<MapPin className="text-cyan-500" size={24} />} change="" />
       </div>

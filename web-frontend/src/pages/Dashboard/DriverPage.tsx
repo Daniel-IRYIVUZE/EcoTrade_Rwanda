@@ -28,8 +28,8 @@ const ImageWithFallback = ({ src, alt, className }: { src?: string; alt: string;
   
   if (!src || hasError) {
     return (
-      <div className={`${className} bg-gradient-to-br from-orange-100 to-yellow-100 flex items-center justify-center`}>
-        <Leaf className="text-orange-600 opacity-30" size={40} />
+      <div className={`${className} bg-gradient-to-br from-cyan-100 to-cyan-100 flex items-center justify-center`}>
+        <Leaf className="text-cyan-600 opacity-30" size={40} />
       </div>
     );
   }
@@ -46,13 +46,13 @@ const ImageWithFallback = ({ src, alt, className }: { src?: string; alt: string;
 };
 
 const SimpleRouteMap = () => (
-  <div className="relative w-full h-64 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-orange-200 flex items-center justify-center overflow-hidden">
+  <div className="relative w-full h-64 bg-gradient-to-br from-cyan-50 to-cyan-50 rounded-lg border border-cyan-200 flex items-center justify-center overflow-hidden">
     <div className="absolute inset-0 opacity-10" style={{
       backgroundImage: 'linear-gradient(45deg, #ea580c 1px, transparent 1px)',
       backgroundSize: '20px 20px'
     }}></div>
     <div className="relative z-10 text-center">
-      <Navigation size={32} className="text-orange-600 mx-auto mb-2" />
+      <Navigation size={32} className="text-cyan-600 mx-auto mb-2" />
       <p className="text-gray-600 font-medium">Current Route Map</p>
       <p className="text-sm text-gray-500">6 stops • 30km total distance</p>
     </div>
@@ -150,11 +150,11 @@ const DriverDashboard = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
         <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 max-w-3xl w-full shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <Settings className="text-orange-600" size={28} />
+              <Settings className="text-cyan-600" size={28} />
               <h3 className="text-2xl font-bold">Driver Settings</h3>
             </div>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg">
@@ -173,7 +173,7 @@ const DriverDashboard = () => {
                   type="text" 
                   value={settings.name}
                   onChange={(e) => setSettings({...settings, name: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -186,7 +186,7 @@ const DriverDashboard = () => {
                   type="email" 
                   value={settings.email}
                   onChange={(e) => setSettings({...settings, email: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -199,7 +199,7 @@ const DriverDashboard = () => {
                   type="tel" 
                   value={settings.phone}
                   onChange={(e) => setSettings({...settings, phone: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -208,7 +208,7 @@ const DriverDashboard = () => {
                 <select 
                   value={settings.vehicleType}
                   onChange={(e) => setSettings({...settings, vehicleType: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 >
                   <option>Pickup Truck</option>
                   <option>Van</option>
@@ -227,7 +227,7 @@ const DriverDashboard = () => {
               <textarea 
                 value={settings.address}
                 onChange={(e) => setSettings({...settings, address: e.target.value})}
-                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 rows={2}
               />
             </div>
@@ -239,7 +239,7 @@ const DriverDashboard = () => {
                   type="text" 
                   value={settings.vehicleNumber}
                   onChange={(e) => setSettings({...settings, vehicleNumber: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
 
@@ -249,7 +249,7 @@ const DriverDashboard = () => {
                   type="text" 
                   value={settings.licenseNumber}
                   onChange={(e) => setSettings({...settings, licenseNumber: e.target.value})}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
               </div>
             </div>
@@ -291,7 +291,7 @@ const DriverDashboard = () => {
                       type="checkbox" 
                       checked={settings[pref.key as keyof typeof settings] as boolean}
                       onChange={(e) => setSettings({...settings, [pref.key]: e.target.checked})}
-                      className="w-5 h-5 text-orange-600 rounded focus:ring-orange-500"
+                      className="w-5 h-5 text-cyan-600 rounded focus:ring-cyan-500"
                     />
                   </label>
                 ))}
@@ -303,7 +303,7 @@ const DriverDashboard = () => {
             <button onClick={onClose} className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50">
               Cancel
             </button>
-            <button onClick={() => { setDriverProfile(settings); handleSaveSettings(); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-orange-600 hover:to-yellow-600 flex items-center justify-center space-x-2">
+            <button onClick={() => { setDriverProfile(settings); handleSaveSettings(); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-500 text-white rounded-xl font-semibold hover:from-cyan-600 hover:to-cyan-600 flex items-center justify-center space-x-2">
               <Save size={20} />
               <span>Save Settings</span>
             </button>
@@ -316,10 +316,10 @@ const DriverDashboard = () => {
   const Overview = () => (
     <div className="space-y-4 sm:space-y-6">
       {/* Connection Status Banner */}
-      <div className={`p-3 sm:p-4 rounded-lg ${offlineMode ? 'bg-yellow-50 border border-yellow-200' : 'bg-cyan-50 border border-cyan-200'}`}>
+      <div className={`p-3 sm:p-4 rounded-lg ${offlineMode ? 'bg-cyan-50 border border-cyan-200' : 'bg-cyan-50 border border-cyan-200'}`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
-            {offlineMode ? <WifiOff className="text-yellow-600" size={24} /> : <Wifi className="text-cyan-600" size={24} />}
+            {offlineMode ? <WifiOff className="text-cyan-600" size={24} /> : <Wifi className="text-cyan-600" size={24} />}
             <div>
               <p className="font-medium">{offlineMode ? 'Offline Mode' : 'Online & Connected'}</p>
               <p className="text-sm">{offlineMode ? '3 pending syncs' : 'All systems operational'}</p>
@@ -327,7 +327,7 @@ const DriverDashboard = () => {
           </div>
           <button 
             onClick={() => setOfflineMode(!offlineMode)}
-            className={`px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto ${offlineMode ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-gray-800'}`}
+            className={`px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base w-full sm:w-auto ${offlineMode ? 'bg-cyan-600 text-white' : 'bg-gray-200 text-gray-800'}`}
           >
             {offlineMode ? 'Go Online' : 'Go Offline'}
           </button>
@@ -356,7 +356,7 @@ const DriverDashboard = () => {
         <StatCard 
           title="Performance"
           value={currentRoute.performanceRating}
-          icon={<Star className="text-yellow-500" size={24} />}
+          icon={<Star className="text-cyan-500" size={24} />}
           change="+0.2 this week"
         />
       </div>
@@ -441,7 +441,7 @@ const DriverDashboard = () => {
               { key: 'rating', label: 'Rating', render: (value) => (
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} className={i < value ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} />
+                    <Star key={i} size={14} className={i < value ? 'text-cyan-400 fill-cyan-400' : 'text-gray-300'} />
                   ))}
                 </div>
               )}
@@ -457,16 +457,16 @@ const DriverDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">My Routes</h2>
-        <button onClick={handleExportSchedule} className="px-4 py-2 bg-orange-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={handleExportSchedule} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Active Routes" value="1" icon={<Navigation className="text-orange-500" size={24} />} change="" />
+        <StatCard title="Active Routes" value="1" icon={<Navigation className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Completed Today" value={currentRoute.stopsCompleted} icon={<CheckCircle className="text-green-500" size={24} />} change="" />
-        <StatCard title="Pending" value={currentRoute.totalStops - currentRoute.stopsCompleted} icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="Pending" value={currentRoute.totalStops - currentRoute.stopsCompleted} icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Distance" value="30km" icon={<Navigation className="text-cyan-500" size={24} />} change="" />
       </div>
 
@@ -508,7 +508,7 @@ const DriverDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Earnings Dashboard</h2>
-        <button onClick={handleExportEarnings} className="px-4 py-2 bg-orange-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={handleExportEarnings} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export Report</span>
         </button>
@@ -525,7 +525,7 @@ const DriverDashboard = () => {
         <h3 className="text-lg font-bold mb-4">Earnings Breakdown</h3>
         <div className="space-y-4">
           {[
-            { category: 'Collections', amount: 450000, percentage: 69, color: 'bg-orange-500' },
+            { category: 'Collections', amount: 450000, percentage: 69, color: 'bg-cyan-500' },
             { category: 'Bonuses', amount: 120000, percentage: 18, color: 'bg-cyan-500' },
             { category: 'Tips', amount: 80000, percentage: 13, color: 'bg-cyan-500' },
           ].map((item) => (
@@ -552,7 +552,7 @@ const DriverDashboard = () => {
           { key: 'rating', label: 'Rating', render: (value) => (
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={14} className={i < value ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} />
+                <Star key={i} size={14} className={i < value ? 'text-cyan-400 fill-cyan-400' : 'text-gray-300'} />
               ))}
             </div>
           )}
@@ -566,7 +566,7 @@ const DriverDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Today's Schedule</h2>
-        <button onClick={handleExportSchedule} className="px-4 py-2 bg-orange-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={handleExportSchedule} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
@@ -595,7 +595,7 @@ const DriverDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Collections</h2>
-        <button onClick={handleExportCollections} className="px-4 py-2 bg-orange-600 text-white rounded-lg flex items-center space-x-2">
+        <button onClick={handleExportCollections} className="px-4 py-2 bg-cyan-600 text-white rounded-lg flex items-center space-x-2">
           <Download size={16} />
           <span>Export</span>
         </button>
@@ -611,7 +611,7 @@ const DriverDashboard = () => {
           { key: 'rating', label: 'Rating', render: (value) => (
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={14} className={i < value ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} />
+                <Star key={i} size={14} className={i < value ? 'text-cyan-400 fill-cyan-400' : 'text-gray-300'} />
               ))}
             </div>
           )}
@@ -643,7 +643,7 @@ const DriverDashboard = () => {
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Status</span>
-              <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+              <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-green-100 text-green-800' : 'bg-cyan-100 text-cyan-800'}`}>
                 {driverProfile.verified ? 'Verified' : 'Pending'}
               </span>
             </div>
@@ -684,7 +684,7 @@ const DriverDashboard = () => {
         </div>
 
         <div className="mt-6 flex items-center gap-3">
-          {offlineMode ? <WifiOff className="text-orange-600" size={20} /> : <Wifi className="text-green-600" size={20} />}
+          {offlineMode ? <WifiOff className="text-cyan-600" size={20} /> : <Wifi className="text-green-600" size={20} />}
           <span className="text-sm text-gray-700">
             {offlineMode ? 'Currently offline - syncing paused' : 'Online - sync active'}
           </span>
@@ -699,7 +699,7 @@ const DriverDashboard = () => {
         <h2 className="text-2xl font-bold">Driver Profile</h2>
         <button 
           onClick={() => setShowSettingsModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+          className="flex items-center space-x-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
         >
           <Settings size={20} />
           <span>Edit Settings</span>
@@ -735,7 +735,7 @@ const DriverDashboard = () => {
               <span className="text-gray-600">Performance Rating</span>
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className={i < Math.floor(currentRoute.performanceRating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} />
+                  <Star key={i} size={16} className={i < Math.floor(currentRoute.performanceRating) ? 'text-cyan-400 fill-cyan-400' : 'text-gray-300'} />
                 ))}
                 <span className="ml-2 font-semibold">{currentRoute.performanceRating}</span>
               </div>
@@ -761,7 +761,7 @@ const DriverDashboard = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Verification Status</span>
-                <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                <span className={`px-2 py-1 rounded text-xs font-semibold ${driverProfile.verified ? 'bg-green-100 text-green-800' : 'bg-cyan-100 text-cyan-800'}`}>
                   {driverProfile.verified ? 'Verified' : 'Pending'}
                 </span>
               </div>
@@ -772,7 +772,7 @@ const DriverDashboard = () => {
             <h3 className="text-lg font-bold mb-4">Preferred Work Areas</h3>
             <div className="flex flex-wrap gap-2">
               {driverProfile.preferredAreas.map((area, idx) => (
-                <span key={idx} className="px-3 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-semibold">
+                <span key={idx} className="px-3 py-2 bg-cyan-100 text-cyan-800 rounded-full text-sm font-semibold">
                   {area}
                 </span>
               ))}

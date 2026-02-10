@@ -38,6 +38,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
         { path: '/dashboard/business/schedule', label: 'Schedule & Pickups', icon: <Calendar size={20} /> },
         { path: '/dashboard/business/greenscore', label: 'Green Score', icon: <BarChart3 size={20} /> },
         { path: '/dashboard/business/reports', label: 'Reports', icon: <FileText size={20} /> },
+        { path: '/dashboard/business/settings', label: 'Settings', icon: <Settings size={20} /> },
       ]
     },
     recycler: {
@@ -49,6 +50,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
         { path: '/dashboard/recycler/financial', label: 'Financial', icon: <DollarSign size={20} /> },
         { path: '/dashboard/recycler/suppliers', label: 'Supplier Network', icon: <Users size={20} /> },
         { path: '/dashboard/recycler/analytics', label: 'Analytics', icon: <BarChart3 size={20} /> },
+        { path: '/dashboard/recycler/settings', label: 'Settings', icon: <Settings size={20} /> },
       ]
     },
     driver: {
@@ -59,6 +61,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
         { path: '/dashboard/driver/earnings', label: 'Earnings', icon: <DollarSign size={20} /> },
         { path: '/dashboard/driver/vehicle', label: 'Vehicle & Equipment', icon: <Truck size={20} /> },
         { path: '/dashboard/driver/offline', label: 'Offline Mode', icon: <Settings size={20} /> },
+        { path: '/dashboard/driver/settings', label: 'Settings', icon: <Settings size={20} /> },
       ]
     },
     individual: {

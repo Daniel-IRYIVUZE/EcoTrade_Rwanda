@@ -144,7 +144,7 @@ const BusinessDashboard = () => {
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4 sm:p-6" onClick={onClose}>
         <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 max-w-3xl w-full shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
@@ -294,7 +294,7 @@ const BusinessDashboard = () => {
               <h3 className="text-3xl font-bold text-green-600">{listing.material}</h3>
               <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 listing.status === 'active' ? 'bg-green-100 text-green-800' :
-                listing.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                listing.status === 'pending' ? 'bg-cyan-100 text-cyan-800' :
                 listing.status === 'sold' ? 'bg-cyan-100 text-cyan-800' :
                 'bg-gray-100 text-gray-800'
               }`}>
@@ -366,7 +366,7 @@ const BusinessDashboard = () => {
         <StatCard 
           title="Pending Pickups"
           value={stats.pendingPickups}
-          icon={<Clock className="text-yellow-500" size={24} />}
+          icon={<Clock className="text-cyan-500" size={24} />}
           change="3 scheduled"
         />
         <StatCard 
@@ -393,7 +393,7 @@ const BusinessDashboard = () => {
                 { key: 'status', label: 'Status', render: (value) => (
                   <span className={`px-2 py-1 rounded text-xs ${
                     value === 'active' ? 'bg-green-100 text-green-800' :
-                    value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                    value === 'pending' ? 'bg-cyan-100 text-cyan-800' :
                     value === 'sold' ? 'bg-cyan-100 text-cyan-800' :
                     'bg-gray-100 text-gray-800'
                   }`}>{value}</span>
@@ -452,7 +452,7 @@ const BusinessDashboard = () => {
               { key: 'status', label: 'Status', render: (value) => (
                 <span className={`px-2 py-1 rounded text-xs ${
                   value === 'completed' ? 'bg-green-100 text-green-800' :
-                  'bg-yellow-100 text-yellow-800'
+                  'bg-cyan-100 text-cyan-800'
                 }`}>{value}</span>
               )}
             ]}
@@ -496,7 +496,7 @@ const BusinessDashboard = () => {
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'active' ? 'bg-green-100 text-green-800' :
-              value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+              value === 'pending' ? 'bg-cyan-100 text-cyan-800' :
               value === 'sold' ? 'bg-cyan-100 text-cyan-800' :
               'bg-gray-100 text-gray-800'
             }`}>{value}</span>
@@ -529,7 +529,7 @@ const BusinessDashboard = () => {
         <StatCard title="Total Revenue" value="RWF 450K" icon={<DollarSign className="text-green-500" size={24} />} change="+15%" />
         <StatCard title="This Month" value="RWF 90K" icon={<Calendar className="text-cyan-500" size={24} />} change="+8%" />
         <StatCard title="Completed" value="42" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
-        <StatCard title="Pending" value="3" icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="Pending" value="3" icon={<Clock className="text-cyan-500" size={24} />} change="" />
       </div>
 
       <DataTable
@@ -543,7 +543,7 @@ const BusinessDashboard = () => {
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'completed' ? 'bg-green-100 text-green-800' :
-              'bg-yellow-100 text-yellow-800'
+              'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
         ]}
@@ -593,7 +593,7 @@ const BusinessDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Active Listings" value={stats.activeListings} icon={<Package className="text-green-500" size={24} />} change="" />
-        <StatCard title="Pending Orders" value="6" icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="Pending Orders" value="6" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Avg. Price" value="RWF 28K" icon={<DollarSign className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Views" value="1.2K" icon={<Eye className="text-cyan-500" size={24} />} change="" />
       </div>
@@ -606,7 +606,7 @@ const BusinessDashboard = () => {
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'active' ? 'bg-green-100 text-green-800' :
-              value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+              value === 'pending' ? 'bg-cyan-100 text-cyan-800' :
               'bg-gray-100 text-gray-800'
             }`}>{value}</span>
           )},
@@ -629,7 +629,7 @@ const BusinessDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Revenue" value={`RWF ${stats.totalRevenue.toLocaleString()}`} icon={<DollarSign className="text-green-500" size={24} />} change="+15%" />
-        <StatCard title="Pending Payouts" value="RWF 60K" icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="Pending Payouts" value="RWF 60K" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Completed" value="42" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Avg. Order" value="RWF 22K" icon={<TrendingUp className="text-cyan-500" size={24} />} change="" />
       </div>
@@ -644,7 +644,7 @@ const BusinessDashboard = () => {
           { key: 'status', label: 'Status', render: (value) => (
             <span className={`px-2 py-1 rounded text-xs ${
               value === 'completed' ? 'bg-green-100 text-green-800' :
-              'bg-yellow-100 text-yellow-800'
+              'bg-cyan-100 text-cyan-800'
             }`}>{value}</span>
           )}
         ]}
@@ -662,7 +662,7 @@ const BusinessDashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Scheduled" value="3" icon={<Calendar className="text-green-500" size={24} />} change="" />
-        <StatCard title="In Progress" value="1" icon={<Clock className="text-yellow-500" size={24} />} change="" />
+        <StatCard title="In Progress" value="1" icon={<Clock className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Completed" value="18" icon={<CheckCircle className="text-cyan-500" size={24} />} change="" />
         <StatCard title="Cancelled" value="0" icon={<AlertCircle className="text-red-500" size={24} />} change="" />
       </div>
@@ -681,7 +681,7 @@ const BusinessDashboard = () => {
                 <p className="text-sm text-gray-600">{pickup.date} • {pickup.time}</p>
               </div>
               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                pickup.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
+                pickup.status === 'in-progress' ? 'bg-cyan-100 text-cyan-800' :
                 'bg-green-100 text-green-800'
               }`}>{pickup.status}</span>
             </div>
@@ -792,7 +792,7 @@ const BusinessDashboard = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <span className="text-sm font-medium">Verified Account</span>
-              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm ${businessProfile.verified ? 'bg-green-100 text-green-800' : 'bg-cyan-100 text-cyan-800'}`}>
                 {businessProfile.verified ? 'Verified' : 'Pending'}
               </span>
             </div>
