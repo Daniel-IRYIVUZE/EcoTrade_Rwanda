@@ -27,17 +27,17 @@ npm run preview
 
 - Development: http://localhost:5173
 - Production: https://ecotrade-rwanda.netlify.app
-- Demo Video: https://youtu.be/
+- Demo Video: link
 
 ## Demo Login Credentials
 
 | Role | Email | Password | Dashboard |
 |------|-------|----------|-----------|
-| Admin | admin@EcoTrade.com | admin123 | /dashboard/admin |
-| Business | business@EcoTrade.com | business123 | /dashboard/business |
-| Recycler | recycler@EcoTrade.com | recycler123 | /dashboard/recycler |
-| Driver | driver@EcoTrade.com | driver123 | /dashboard/driver |
-| Individual | user@EcoTrade.com | user123 | /dashboard/individual |
+| Admin | admin@demo.com | admin123 | /dashboard/admin |
+| Business | business@demo.com | business123 | /dashboard/business |
+| Recycler | recycler@demo.com | recycler123 | /dashboard/recycler |
+| Driver | driver@demo.com | driver123 | /dashboard/driver |
+| Individual | user@demo.com | user123 | /dashboard/individual |
 
 ## Platform Screenshots
 
@@ -90,7 +90,6 @@ web-frontend/
 │   ├── images/
 │   │   └── EcoTrade.png
 │   ├── manifest.json
-│   ├── robots.txt
 │   └── favicon.ico
 ├── src/
 │   ├── assets/
@@ -252,6 +251,6 @@ MIT License - see LICENSE file
 
 ## Support
 
-- Email: support@EcoTrade.rw
+- Email: danieliryivuze4@gmail.com
 - Website: https://ecotrade-rwanda.netlify.app
-- Demo Video: https://youtu.be/
+- Demo Video: link
