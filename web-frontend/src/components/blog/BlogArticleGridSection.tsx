@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Clock, BookOpen, Star, ThumbsUp, BookmarkCheck, Bookmark, ChevronRight } from 'lucide-react';
+import { Clock, BookOpen, Star, ThumbsUp, BookmarkCheck, Bookmark} from 'lucide-react';
 
 interface Article {
   id: number;

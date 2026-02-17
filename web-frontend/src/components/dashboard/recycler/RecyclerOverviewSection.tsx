@@ -1,6 +1,5 @@
-import { Package, DollarSign, TrendingUp, ShoppingCart, Leaf, CheckCircle, Clock } from 'lucide-react';
+import { Package, DollarSign, ShoppingCart, Leaf, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 
 const RecyclerOverviewSection = () => {
   const [stats] = useState({

@@ -1,4 +1,4 @@
-import { ArrowRight, Recycle, Mail } from 'lucide-react';
+import { ArrowRight, Recycle} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
