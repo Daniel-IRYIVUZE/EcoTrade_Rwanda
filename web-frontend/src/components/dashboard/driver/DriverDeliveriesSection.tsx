@@ -4,14 +4,14 @@ import { motion } from 'framer-motion';
 
 const RecyclerPurchasesSection = () => {
   const [purchases] = useState([
-    { id: 1, date: '2024-02-09', seller: 'Kigali Hotel', material: 'UCO', quantity: '45kg', amount: 22500, status: 'completed', driver: 'John Driver' },
-    { id: 2, date: '2024-02-08', seller: 'City Restaurant', material: 'Glass', quantity: '180kg', amount: 27000, status: 'in-transit', driver: 'Mary Driver' },
-    { id: 3, date: '2024-02-07', seller: 'Hilltop Hotel', material: 'Paper', quantity: '75kg', amount: 11250, status: 'scheduled', driver: 'John Driver' },
+    { id: 1, date: '2026-02-19', seller: 'Park Inn by Radisson', material: 'UCO', quantity: '100L', amount: 13000, status: 'completed', driver: 'Emmanuel Mugisha' },
+    { id: 2, date: '2026-02-23', seller: 'Mille Collines Hotel', material: 'UCO', quantity: '150L', amount: 22500, status: 'completed', driver: 'Jean Pierre Habimana' },
+    { id: 3, date: '2026-02-25', seller: 'Serena Hotel Kigali', material: 'Glass', quantity: '150kg', amount: 11500, status: 'in-transit', driver: 'Jean Pierre Habimana' },
   ]);
 
   const getStatusIcon = (status: string) => {
     switch(status) {
-      case 'completed': return <CheckCircle size={16} className="text-green-600" />;
+      case 'completed': return <CheckCircle size={16} className="text-cyan-600" />;
       case 'in-transit': return <Truck size={16} className="text-blue-600" />;
       case 'scheduled': return <Clock size={16} className="text-amber-600" />;
       default: return null;
@@ -20,7 +20,7 @@ const RecyclerPurchasesSection = () => {
 
   const getStatusBadge = (status: string) => {
     switch(status) {
-      case 'completed': return 'bg-green-100 text-green-700';
+      case 'completed': return 'bg-cyan-100 text-cyan-700';
       case 'in-transit': return 'bg-blue-100 text-blue-700';
       case 'scheduled': return 'bg-amber-100 text-amber-700';
       default: return 'bg-gray-100 text-gray-700';

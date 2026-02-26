@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 const RecyclerOverviewSection = () => {
   const [stats] = useState({
-    totalPurchases: 156,
-    activeBids: 8,
-    totalSpent: 2500000,
-    materialsProcessed: 15000,
-    savedAmount: 450000
+    totalPurchases: 2,
+    activeBids: 3,
+    totalSpent: 49500,
+    materialsProcessed: 375,
+    savedAmount: 15000
   });
 
   return (
@@ -24,7 +24,7 @@ const RecyclerOverviewSection = () => {
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-600 text-sm font-medium">Active Bids</span>
-          <CheckCircle size={20} className="text-green-600" />
+          <CheckCircle size={20} className="text-cyan-600" />
         </div>
         <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.activeBids}</div>
         <p className="text-xs text-gray-500 mt-1">Current negotiations</p>
@@ -33,7 +33,7 @@ const RecyclerOverviewSection = () => {
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-600 text-sm font-medium">Total Spent</span>
-          <DollarSign size={20} className="text-green-600" />
+          <DollarSign size={20} className="text-cyan-600" />
         </div>
         <div className="text-2xl sm:text-3xl font-bold text-gray-900">Rwf {(stats.totalSpent / 1000000).toFixed(1)}M</div>
         <p className="text-xs text-gray-500 mt-1">Lifetime investment</p>
@@ -51,7 +51,7 @@ const RecyclerOverviewSection = () => {
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-600 text-sm font-medium">Cost Savings</span>
-          <Leaf size={20} className="text-green-600" />
+          <Leaf size={20} className="text-cyan-600" />
         </div>
         <div className="text-2xl sm:text-3xl font-bold text-gray-900">Rwf {(stats.savedAmount / 1000).toFixed(0)}K</div>
         <p className="text-xs text-gray-500 mt-1">Route optimization</p>

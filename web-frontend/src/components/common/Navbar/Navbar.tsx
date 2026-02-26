@@ -129,9 +129,12 @@ const Navbar = () => {
               <>
                 <div className="h-6 w-px bg-gray-200"></div>
                 <Link to="/login" className="hover:text-cyan-600 transition-colors">Login</Link>
-                <Link to="/register" className="bg-cyan-600 text-white px-6 py-2.5 rounded-full hover:bg-cyan-700 transition-all shadow-sm hover:shadow-md">
+                <button 
+                  onClick={() => navigate('/login')}
+                  className="bg-cyan-600 text-white px-6 py-2.5 rounded-full hover:bg-cyan-700 transition-all shadow-sm hover:shadow-md"
+                >
                   Join Platform
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -197,19 +200,18 @@ const Navbar = () => {
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/register" 
-                  onClick={() => setIsOpen(false)}
-                  className="block bg-cyan-600 text-white text-center py-3 rounded-lg hover:bg-cyan-700 transition-colors"
+                <button 
+                onClick={() => navigate('/login')}
+                  className="w-full block bg-cyan-600 text-white text-center py-3 rounded-lg hover:bg-cyan-700 transition-colors"
                 >
                   Join Platform
-                </Link>
+                </button>
               </div>
             </>
           )}
         </div>
       )}
-    </nav>
+  </nav>
   );
 };
 

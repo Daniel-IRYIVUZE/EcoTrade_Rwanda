@@ -1,28 +1,42 @@
+// App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { seedDataIfEmpty } from './utils/dataStore';
+
+// Seed initial data on app load
+seedDataIfEmpty();
 
 // Import Layout Components
 import Sidebar from './components/layout/Sidebar';
 import TopNav from './components/layout/TopNav';
 
-// Public Pages (keep your existing imports)
+// Public Pages
 import HomePage from './pages/Home/HomePage';
 import AboutPage from './pages/About/AboutPage';
 import ServicesPage from './pages/Services/ServicesPage';
-import LoginPage from './pages/Login/LoginPage';
-import RegisterPage from './pages/Register/RegisterPage';
-import ForgotPassword from './pages/Login/ForgotPassword';
 import BlogPage from './pages/Blog/BlogPage';
 import ContactPage from './pages/Contact/ContactPage';
 import MarketplacePage from './pages/Marketplace/MarketplacePage';
+import LoginPage from './pages/Login/LoginPage';
 import TermsPrivacyPage from './pages/TermsPrivacy/TermsPrivacy';
+import NotFoundPage from './pages/NotFound/NotFoundPage';
 
-// Dashboard Pages (update these imports to match your folder structure)
-import RecyclerDashboard from './pages/Dashboard/RecyclerDashboard'; // Updated import
-import DriverDashboard from './pages/Dashboard/DriverPage'; // Updated import
-import IndividualDashboard from './pages/Dashboard/UserDashboard'; // Updated import
-import BusinessDashboard from './pages/Dashboard/BusinessDashboard'; // Updated import
-import AdminDashboard from './pages/Dashboard/AdminDashboard'; // Updated import
+// Dashboard Pages
+import AdminDashboard from './pages/Dashboard/AdminDashboard';
+import BusinessDashboard from './pages/Dashboard/BusinessDashboard';
+import RecyclerDashboard from './pages/Dashboard/RecyclerDashboard';
+import DriverPage from './pages/Dashboard/DriverPage';
+import UserDashboard from './pages/Dashboard/UserDashboard';
+
+// Loading Component
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-cyan-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-gray-600">Loading...</p>
+    </div>
+  </div>
+);
 
 // Protected Route Component
 type ProtectedRouteProps = {
@@ -33,10 +47,14 @@ type ProtectedRouteProps = {
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
   
-  if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (loading) return <LoadingSpinner />;
+  
+  if (!user) {
+    return <Navigate to="/login" state={{ from: window.location.pathname }} replace />;
+  }
+  
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" />;
+    return <Navigate to={`/dashboard/${user.role}`} replace />;
   }
   
   return <>{children}</>;
@@ -46,12 +64,14 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
 const DashboardLayout = () => {
   const { user } = useAuth();
   
+  if (!user) return <Navigate to="/login" replace />;
+  
   return (
     <div className="flex h-screen bg-gray-50">
-      <Sidebar userRole={user?.role as 'admin' | 'business' | 'recycler' | 'driver' | 'individual'} />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {user && <TopNav user={user} />}
-        <main className="flex-1 overflow-y-auto p-6">
+      <Sidebar userRole={user.role} />
+      <div className="flex-1 flex flex-col overflow-hidden w-full">
+        <TopNav user={user} />
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6 bg-gray-50">
           <Outlet />
         </main>
       </div>
@@ -59,82 +79,101 @@ const DashboardLayout = () => {
   );
 };
 
+// Role-based dashboard redirect
+const DashboardRedirect = () => {
+  const { user } = useAuth();
+  
+  if (!user) return <Navigate to="/login" replace />;
+  
+  switch (user.role) {
+    case 'admin':
+      return <Navigate to="/dashboard/admin" replace />;
+    case 'business':
+      return <Navigate to="/dashboard/business" replace />;
+    case 'recycler':
+      return <Navigate to="/dashboard/recycler" replace />;
+    case 'driver':
+      return <Navigate to="/dashboard/driver" replace />;
+    case 'individual':
+      return <Navigate to="/dashboard/individual" replace />;
+    default:
+      return <Navigate to="/" replace />;
+  }
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-stone-50 flex flex-col font-sans antialiased">
-        <main className="flex-grow">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/marketplace" element={<MarketplacePage />} />
-              <Route path="/terms-privacy" element={<TermsPrivacyPage />} />
+        <div className="min-h-screen bg-gray-50 font-sans antialiased">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/marketplace" element={<MarketplacePage />} />
+            <Route path="/terms-privacy" element={<TermsPrivacyPage />} />
+            
+            {/* Authentication Routes */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<Navigate to="/login" replace />} />
+            
+            {/* Dashboard Root - Redirects to role-specific dashboard */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<DashboardRedirect />} />
               
-              {/* Authentication Routes */}
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              
-              {/* Protected Dashboard Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <DashboardLayout />
+              {/* Admin Dashboard */}
+              <Route path="admin/*" element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
                 </ProtectedRoute>
-              }>
-                <Route index element={<Navigate to="overview" />} />
-                
-                {/* Admin Dashboard Routes */}
-                <Route path="admin/*" element={
-                  <ProtectedRoute allowedRoles={['admin']}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Business/HORECA Dashboard Routes */}
-                <Route path="business/*" element={
-                  <ProtectedRoute allowedRoles={['business']}>
-                    <BusinessDashboard />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Recycler Dashboard Routes */}
-                <Route path="recycler/*" element={
-                  <ProtectedRoute allowedRoles={['recycler']}>
-                    <RecyclerDashboard />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Driver Dashboard Routes */}
-                <Route path="driver/*" element={
-                  <ProtectedRoute allowedRoles={['driver']}>
-                    <DriverDashboard />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Individual Dashboard Routes */}
-                <Route path="individual/*" element={
-                  <ProtectedRoute allowedRoles={['individual']}>
-                    <IndividualDashboard />
-                  </ProtectedRoute>
-                } />
-              </Route>
+              } />
               
-              {/* Redirect old dashboard routes to new structure */}
-              <Route path="/admin" element={<Navigate to="/dashboard/admin" />} />
-              <Route path="/business" element={<Navigate to="/dashboard/business" />} />
-              <Route path="/recycler" element={<Navigate to="/dashboard/recycler" />} />
-              <Route path="/driver" element={<Navigate to="/dashboard/driver" />} />
-              <Route path="/user" element={<Navigate to="/dashboard/individual" />} />
+              {/* Business/Hotel Dashboard */}
+              <Route path="business/*" element={
+                <ProtectedRoute allowedRoles={['business']}>
+                  <BusinessDashboard />
+                </ProtectedRoute>
+              } />
               
-              {/* Fallback Route */}
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </main>
+              {/* Recycler Dashboard */}
+              <Route path="recycler/*" element={
+                <ProtectedRoute allowedRoles={['recycler']}>
+                  <RecyclerDashboard />
+                </ProtectedRoute>
+              } />
+              
+              {/* Driver Dashboard */}
+              <Route path="driver/*" element={
+                <ProtectedRoute allowedRoles={['driver']}>
+                  <DriverPage />
+                </ProtectedRoute>
+              } />
+              
+              {/* Individual/User Dashboard */}
+              <Route path="individual/*" element={
+                <ProtectedRoute allowedRoles={['individual']}>
+                  <UserDashboard />
+                </ProtectedRoute>
+              } />
+            </Route>
+            
+            {/* Legacy redirect paths */}
+            <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
+            <Route path="/business" element={<Navigate to="/dashboard/business" replace />} />
+            <Route path="/recycler" element={<Navigate to="/dashboard/recycler" replace />} />
+            <Route path="/driver" element={<Navigate to="/dashboard/driver" replace />} />
+            <Route path="/individual" element={<Navigate to="/dashboard/individual" replace />} />
+            
+            {/* 404 Not Found */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </div>
       </Router>
     </AuthProvider>

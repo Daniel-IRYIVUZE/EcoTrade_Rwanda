@@ -32,9 +32,9 @@ const Footer = () => {
 
   const quickLinks = [
     { label: 'Marketplace', path: '/marketplace' },
-    { label: 'Privacy Policy', path: '/privacy-policy' },
-    { label: 'Terms of Service', path: '/terms-of-service' },
-    { label: 'FAQ', path: '/faq' },
+    { label: 'Privacy Policy', path: '/terms-privacy' },
+    { label: 'Terms of Service', path: '/terms-privacy' },
+    { label: 'FAQ', path: '/contact' },
     { label: 'Support', path: '/contact' },
   ];
 
@@ -119,7 +119,7 @@ const Footer = () => {
             <h4 className="text-white font-bold mb-6 text-lg">Market Updates</h4>
             <p className="text-xs mb-4 text-gray-300">Subscribe for market price updates on UCO and recyclables.</p>
             {subscribed ? (
-              <div className="bg-green-900/30 border border-green-700/50 text-green-200 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-cyan-900/30 border border-cyan-700/50 text-cyan-200 px-4 py-3 rounded-lg text-sm">
                 Thank you for subscribing!
               </div>
             ) : (
@@ -148,7 +148,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-xs text-gray-400 text-center md:text-left">
-              &copy; {new Date().getFullYear()} EcoTrade . All rights reserved.
+              &copy; {new Date().getFullYear()} EcoTrade. All rights reserved.
             </div>
             <div className="flex gap-6 text-xs text-gray-400">
               <Link to="/terms-privacy" className="hover:text-gray-200 transition-colors">

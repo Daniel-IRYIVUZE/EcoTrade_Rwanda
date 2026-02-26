@@ -9,13 +9,13 @@ type StatCardProps = {
   subtitle?: string;
   change?: string;
   progress?: number;
-  color?: 'green' | 'cyan' | 'red' | 'yellow' | 'purple' | 'orange' | 'gray';
+  color?: 'cyan' | 'blue' | 'red' | 'yellow' | 'purple' | 'orange' | 'gray';
 };
 
 const StatCard = ({ title, value, icon, subtitle, change, progress, color = 'gray' }: StatCardProps) => {
   const colorClasses = {
-    green: 'text-green-600',
     cyan: 'text-cyan-600',
+    blue: 'text-blue-600',
     red: 'text-red-600',
     yellow: 'text-yellow-600',
     purple: 'text-purple-600',
@@ -24,8 +24,8 @@ const StatCard = ({ title, value, icon, subtitle, change, progress, color = 'gra
   };
 
   const bgColorClasses = {
-    green: 'bg-green-100',
     cyan: 'bg-cyan-100',
+    blue: 'bg-blue-100',
     red: 'bg-red-100',
     yellow: 'bg-yellow-100',
     purple: 'bg-purple-100',
@@ -40,7 +40,7 @@ const StatCard = ({ title, value, icon, subtitle, change, progress, color = 'gra
           <span className={colorClasses[color]}>{icon}</span>
         </div>
         {change && (
-          <span className={`text-sm font-medium ${change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
+          <span className={`text-sm font-medium ${change.startsWith('+') ? 'text-cyan-600' : 'text-red-600'}`}>
             {change}
           </span>
         )}

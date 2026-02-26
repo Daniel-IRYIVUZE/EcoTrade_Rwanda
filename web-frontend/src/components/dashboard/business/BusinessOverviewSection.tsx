@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 const BusinessOverviewSection = () => {
   const [stats] = useState({
-    totalListings: 45,
-    activeListings: 12,
-    totalRevenue: 450000,
-    pendingPickups: 3,
-    wasteReduction: 2500
+    totalListings: 2,
+    activeListings: 1,
+    totalRevenue: 342000,
+    pendingPickups: 1,
+    wasteReduction: 380
   });
 
   return (
@@ -24,7 +24,7 @@ const BusinessOverviewSection = () => {
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-600 text-sm font-medium">Active Now</span>
-          <CheckCircle size={20} className="text-green-600" />
+          <CheckCircle size={20} className="text-cyan-600" />
         </div>
         <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.activeListings}</div>
         <p className="text-xs text-gray-500 mt-1">Available for pickup</p>
@@ -33,7 +33,7 @@ const BusinessOverviewSection = () => {
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-600 text-sm font-medium">Total Revenue</span>
-          <DollarSign size={20} className="text-green-600" />
+          <DollarSign size={20} className="text-cyan-600" />
         </div>
         <div className="text-2xl sm:text-3xl font-bold text-gray-900">Rwf {(stats.totalRevenue / 1000).toFixed(0)}K</div>
         <p className="text-xs text-gray-500 mt-1">Lifetime earnings</p>
@@ -51,7 +51,7 @@ const BusinessOverviewSection = () => {
       <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-600 text-sm font-medium">Waste Reduced</span>
-          <Leaf size={20} className="text-green-600" />
+          <Leaf size={20} className="text-cyan-600" />
         </div>
         <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.wasteReduction}kg</div>
         <p className="text-xs text-gray-500 mt-1">Diverted from landfill</p>

@@ -1,0 +1,61 @@
+import { useState, useEffect, useCallback } from 'react';
+import { getAll, downloadCSV } from '../../../utils/dataStore';
+import type { Collection } from '../../../utils/dataStore';
+import { CheckCircle, Package, Star, DollarSign, Download } from 'lucide-react';
+import StatCard from '../StatCard';
+import DataTable from '../DataTable';
+import { completedJobs } from './_shared';
+
+export default function DriverCompletedJobs() {
+  const [completedCols, setCompletedCols] = useState<Collection[]>([]);
+  const load = useCallback(() => setCompletedCols(getAll<Collection>('collections').filter(c => c.status === 'completed')), []);
+  useEffect(() => { load(); window.addEventListener('ecotrade_data_change', load); return () => window.removeEventListener('ecotrade_data_change', load); }, [load]);
+
+  const tableData = completedCols.length > 0
+    ? completedCols.map(c => ({
+        id: c.id, date: c.completedAt?.split('T')[0] ?? c.scheduledDate,
+        route: c.location.split(',')[0] ?? 'Kigali', stops: 1,
+        totalWeight: `${c.actualWeight ?? c.volume} kg`,
+        duration: '2h', earnings: `RWF ${c.earnings.toLocaleString()}`,
+        rating: c.rating ?? 4.8, issues: c.notes || 'None',
+      }))
+    : completedJobs;
+
+  const totalEarnings = completedCols.length > 0 ? completedCols.reduce((s, c) => s + c.earnings, 0) : 333000;
+  const totalWeight = completedCols.length > 0 ? (completedCols.reduce((s, c) => s + (c.actualWeight ?? c.volume), 0) / 1000).toFixed(1) + 't' : '10.1t';
+  const avgRating = completedCols.length > 0 ? (completedCols.reduce((s, c) => s + (c.rating ?? 4.8), 0) / completedCols.length).toFixed(1) : '4.8';
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">Completed Jobs</h1>
+        <button onClick={() => downloadCSV('completed_jobs', ['ID','Date','Route','Weight','Earnings','Rating'],
+          tableData.map(r => [r.id, r.date, r.route, r.totalWeight, r.earnings, String(r.rating)]))}
+          className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm hover:bg-gray-50"><Download size={16} /> Export</button>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <StatCard title="Total Jobs" value={tableData.length} icon={<CheckCircle size={22} />} color="cyan" />
+        <StatCard title="Total Weight" value={totalWeight} icon={<Package size={22} />} color="blue" />
+        <StatCard title="Avg Rating" value={avgRating} icon={<Star size={22} />} color="yellow" />
+        <StatCard title="Total Earned" value={`RWF ${(totalEarnings / 1000).toFixed(0)}K`} icon={<DollarSign size={22} />} color="purple" />
+      </div>
+      <div className="bg-white rounded-lg shadow border p-4">
+        <DataTable
+          columns={[
+            { key: 'id', label: 'Job', render: (v: string) => <span className="font-mono text-sm">{v}</span> },
+            { key: 'date', label: 'Date' },
+            { key: 'route', label: 'Route' },
+            { key: 'stops', label: 'Stops' },
+            { key: 'totalWeight', label: 'Weight' },
+            { key: 'duration', label: 'Duration' },
+            { key: 'earnings', label: 'Earnings', render: (v: string) => <span className="font-semibold text-green-600">{v}</span> },
+            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-600 font-semibold">⭐ {v}</span> },
+            { key: 'issues', label: 'Issues', render: (v: string) => !v || v === 'None' ? <span className="text-green-600 text-xs">✓ Clean</span> : <span className="text-yellow-600 text-xs">{v}</span> },
+          ]}
+          data={tableData}
+          pageSize={6}
+        />
+      </div>
+    </div>
+  );
+}

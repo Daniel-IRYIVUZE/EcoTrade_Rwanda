@@ -1,142 +1,84 @@
-import { ArrowRight, CheckCircle, Shield, MapPin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+// components/home/HeroSection.tsx
+import { ArrowRight, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
-  const navigate = useNavigate();
-
-  const handleJoinAsBusiness = () => {
-    navigate('/register?type=business');
-  };
-
-  const handleJoinAsRecycler = () => {
-    navigate('/register?type=recycler');
-  };
-
-  const handleViewMarketplace = () => {
-    navigate('/marketplace');
-  };
-
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img 
-          src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1920" 
-          alt="Kigali Circular Economy Background" 
-          className="w-full h-full object-cover"
+    <section className="relative bg-gradient-to-br from-cyan-900 via-cyan-700 to-teal-600 text-white overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=1920&q=80)',
+            filter: 'brightness(0.3)'
+          }}
         />
-        <div className="absolute inset-0 bg-black/60"></div>
+      </div>
+      
+      {/* Animated background elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-300 rounded-full mix-blend-overlay filter blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="lg:w-11/12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="grid lg:grid-cols-2 gap-12 items-center"
-        >
-          <div className="text-white">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-            </motion.div>
-            
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
-            >
-              EcoTrade{' '}
-              <span className="text-cyan-300">Rwanda</span>
-            </motion.h1>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-lg text-gray-200 mb-8 max-w-lg"
-            >
-              Connect with verified recyclers, optimize waste collection, and transform your 
-              hospitality waste into sustainable revenue through our smart B2B platform.
-            </motion.p>
-            
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-wrap gap-4"
-            >
-              <button
-                onClick={handleJoinAsBusiness}
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-bold flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
-              >
-                Join as Business <ArrowRight size={20} />
-              </button>
-              <button
-                onClick={handleJoinAsRecycler}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-bold flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
-              >
-                Join as Recycler <ArrowRight size={20} />
-              </button>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-              className="mt-8 flex flex-wrap gap-4"
-            >
-              <div className="flex items-center gap-2">
-                <CheckCircle size={16} className="text-green-400" />
-                <span className="text-sm text-gray-300">Verified Recyclers</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield size={16} className="text-cyan-400" />
-                <span className="text-sm text-gray-300">Secure Payments</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin size={16} className="text-red-400" />
-                <span className="text-sm text-gray-300">Kigali Wide</span>
-              </div>
-            </motion.div>
-          </div>
-          
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="hidden lg:block"
-          >
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-              <h3 className="text-xl font-bold text-white mb-4">Start Earning Today</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-white">
-                  <span>Used Cooking Oil</span>
-                  <span className="font-bold">Rwf 800-1,200/L</span>
-                </div>
-                <div className="flex items-center justify-between text-white">
-                  <span>Glass Bottles</span>
-                  <span className="font-bold">Rwf 150-300/kg</span>
-                </div>
-                <div className="flex items-center justify-between text-white">
-                  <span>Paper & Cardboard</span>
-                  <span className="font-bold">Rwf 50-150/kg</span>
-                </div>
-              </div>
-              <button
-                onClick={handleViewMarketplace}
-                className="w-full mt-6 bg-white text-cyan-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-bold transition-all"
-              >
-                Browse Marketplace
-              </button>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div className=" gap-12 items-center">
+          {/* Left Content */}
+          <div className="space-y-8">
+            <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+              <Award className="w-5 h-5 mr-2" />
+              <span className="text-sm font-medium">Kigali's First Circular Economy Marketplace</span>
             </div>
-          </motion.div>
-        </motion.div>
+
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+              Transform Waste into{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300">
+                Revenue
+              </span>
+            </h1>
+
+            <p className="text-xl text-cyan-50 max-w-md">
+              Connect with recyclers, optimize collections, and earn from your commercial waste. 
+              Join Kigali's HORECA circular economy today.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-4">
+              <Link
+                to="/login"
+                className="group bg-white text-cyan-800 px-8 py-4 rounded-xl font-semibold hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center"
+              >
+                Join as Hotel
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              
+              <Link
+                to="/login"
+                className="bg-cyan-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-cyan-500 transform hover:-translate-y-1 transition-all duration-300 border border-cyan-400"
+              >
+                Partner as Recycler
+              </Link>
+            </div>
+
+            {/* Quick Stats Preview */}
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-cyan-500/30">
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold">4+</p>
+                <p className="text-cyan-200 text-sm">Hotels Registered</p>
+              </div>
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold">2</p>
+                <p className="text-cyan-200 text-sm">Active Recyclers</p>
+              </div>
+              <div>
+                <p className="text-2xl lg:text-3xl font-bold">0.1t</p>
+                <p className="text-cyan-200 text-sm">Monthly Volume</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );

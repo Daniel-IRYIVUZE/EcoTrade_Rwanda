@@ -57,7 +57,7 @@ const TermsPrivacyPage = () => {
   const termsContent = [
     {
       title: '1. Acceptance of Terms',
-      content: 'By accessing and using the EcoTrade Rwanda   (EcoTrade) platform, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.'
+      content: 'By accessing and using the EcoTrade Rwanda (EcoTrade) platform, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.'
     },
     {
       title: '2. User Accounts',
@@ -112,7 +112,7 @@ const TermsPrivacyPage = () => {
     },
     {
       title: 'Data Retention',
-      content: 'We retain your data as long as your account is active or as needed to provide services. Transaction records are kept for 7 years as requislate by law.',
+      content: 'We retain your data as long as your account is active or as needed to provide services. Transaction records are kept for 7 years as required by law.',
       icon: <Calendar className="text-slate-400" size={18} />
     },
     {
@@ -141,7 +141,7 @@ const TermsPrivacyPage = () => {
     },
     {
       title: 'Data Breach Protocol',
-      content: 'In the event of a data breach, we will notify affected users and relevant authorities within 72 hours as requislate by law.'
+      content: 'In the event of a data breach, we will notify affected users and relevant authorities within 72 hours as required by law.'
     },
     {
       title: 'Contact DPO',
@@ -433,13 +433,13 @@ const TermsPrivacyPage = () => {
             <p className="text-slate-600 mb-4 max-w-2xl mx-auto">
               If you have any questions about our terms or privacy practices, please don't hesitate to contact our legal team.
             </p>
-            <Link
-              to="mailto:legal@EcoTrade.rw"
+            <a
+              href="mailto:legal@ecotrade.rw"
               className="inline-flex items-center gap-2 bg-cyan-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-cyan-700 transition-all"
             >
               <Mail size={18} />
               Contact Legal Team
-            </Link>
+            </a>
           </div>
         </div>
       </main>

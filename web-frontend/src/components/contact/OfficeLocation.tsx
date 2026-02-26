@@ -1,0 +1,93 @@
+// components/contact/OfficeLocation.tsx
+import { MapPin, Navigation, ExternalLink } from 'lucide-react';
+
+const OfficeLocation = () => {
+  return (
+    <section className="mt-12">
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Our Location</h2>
+      
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        {/* Map Container */}
+        <div className="relative h-[400px] bg-gray-200">
+          {/* This would be replaced with actual Leaflet map */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200">
+            {/* Sample Map Grid */}
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'linear-gradient(#e5e7eb 1px, transparent 1px), linear-gradient(90deg, #e5e7eb 1px, transparent 1px)',
+              backgroundSize: '50px 50px'
+            }}></div>
+            
+            {/* Map Marker */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group">
+              <div className="relative">
+                <MapPin className="w-10 h-10 text-cyan-600 fill-cyan-600/30 animate-bounce" />
+                <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white px-4 py-2 rounded-xl shadow-lg whitespace-nowrap">
+                  <p className="font-semibold text-gray-900">EcoTrade HQ</p>
+                  <p className="text-xs text-gray-600">Kigali Innovation City</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Map Controls */}
+          <div className="absolute top-4 right-4 flex flex-col space-y-2">
+            <button className="bg-white p-2 rounded-lg shadow-lg hover:bg-gray-50">
+              <Navigation className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
+
+        {/* Location Info Bar */}
+        <div className="p-6 border-t border-gray-200">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-cyan-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">Kigali Innovation City</h3>
+                <p className="text-sm text-gray-600">KG 541 St, Gasabo, Kigali, Rwanda</p>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Kigali%20Innovation%20City"
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 bg-cyan-600 text-white rounded-xl font-semibold hover:bg-cyan-700 transition-colors flex items-center"
+              >
+                <Navigation className="w-4 h-4 mr-2" />
+                Get Directions
+              </a>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Kigali%20Innovation%20City"
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 border border-gray-300 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                aria-label="Open map"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+
+          {/* Nearby Landmarks */}
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <p className="text-sm text-gray-600 mb-2 flex items-center">
+              <MapPin className="w-4 h-4 mr-2 text-cyan-600" />
+              Nearby landmarks:
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">M. Peace Plaza (500m)</span>
+              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">Kigali Convention Centre (1.2km)</span>
+              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">BK Arena (2km)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default OfficeLocation;

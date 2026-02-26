@@ -1,0 +1,125 @@
+import { useState } from 'react';
+import { FileText, Download, BarChart2, Users, Leaf, DollarSign } from 'lucide-react';
+import { getAll, downloadCSV, downloadPDF } from '../../../utils/dataStore';
+import type { PlatformUser, WasteListing, Transaction, Collection } from '../../../utils/dataStore';
+
+const REPORT_TYPES = [
+  { id: 'users', label: 'User Report', icon: <Users size={18}/>, color: 'bg-blue-50 border-blue-200 text-blue-700' },
+  { id: 'listings', label: 'Listings Report', icon: <FileText size={18}/>, color: 'bg-cyan-50 border-cyan-200 text-cyan-700' },
+  { id: 'transactions', label: 'Financial Report', icon: <DollarSign size={18}/>, color: 'bg-green-50 border-green-200 text-green-700' },
+  { id: 'environmental', label: 'Environmental Impact', icon: <Leaf size={18}/>, color: 'bg-teal-50 border-teal-200 text-teal-700' },
+  { id: 'collections', label: 'Collections Report', icon: <BarChart2 size={18}/>, color: 'bg-orange-50 border-orange-200 text-orange-700' },
+];
+
+export default function AdminReports() {
+  const [generating, setGenerating] = useState<string | null>(null);
+  const [format, setFormat] = useState<'csv' | 'pdf'>('csv');
+  const [dateFrom, setDateFrom] = useState(() => { const d = new Date(); d.setMonth(d.getMonth()-1); return d.toISOString().split('T')[0]; });
+  const [dateTo, setDateTo] = useState(() => new Date().toISOString().split('T')[0]);
+
+  const generateReport = (type: string) => {
+    setGenerating(type);
+    setTimeout(() => {
+      const users = getAll<PlatformUser>('users');
+      const listings = getAll<WasteListing>('listings');
+      const transactions = getAll<Transaction>('transactions');
+      const collections = getAll<Collection>('collections');
+
+      if (format === 'pdf') { downloadPDF((REPORT_TYPES.find(r => r.id === type)?.label || type) + ' Report', '<p>Report generated from EcoTrade Rwanda platform data.</p>'); setGenerating(null); return; }
+
+      switch (type) {
+        case 'users':
+          downloadCSV('users_report', ['ID','Name','Email','Role','Status','Location','Joined'],
+            users.map(u => [u.id, u.name, u.email, u.role, u.status, u.location, new Date(u.joinDate).toLocaleDateString()]));
+          break;
+        case 'listings':
+          downloadCSV('listings_report', ['ID','Hotel','Waste Type','Volume','Unit','Min Bid','Status','Date'],
+            listings.map(l => [l.id, l.hotelName, l.wasteType, String(l.volume), l.unit, String(l.minBid), l.status, new Date(l.createdAt).toLocaleDateString()]));
+          break;
+        case 'transactions':
+          downloadCSV('financial_report', ['ID','Listing','From','To','Amount','Fee','Status','Date'],
+            transactions.map(t => [t.id, t.listingId, t.from, t.to, String(t.amount), String(t.fee), t.status, new Date(t.date).toLocaleDateString()]));
+          break;
+        case 'environmental':
+          downloadCSV('environmental_report', ['ID','Hotel','Driver','Waste Type','Volume (kg/L)','Date'],
+            collections.map(c => [c.id, c.hotelName, c.driverName, c.wasteType, String(c.volume), new Date(c.scheduledDate).toLocaleDateString()]));
+          break;
+        case 'collections':
+          downloadCSV('collections_report', ['ID','Hotel','Recycler','Driver','Volume','Status','Date'],
+            collections.map(c => [c.id, c.hotelName, c.recyclerName, c.driverName, String(c.volume), c.status, new Date(c.scheduledDate).toLocaleDateString()]));
+          break;
+      }
+      setGenerating(null);
+    }, 600);
+  };
+
+  const summaryStats = () => {
+    const users = getAll<PlatformUser>('users');
+    const listings = getAll<WasteListing>('listings');
+    const transactions = getAll<Transaction>('transactions').filter(t => t.status === 'completed');
+    const collections = getAll<Collection>('collections');
+    return {
+      totalUsers: users.length,
+      activeListings: listings.filter(l => l.status === 'open').length,
+      totalRevenue: transactions.reduce((s, t) => s + t.amount, 0),
+      co2Saved: collections.reduce((s, c) => s + c.volume * 0.5, 0),
+    };
+  };
+  const stats = summaryStats();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2"><FileText size={20} className="text-cyan-600"/>Generate Reports</h2>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[['Total Users', stats.totalUsers, 'bg-blue-50'], ['Active Listings', stats.activeListings, 'bg-cyan-50'], [`Revenue (RWF)`, `${(stats.totalRevenue/1000).toFixed(0)}K`, 'bg-green-50'], ['CO₂ Saved (kg)', stats.co2Saved.toFixed(0), 'bg-teal-50']].map(([l,v,c]) => (
+          <div key={l as string} className={`${c} rounded-xl p-4 border`}>
+            <p className="text-xs text-gray-500 mb-1">{l}</p>
+            <p className="text-xl font-bold text-gray-800">{v}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white border rounded-xl p-5 space-y-4">
+        <h3 className="font-semibold text-gray-700">Report Settings</h3>
+        <div className="flex flex-wrap gap-4">
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Format</label>
+            <div className="flex gap-2">
+              {(['csv','pdf'] as const).map(f => (
+                <button key={f} onClick={() => setFormat(f)} className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${format === f ? 'bg-cyan-600 text-white border-cyan-600' : 'hover:bg-gray-50 text-gray-700'}`}>{f.toUpperCase()}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Date From</label>
+            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)} className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"/>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Date To</label>
+            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)} className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"/>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {REPORT_TYPES.map(rt => (
+          <div key={rt.id} className={`border rounded-xl p-5 ${rt.color} flex flex-col gap-4`}>
+            <div className="flex items-center gap-3">
+              {rt.icon}
+              <div>
+                <h3 className="font-semibold">{rt.label}</h3>
+                <p className="text-xs opacity-75">Full export as {format.toUpperCase()}</p>
+              </div>
+            </div>
+            <button onClick={() => generateReport(rt.id)} disabled={generating === rt.id} className="mt-auto flex items-center justify-center gap-2 bg-white/70 border border-current rounded-lg py-2 text-sm font-medium hover:bg-white/90 disabled:opacity-50 transition-colors">
+              <Download size={15}/> {generating === rt.id ? 'Generating...' : `Download ${format.toUpperCase()}`}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

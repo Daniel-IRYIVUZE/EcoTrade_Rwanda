@@ -1,0 +1,76 @@
+import { useState, useEffect, useCallback } from 'react';
+import { getAll, downloadPDF } from '../../../utils/dataStore';
+import type { Collection } from '../../../utils/dataStore';
+import { DollarSign, TrendingUp, Calendar, Clock, Download } from 'lucide-react';
+import StatCard from '../StatCard';
+import Widget from '../Widget';
+import ChartComponent from '../ChartComponent';
+import { driverProfile, earningsData, monthlyEarnings } from './_shared';
+
+const StatusBadge = ({ status }: { status: string }) => {
+  const styles: Record<string, string> = {
+    completed: 'bg-green-100 text-green-800', pending: 'bg-yellow-100 text-yellow-800',
+  };
+  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}>{status.replace(/_/g, ' ')}</span>;
+};
+
+export default function DriverEarnings() {
+  const [transactions, setTransactions] = useState<Collection[]>([]);
+  const load = useCallback(() => setTransactions(getAll<Collection>('collections')), []);
+  useEffect(() => { load(); window.addEventListener('ecotrade_data_change', load); return () => window.removeEventListener('ecotrade_data_change', load); }, [load]);
+
+  const totalEarned = transactions.reduce((s, c) => s + c.earnings, 0) || driverProfile.totalEarnings;
+  const monthlyEarned = transactions.filter(c => c.scheduledDate?.startsWith(new Date().toISOString().slice(0, 7))).reduce((s, c) => s + c.earnings, 0) || driverProfile.monthlyEarnings;
+
+  const payouts = transactions.filter(c => c.status === 'completed' && c.completedAt).slice(0, 5).map(c => ({
+    date: c.completedAt?.split('T')[0] ?? '', amount: `RWF ${c.earnings.toLocaleString()}`, route: c.id, method: 'Mobile Money', status: 'completed',
+  }));
+  const payoutData = payouts.length > 0 ? payouts : [
+    { date: '2026-02-19', amount: 'RWF 13,000', route: 'DR-001', method: 'Mobile Money', status: 'completed' },
+    { date: '2026-02-23', amount: 'RWF 9,000', route: 'DR-002', method: 'Mobile Money', status: 'completed' },
+    { date: '2026-02-24', amount: 'RWF 15,000', route: 'DR-003', method: 'Mobile Money', status: 'completed' },
+    { date: '2026-02-25', amount: 'RWF 5,000', route: 'DR-004', method: 'Mobile Money', status: 'completed' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">My Earnings</h1>
+        <button onClick={() => {
+          const tableRows = payoutData.map(p => `<tr><td>${p.date}</td><td>${p.route}</td><td>${p.amount}</td><td>${p.method}</td><td>${p.status}</td></tr>`).join('');
+          downloadPDF('Earnings Statement — Jean Pierre Habimana', `
+            <div class="stat-grid">
+              <div class="stat-card"><div class="stat-value">RWF ${(totalEarned/1000000).toFixed(1)}M</div><div class="stat-label">Total Earnings</div></div>
+              <div class="stat-card"><div class="stat-value">RWF ${(monthlyEarned/1000).toFixed(0)}K</div><div class="stat-label">This Month</div></div>
+              <div class="stat-card"><div class="stat-value">RWF 62K</div><div class="stat-label">This Week</div></div>
+              <div class="stat-card"><div class="stat-value">RWF 12K</div><div class="stat-label">Today</div></div>
+            </div>
+            <h2>Recent Payouts</h2>
+            <table><thead><tr><th>Date</th><th>Route</th><th>Amount (RWF)</th><th>Method</th><th>Status</th></tr></thead>
+            <tbody>${tableRows}</tbody></table>
+          `);
+        }} className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm hover:bg-gray-50"><Download size={16} /> Download Statement</button>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <StatCard title="Total Earnings" value={`RWF ${(totalEarned / 1000000).toFixed(1)}M`} icon={<DollarSign size={22} />} color="cyan" change="+8%" />
+        <StatCard title="This Month" value={`RWF ${(monthlyEarned / 1000).toFixed(0)}K`} icon={<TrendingUp size={22} />} color="blue" change="+12%" />
+        <StatCard title="This Week" value="RWF 62K" icon={<Calendar size={22} />} color="purple" />
+        <StatCard title="Today" value="RWF 12K" icon={<Clock size={22} />} color="orange" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Widget title="Weekly Earnings" icon={<TrendingUp size={20} className="text-cyan-600" />}><ChartComponent type="bar" data={earningsData} height={260} /></Widget>
+        <Widget title="Monthly Trend" icon={<TrendingUp size={20} className="text-purple-600" />}><ChartComponent type="line" data={monthlyEarnings} height={260} /></Widget>
+      </div>
+      <Widget title="Recent Payouts" icon={<DollarSign size={20} className="text-green-600" />}>
+        <div className="space-y-3">
+          {payoutData.map((payout, i) => (
+            <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div><p className="text-sm font-medium">{payout.date} · {payout.route}</p><p className="text-xs text-gray-500">{payout.method}</p></div>
+              <div className="text-right"><p className="font-semibold text-green-600">{payout.amount}</p><StatusBadge status={payout.status} /></div>
+            </div>
+          ))}
+        </div>
+      </Widget>
+    </div>
+  );
+}

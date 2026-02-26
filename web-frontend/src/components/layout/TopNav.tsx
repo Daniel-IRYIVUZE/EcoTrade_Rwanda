@@ -1,12 +1,7 @@
 // components/layout/TopNav.tsx
 import { useState } from 'react';
 import { Search, Bell } from 'lucide-react';
-
-interface User {
-  name: string;
-  role: string;
-  avatar: string;
-}
+import type { User } from '../../context/AuthContext';
 
 interface TopNavProps {
   user: User;
@@ -19,6 +14,7 @@ const TopNav = ({ user }: TopNavProps) => {
     { id: 3, message: 'Payment confirmed - RWF 25,000', time: '3 hours ago', read: true },
   ]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -38,6 +34,8 @@ const TopNav = ({ user }: TopNavProps) => {
             <input
               type="search"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             />
           </div>
@@ -75,7 +73,7 @@ const TopNav = ({ user }: TopNavProps) => {
                   ))}
                 </div>
                 <div className="p-3 text-center border-t">
-                  <button className="text-sm text-cyan-600 hover:text-cyan-700 font-medium">
+                  <button onClick={() => setShowNotifications(false)} className="text-sm text-cyan-600 hover:text-cyan-700 font-medium">
                     View All Notifications
                   </button>
                 </div>
@@ -89,12 +87,18 @@ const TopNav = ({ user }: TopNavProps) => {
               <p className="font-medium text-sm">{user.name}</p>
               <p className="text-xs text-gray-500 capitalize">{user.role}</p>
             </div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-500 overflow-hidden ring-2 ring-cyan-100">
-              <img 
-                src={user.avatar} 
-                alt={user.name}
-                className="w-full h-full object-cover"
-              />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-500 overflow-hidden ring-2 ring-cyan-100 flex items-center justify-center">
+              {user.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt={user.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-white font-semibold text-sm">
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
           </div>
         </div>

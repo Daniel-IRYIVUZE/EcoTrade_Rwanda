@@ -1,0 +1,120 @@
+import { useState } from 'react';
+import { Save, Settings, Bell, Shield, CreditCard, Globe } from 'lucide-react';
+
+interface PlatformSettings {
+  platformName: string;
+  platformFeePercent: number;
+  minBidAmount: number;
+  listingExpiryDays: number;
+  maintenanceMode: boolean;
+  emailNotifications: boolean;
+  smsNotifications: boolean;
+  autoApproveListings: boolean;
+  requireIDVerification: boolean;
+  currency: string;
+  country: string;
+  supportEmail: string;
+  supportPhone: string;
+}
+
+const KEY = 'ecotrade_platform_settings';
+
+const defaults: PlatformSettings = {
+  platformName: 'EcoTrade Rwanda',
+  platformFeePercent: 10,
+  minBidAmount: 5000,
+  listingExpiryDays: 30,
+  maintenanceMode: false,
+  emailNotifications: true,
+  smsNotifications: true,
+  autoApproveListings: false,
+  requireIDVerification: true,
+  currency: 'RWF',
+  country: 'Rwanda',
+  supportEmail: 'support@ecotrade.rw',
+  supportPhone: '+250 780 162 164',
+};
+
+export default function AdminSettings() {
+  const [settings, setSettings] = useState<PlatformSettings>(() => {
+    try { return { ...defaults, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { return defaults; }
+  });
+  const [saved, setSaved] = useState(false);
+
+  const save = () => {
+    localStorage.setItem(KEY, JSON.stringify(settings));
+    setSaved(true); setTimeout(() => setSaved(false), 2000);
+  };
+
+  const Field = ({ label, id, type = 'text', value, onChange }: { label: string; id: string; type?: string; value: any; onChange: (v: any) => void }) => (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <input id={id} type={type} value={value} onChange={e => onChange(type === 'number' ? Number(e.target.value) : e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"/>
+    </div>
+  );
+
+  const Toggle = ({ label, desc, checked, onChange }: { label: string; desc: string; checked: boolean; onChange: (v: boolean) => void }) => (
+    <div className="flex items-start justify-between py-3 border-b last:border-0">
+      <div><p className="text-sm font-medium text-gray-700">{label}</p><p className="text-xs text-gray-400">{desc}</p></div>
+      <button onClick={() => onChange(!checked)} className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ml-4 ${checked ? 'bg-cyan-600' : 'bg-gray-200'}`}>
+        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${checked ? 'translate-x-5' : ''}`}/>
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6 max-w-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2"><Settings size={20} className="text-cyan-600"/>Platform Settings</h2>
+        {saved && <span className="text-green-600 text-sm font-medium">✓ Settings saved!</span>}
+      </div>
+
+      <div className="bg-white border rounded-xl p-5 space-y-4">
+        <h3 className="font-semibold text-gray-700 flex items-center gap-2"><Globe size={16}/>General</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Platform Name" id="name" value={settings.platformName} onChange={v => setSettings({...settings, platformName: v})}/>
+          <Field label="Country" id="country" value={settings.country} onChange={v => setSettings({...settings, country: v})}/>
+          <Field label="Support Email" id="email" value={settings.supportEmail} onChange={v => setSettings({...settings, supportEmail: v})}/>
+          <Field label="Support Phone" id="phone" value={settings.supportPhone} onChange={v => setSettings({...settings, supportPhone: v})}/>
+        </div>
+      </div>
+
+      <div className="bg-white border rounded-xl p-5 space-y-4">
+        <h3 className="font-semibold text-gray-700 flex items-center gap-2"><CreditCard size={16}/>Financial</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Platform Fee (%)" id="fee" type="number" value={settings.platformFeePercent} onChange={v => setSettings({...settings, platformFeePercent: v})}/>
+          <Field label="Minimum Bid (RWF)" id="minbid" type="number" value={settings.minBidAmount} onChange={v => setSettings({...settings, minBidAmount: v})}/>
+          <Field label="Listing Expiry (days)" id="expiry" type="number" value={settings.listingExpiryDays} onChange={v => setSettings({...settings, listingExpiryDays: v})}/>
+          <Field label="Currency" id="currency" value={settings.currency} onChange={v => setSettings({...settings, currency: v})}/>
+        </div>
+      </div>
+
+      <div className="bg-white border rounded-xl p-5">
+        <h3 className="font-semibold text-gray-700 flex items-center gap-2 mb-3"><Bell size={16}/>Notifications & Features</h3>
+        <div>
+          <Toggle label="Email Notifications" desc="Send email alerts to users" checked={settings.emailNotifications} onChange={v => setSettings({...settings, emailNotifications: v})}/>
+          <Toggle label="SMS Notifications" desc="Send SMS alerts for bids and collections" checked={settings.smsNotifications} onChange={v => setSettings({...settings, smsNotifications: v})}/>
+        </div>
+      </div>
+
+      <div className="bg-white border rounded-xl p-5">
+        <h3 className="font-semibold text-gray-700 flex items-center gap-2 mb-3"><Shield size={16}/>Security & Compliance</h3>
+        <div>
+          <Toggle label="Require ID Verification" desc="Require identity docs before account activation" checked={settings.requireIDVerification} onChange={v => setSettings({...settings, requireIDVerification: v})}/>
+          <Toggle label="Auto-Approve Listings" desc="Automatically approve new waste listings" checked={settings.autoApproveListings} onChange={v => setSettings({...settings, autoApproveListings: v})}/>
+          <Toggle label="Maintenance Mode" desc="Take the platform offline for maintenance" checked={settings.maintenanceMode} onChange={v => setSettings({...settings, maintenanceMode: v})}/>
+        </div>
+      </div>
+
+      {settings.maintenanceMode && (
+        <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-lg p-4 text-sm">
+          ⚠️ <strong>Warning:</strong> Maintenance mode is enabled. Users will see a maintenance page when visiting the platform.
+        </div>
+      )}
+
+      <button onClick={save} className="flex items-center gap-2 bg-cyan-600 text-white px-6 py-3 rounded-xl hover:bg-cyan-700 font-medium">
+        <Save size={16}/> Save Settings
+      </button>
+    </div>
+  );
+}

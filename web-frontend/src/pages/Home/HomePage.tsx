@@ -1,24 +1,35 @@
+// pages/HomePage.tsx
 import Navbar from '../../components/common/Navbar/Navbar';
 import Footer from '../../components/common/Footer/Footer';
 import HeroSection from '../../components/home/HeroSection';
-import StatsSection from '../../components/home/StatsSection';
-import HowItWorksSection from '../../components/home/HowItWorksSection';
-import FeaturedMaterialsSection from '../../components/home/FeaturedMaterialsSection';
-import SuccessStoriesSection from '../../components/home/SuccessStoriesSection';
+import HowItWorks from '../../components/home/HowItWorks';
+import KeyFeatures from '../../components/home/KeyFeatures';
+import LiveImpactTicker from '../../components/home/LiveImpactTicker';
+import InteractiveMap from '../../components/home/InteractiveMap';
+import SuccessStories from '../../components/home/SuccessStories';
+import StatsCounter from '../../components/home/StatsCounter';
+import MarketplacePreview from '../../components/home/MarketplacePreview';
 import CTASection from '../../components/home/CTASection';
+import NewsletterSection from '../../components/home/NewsletterSection';
+import PartnersCarousel from '../../components/home/PartnersCarousel';
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <div className="pt-16">
+      <main className="pt-16">
         <HeroSection />
-        <StatsSection />
-        <HowItWorksSection />
-        <FeaturedMaterialsSection />
-        <SuccessStoriesSection />
+        <StatsCounter />
+        <HowItWorks />
+        <KeyFeatures />
+        <LiveImpactTicker />
+        <InteractiveMap />
+        <SuccessStories />
+        <MarketplacePreview />
+        <PartnersCarousel />
         <CTASection />
-      </div>
+        <NewsletterSection />
+      </main>
       <Footer />
     </div>
   );

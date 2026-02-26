@@ -1,75 +1,51 @@
-# EcoTrade  Platform
+# EcoTrade Rwanda Platform
 
 ## Project Description
 
-EcoTrade  is a digital platform connecting waste generators (hotels, restaurants, businesses) with recyclers, drivers, and individual collectors in Kigali, Rwanda. The platform enables transparent waste-to-resource transactions while promoting environmental sustainability and creating economic opportunities.
+EcoTrade Rwanda is a digital B2B marketplace connecting waste generators (hotels, restaurants, businesses) with recyclers, drivers, and individual collectors in Kigali, Rwanda. The platform enables transparent waste-to-resource transactions while promoting environmental sustainability and creating economic opportunities.
 
-### Key Features
+## Key Features
 
-- Multi-Role Dashboard System (Admin, Business, Recycler, Driver, Individual)
-- Waste Marketplace for recyclable materials (UCO, glass, paper, plastic, metal)
-- Green Score Certification and Impact Analytics
-- Logistics Management and Route Optimization
-- Financial Tracking and Transaction History
-- Role-based Settings pages with editable profiles
-- Actionable dashboard controls (filters, exports, status toggles)
-- CO2 Savings Calculator
+- **Multi-Role Dashboard System** — Admin, Business, Recycler, Driver, Individual
+- **Waste Marketplace** — Listings for recyclable materials (UCO, glass, paper, plastic)
+- **Green Score Certification** — Environmental performance scoring and certificates
+- **Impact Analytics** — CO₂ savings, waste diverted, water saved
+- **Logistics Management** — Route planning and collection scheduling
+- **Financial Tracking** — Transaction history, revenue reports, earnings statements
+- **PDF Report Exports** — All reports download as formatted PDFs with full data
+- **OTP Two-Factor Authentication** — Secure login with SMS/email OTP
+- **Role-based Settings** — Editable profiles with notification preferences
 
-### Technology Stack
+## Technology Stack
 
-- Frontend: React 18+ with TypeScript, Vite, TailwindCSS
-- Routing: React Router v6
-- Icons: Lucide React
-- State Management: React Context API
-- Animations: Framer Motion
+| Layer | Technology |
+|-------|------------|
+| Frontend | React 18+ with TypeScript |
+| Build Tool | Vite |
+| Styling | TailwindCSS |
+| Routing | React Router v6 |
+| Icons | Lucide React |
+| State | React Context API + localStorage |
+| Animations | Framer Motion |
+| Charts | Chart.js via ChartComponent |
 
-## Platform Screenshots
+## Demo Login Credentials
 
-### Public Pages
+| Role | Email | Password | Dashboard |
+|------|-------|----------|-----------|
+| Admin | admin@ecotrade.rw | admin123 | /dashboard/admin |
+| Business | business@ecotrade.rw | business123 | /dashboard/business |
+| Recycler | recycler@ecotrade.rw | recycler123 | /dashboard/recycler |
+| Driver | driver@ecotrade.rw | driver123 | /dashboard/driver |
+| Individual | individual@ecotrade.rw | user123 | /dashboard/individual |
 
-#### Landing Page
-![EcoTrade Homepage](./web-frontend/src/assets/screeenshots/image-1.png)
+> OTP code (2FA): **123456**
 
-#### Login & Registration
-![Login Page](./web-frontend/src/assets/screeenshots/image-2.png)
-![Register Page](./web-frontend/src/assets/screeenshots/image-3.png)
-
-### Role-Based Dashboards
-
-#### Admin Dashboard
-![Admin Dashboard](./web-frontend/src/assets/screeenshots/image-4.png)
-*Platform statistics, user management, and system configuration*
-
-#### Business Dashboard
-![Business Dashboard](./web-frontend/src/assets/screeenshots/image-5.png)
-*Waste listings, marketplace, and revenue analytics*
-
-#### Recycler Dashboard
-![Recycler Dashboard](./web-frontend/src/assets/screeenshots/image-6.png)
-*Material procurement, inventory, and supplier network*
-
-#### Driver Dashboard
-![Driver Dashboard](./web-frontend/src/assets/screeenshots/image-7.png)
-*Route management, collections, and earnings tracking*
-
-#### Individual Dashboard
-![Individual Dashboard](./web-frontend/src/assets/screeenshots/image-8.png)
-*Personal listings, marketplace, and environmental impact*
-
-### Features
-
-#### Marketplace Listings
-![Marketplace](./web-frontend/src/assets/screeenshots/image-9.png)
-*Material-specific imagery for UCO, Glass, Paper, Plastic listings*
-
-#### Settings & Profile Management
-![Settings Modal](./web-frontend/src/assets/screeenshots/image-10.png)
-*Editable profile with notification preferences and role-specific options*
 ## Links
 
-- GitHub Repository: https://github.com/Daniel-IRYIVUZE/kcem_platform.git
-- Live Demo: https://ecotrade-rwanda.netlify.app
-- Demo Video: link
+- **GitHub:** https://github.com/Daniel-IRYIVUZE/kcem_platform.git
+- **Live Demo:** https://ecotrade-rwanda.netlify.app
+- **Demo Video:** *(link pending)*
 
 ## Setup Instructions
 
@@ -83,8 +59,8 @@ EcoTrade  is a digital platform connecting waste generators (hotels, restaurants
 
 ```bash
 # Clone repository
-git clone https://github.com/Daniel-IRYIVUZE/EcoTrade_platform.git
-cd EcoTrade_platform/web-frontend
+git clone https://github.com/Daniel-IRYIVUZE/kcem_platform.git
+cd kcem_platform/web-frontend
 
 # Install dependencies
 npm install
@@ -99,55 +75,58 @@ npm run build
 ## Project Structure
 
 ```
-EcoTrade_platform/
+kcem_platform/
 ├── LICENSE
 ├── README.md
 └── web-frontend/
     ├── public/
-    │   ├── images/
-    │   │   ├── EcoTrade.png
-    │   │   └── EcoTrade1.png
-    ├── src/
-    │   ├── assets/
-    │   │   ├── images/
-    │   │   └── styles/
-    │   ├── components/
-    │   │   ├── common/
-    │   │   ├── dashboard/
-    │   │   └── layout/
-    │   ├── context/
-    │   │   └── AuthContext.tsx
-    │   ├── pages/
-    │   │   ├── Dashboard/
-    │   │   ├── Home/
-    │   │   ├── Login/
-    │   │   ├── Register/
-    │   │   ├── About/
-    │   │   ├── Blog/
-    │   │   ├── Contact/
-    │   │   ├── Marketplace/
-    │   │   ├── Services/
-    │   │   ├── TermsPrivacy/
-    │   │   └── Updates/
-    │   ├── App.tsx
-    │   └── main.tsx
-    ├── package.json
-    ├── tsconfig.json
-    └── vite.config.ts
+    │   ├── manifest.json
+    │   └── robots.txt
+    └── src/
+        ├── assets/
+        │   ├── images/
+        │   └── styles/
+        ├── components/
+        │   ├── about/
+        │   ├── auth/
+        │   ├── blog/
+        │   ├── common/
+        │   ├── contact/
+        │   ├── dashboard/
+        │   │   ├── admin/
+        │   │   ├── business/
+        │   │   ├── driver/
+        │   │   ├── individual/
+        │   │   └── recycler/
+        │   ├── home/
+        │   ├── marketplace/
+        │   └── services/
+        ├── context/
+        │   └── AuthContext.tsx
+        ├── pages/
+        │   ├── About/
+        │   ├── Blog/
+        │   ├── Contact/
+        │   ├── Dashboard/
+        │   ├── Home/
+        │   ├── Login/
+        │   ├── Marketplace/
+        │   ├── NotFound/
+        │   ├── Services/
+        │   └── TermsPrivacy/
+        ├── utils/
+        │   └── dataStore.ts
+        ├── App.tsx
+        └── main.tsx
 ```
 
 ## Deployment
 
-### Netlify Deployment
+### Netlify
 
 ```bash
-# Install Netlify CLI
 npm install -g netlify-cli
-
-# Login to Netlify
 netlify login
-
-# Deploy
 cd web-frontend
 npm run build
 netlify deploy --prod
@@ -157,10 +136,11 @@ Live URL: https://ecotrade-rwanda.netlify.app
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License — see [LICENSE](./LICENSE) file for details.
 
 ## Contact
 
-- Email: support@EcoTrade.rw
+- Email: contact@ecotrade.rw
+- Phone: +250 780 162 164
 - Website: https://ecotrade-rwanda.netlify.app
-- Demo Video: https://youtu.be/
+

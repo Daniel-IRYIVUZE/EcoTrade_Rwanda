@@ -82,7 +82,7 @@ const DataTable = ({ columns, data, pageSize = 5 }: DataTableProps) => {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`px-3 py-1 rounded ${
                       currentPage === pageNum
-                        ? 'bg-green-600 text-white'
+                        ? 'bg-cyan-600 text-white'
                         : 'border hover:bg-gray-50'
                     }`}
                   >

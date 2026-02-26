@@ -1,86 +1,190 @@
-# EcoTrade  - Web Frontend
+# EcoTrade Rwanda — Web Frontend
 
 ## Overview
 
-React + TypeScript frontend for the EcoTrade  platform. A fully responsive, multi-dashboard web application for waste-to-resource circular economy marketplace.
+React + TypeScript frontend for the EcoTrade Rwanda platform. A fully responsive, multi-dashboard web application for a waste-to-resource circular economy marketplace serving Kigali, Rwanda.
 
 ## Quick Start
 
-### Installation
-
 ```bash
 # From the web-frontend folder
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+npm install        # Install dependencies
+npm run dev        # Start development server (http://localhost:5173)
+npm run build      # Production build
+npm run preview    # Preview production build
+npm run lint       # Run ESLint
 ```
-
-### Access
-
-- Development: http://localhost:5173
-- Production: https://ecotrade-rwanda.netlify.app
-- Demo Video: link
 
 ## Demo Login Credentials
 
 | Role | Email | Password | Dashboard |
 |------|-------|----------|-----------|
-| Admin | admin@demo.com | admin123 | /dashboard/admin |
-| Business | business@demo.com | business123 | /dashboard/business |
-| Recycler | recycler@demo.com | recycler123 | /dashboard/recycler |
-| Driver | driver@demo.com | driver123 | /dashboard/driver |
-| Individual | user@demo.com | user123 | /dashboard/individual |
+| Admin | admin@ecotrade.rw | admin123 | /dashboard/admin |
+| Business | business@ecotrade.rw | business123 | /dashboard/business |
+| Recycler | recycler@ecotrade.rw | recycler123 | /dashboard/recycler |
+| Driver | driver@ecotrade.rw | driver123 | /dashboard/driver |
+| Individual | individual@ecotrade.rw | user123 | /dashboard/individual |
 
-## Platform Screenshots
+> OTP code (2FA): **123456**
 
-### Public Pages
+## Technology Stack
 
-#### Landing Page
-![EcoTrade Homepage](./src/assets/screeenshots/image-1.png)
+| Layer | Technology |
+|-------|------------|
+| UI Framework | React 18+ with TypeScript |
+| Build Tool | Vite |
+| Styling | TailwindCSS |
+| Routing | React Router v6 |
+| Icons | Lucide React |
+| Animations | Framer Motion |
+| Charts | Chart.js (via ChartComponent) |
+| State | React Context API + localStorage |
 
-#### Login & Registration
-![Login Page](./src/assets/screeenshots/image-2.png)
-![Register Page](./src/assets/screeenshots/image-3.png)
+## Project Structure
 
-### Role-Based Dashboards
+```
+web-frontend/
+├── public/
+│   ├── manifest.json
+│   └── robots.txt
+└── src/
+    ├── assets/
+    │   ├── images/
+    │   │   ├── icons/
+    │   │   ├── illustrations/
+    │   │   └── logos/
+    │   └── styles/
+    │       └── global.css
+    ├── components/
+    │   ├── about/
+    │   ├── auth/
+    │   │   ├── ForgotPasswordModal.tsx
+    │   │   ├── LoginForm.tsx
+    │   │   ├── SignupWizard.tsx
+    │   │   ├── TermsPrivacyModal.tsx
+    │   │   └── TwoFactorModal.tsx      # OTP only
+    │   ├── blog/
+    │   ├── common/
+    │   │   ├── Footer/
+    │   │   ├── Modal/
+    │   │   └── Navbar/
+    │   ├── contact/
+    │   ├── dashboard/
+    │   │   ├── ChartComponent.tsx
+    │   │   ├── DataTable.tsx
+    │   │   ├── StatCard.tsx
+    │   │   ├── Widget.tsx
+    │   │   ├── admin/
+    │   │   ├── business/
+    │   │   ├── driver/
+    │   │   ├── individual/
+    │   │   └── recycler/
+    │   ├── home/
+    │   ├── layout/
+    │   │   ├── Sidebar.tsx
+    │   │   └── TopNav.tsx
+    │   ├── marketplace/
+    │   └── services/
+    ├── context/
+    │   └── AuthContext.tsx
+    ├── pages/
+    │   ├── About/
+    │   ├── Blog/
+    │   ├── Contact/
+    │   ├── Dashboard/
+    │   │   ├── AdminDashboard.tsx
+    │   │   ├── BusinessDashboard.tsx
+    │   │   ├── RecyclerDashboard.tsx
+    │   │   ├── DriverPage.tsx
+    │   │   └── UserDashboard.tsx
+    │   ├── Home/
+    │   ├── Login/
+    │   ├── Marketplace/
+    │   ├── NotFound/
+    │   ├── Services/
+    │   └── TermsPrivacy/
+    ├── types/
+    ├── utils/
+    │   └── dataStore.ts          # localStorage CRUD + seedDataIfEmpty
+    ├── App.tsx
+    ├── main.tsx
+    └── index.css
+```
 
-#### Admin Dashboard
-![Admin Dashboard](./src/assets/screeenshots/image-4.png)
-*Platform statistics, user management, and system configuration*
+## Dashboard Pages
 
-#### Business Dashboard
-![Business Dashboard](./src/assets/screeenshots/image-5.png)
-*Waste listings, marketplace, and revenue analytics*
+### Admin Dashboard (6 sections)
+- Platform Overview — live stats from dataStore
+- User Management — add/edit/delete/suspend users, export PDF
+- Content Moderation
+- Financial Oversight
+- Analytics & Reports — charts + PDF export
+- System Configuration
 
-#### Recycler Dashboard
-![Recycler Dashboard](./src/assets/screeenshots/image-6.png)
-*Material procurement, inventory, and supplier network*
+### Business Dashboard (10 sections)
+- Overview, Waste Listings, Marketplace, Financial Dashboard
+- Schedule & Pickups, Green Score, Reports (PDF), Transactions, Analytics, Settings
 
-#### Driver Dashboard
-![Driver Dashboard](./src/assets/screeenshots/image-7.png)
-*Route management, collections, and earnings tracking*
+### Recycler Dashboard (9 sections)
+- Overview, Marketplace, Logistics, Inventory, Financial Dashboard
+- Supplier Network, Purchases, Analytics, Settings
 
-#### Individual Dashboard
-![Individual Dashboard](./src/assets/screeenshots/image-8.png)
-*Personal listings, marketplace, and environmental impact*
+### Driver Dashboard (8 sections)
+- Today's Schedule, Assigned Routes, Collections History
+- Earnings (PDF statement), Vehicle & Equipment, Offline Mode, Settings
 
-### Features
+### Individual Dashboard (8 sections)
+- Overview, Marketplace, My Impact, Orders, Financial Dashboard
+- Listings, Earnings, Settings
 
-#### Marketplace Listings
-![Marketplace](./src/assets/screeenshots/image-9.png)
-*Material-specific imagery for UCO, Glass, Paper, Plastic listings*
+## Key Implementation Notes
 
-#### Settings & Profile Management
-![Settings Modal](./src/assets/screeenshots/image-10.png)
-*Editable profile with notification preferences and role-specific options*
+- **Data layer:** All dashboard data reads from `localStorage` via `dataStore.ts`. `seedDataIfEmpty()` runs on first load populating 12 users, 5 listings, 5 transactions, 3 collections.
+- **Auth:** Email + password check against stored users, followed by OTP (code: 123456). No Authenticator app.
+- **PDF exports:** All report downloads (analytics, user list, earnings statements, business reports) generate styled HTML and trigger the browser print dialog — no CSV files.
+- **Currency:** Rwandan Franc (RWF) throughout.
+- **Phone:** +250 780 162 164
+
+## Seeded Data Summary
+
+| Type | Count | Notes |
+|------|-------|-------|
+| Users | 12 | 5 hotels, 2 recyclers, 3 drivers, 1 individual, 1 admin |
+| Waste Listings | 5 | WL001–WL005 (UCO, Glass, Paper) |
+| Transactions | 5 | Total completed: RWF 92,500 |
+| Collections | 3 | Total earnings: RWF 13,000 |
+
+## Deployment
+
+### Netlify
+
+```bash
+npm install -g netlify-cli
+netlify login
+npm run build
+netlify deploy --prod
+```
+
+Live URL: https://ecotrade-rwanda.netlify.app
+
+## Responsive Breakpoints
+
+| Breakpoint | Range |
+|------------|-------|
+| Mobile | 320px – 639px |
+| Tablet | 640px – 1023px |
+| Desktop | 1024px+ |
+
+## License
+
+MIT License — see [LICENSE](../LICENSE)
+
+## Support
+
+- Email: contact@ecotrade.rw
+- Phone: +250 780 162 164
+- Website: https://ecotrade-rwanda.netlify.app
+
 
 ## Project Structure
 
@@ -117,7 +221,7 @@ web-frontend/
 │   │   │   ├── DriverPage.tsx
 │   │   │   └── UserDashboard.tsx
 │   │   ├── Home/HomePage.tsx
-│   │   ├── Login/LoginPage.tsx
+│   │   ├── Login/terms-privacyPage.tsx
 │   │   ├── Register/RegisterPage.tsx
 │   │   ├── About/AboutPage.tsx
 │   │   ├── Blog/BlogPage.tsx
@@ -161,7 +265,7 @@ web-frontend/
 - Marketplace
 - Financial Dashboard
 - Schedule & Pickups
-- Green Score
+- cyan Score
 - Reports
 - Transactions
 - Analytics
