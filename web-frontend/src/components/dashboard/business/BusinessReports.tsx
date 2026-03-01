@@ -84,18 +84,18 @@ export default function BusinessReports() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Reports & Certificates</h1>
-        <p className="text-sm text-gray-500">Reports are generated from live platform data</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Reports & Certificates</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Reports are generated from live platform data</p>
       </div>
-      <div className="bg-white rounded-lg shadow border p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
         <DataTable
           columns={[
             { key: 'name', label: 'Report', render: (v: string) => <span className="font-medium">{v}</span> },
-            { key: 'type', label: 'Type', render: (v: string) => <span className={`px-2 py-1 rounded text-xs font-medium ${v === 'Green Certificate' ? 'bg-yellow-100 text-yellow-800' : v === 'Impact Report' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{v}</span> },
+            { key: 'type', label: 'Type', render: (v: string) => <span className={`px-2 py-1 rounded text-xs font-medium ${v === 'Green Certificate' ? 'bg-yellow-100 text-yellow-800' : v === 'Impact Report' ? 'bg-green-100 text-green-800 dark:text-green-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{v}</span> },
             { key: 'date', label: 'Date' },
             { key: 'status', label: 'Status', render: () => <StatusBadge status="completed" /> },
             { key: 'id', label: 'Download', render: (v: number, r: typeof reports[0]) => (
-              <button onClick={() => generateReport(r.type, v)} disabled={generating === v} className="flex items-center gap-1 text-xs px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded hover:bg-cyan-100 font-medium disabled:opacity-50">
+              <button onClick={() => generateReport(r.type, v)} disabled={generating === v} className="flex items-center gap-1 text-xs px-3 py-1.5 bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 rounded hover:bg-cyan-100 font-medium disabled:opacity-50">
                 {generating === v ? 'Generating...' : <><Download size={14} /> PDF</>}
               </button>
             )},

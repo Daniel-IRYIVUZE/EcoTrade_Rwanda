@@ -1,7 +1,9 @@
 // App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { seedDataIfEmpty } from './utils/dataStore';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Seed initial data on app load
 seedDataIfEmpty();
@@ -30,10 +32,10 @@ import UserDashboard from './pages/Dashboard/UserDashboard';
 
 // Loading Component
 const LoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+  <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-800/50">
     <div className="text-center">
       <div className="w-16 h-16 border-4 border-cyan-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <p className="text-gray-600">Loading...</p>
+      <p className="text-gray-600 dark:text-gray-400">Loading...</p>
     </div>
   </div>
 );
@@ -67,11 +69,11 @@ const DashboardLayout = () => {
   if (!user) return <Navigate to="/login" replace />;
   
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       <Sidebar userRole={user.role} />
       <div className="flex-1 flex flex-col overflow-hidden w-full">
         <TopNav user={user} />
-        <main className="flex-1 overflow-y-auto p-3 sm:p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-6 bg-gray-50 dark:bg-gray-950">
           <Outlet />
         </main>
       </div>
@@ -103,10 +105,12 @@ const DashboardRedirect = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50 font-sans antialiased">
-          <Routes>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans antialiased transition-colors duration-300">
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -174,9 +178,10 @@ function App() {
             {/* 404 Not Found */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

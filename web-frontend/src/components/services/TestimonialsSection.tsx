@@ -11,7 +11,7 @@ const testimonials = [
     type: 'hotel',
     content: 'EcoTrade transformed our waste management. We went from paying RWF 50,000 monthly to earning RWF 30,000. The platform is incredibly easy to use.',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=100',
+    image: '/images/default-avatar.svg',
     metrics: {
       savings: 'RWF 80k/year',
       diversion: '85%'
@@ -25,7 +25,7 @@ const testimonials = [
     type: 'hotel',
     content: 'The real-time tracking and instant payments have revolutionized how we handle our recycling program. Our Green Score improved by 40%.',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=100',
+    image: '/images/default-avatar.svg',
     metrics: {
       savings: 'RWF 120k/year',
       diversion: '92%'
@@ -39,7 +39,7 @@ const testimonials = [
     type: 'hotel',
     content: 'Our Green Score improved dramatically, and we now have verifiable data for our sustainability reports. Highly recommended.',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100',
+    image: '/images/default-avatar.svg',
     metrics: {
       savings: 'RWF 60k/year',
       diversion: '78%'
@@ -53,7 +53,7 @@ const testimonials = [
     type: 'recycler',
     content: 'The supply pipeline dashboard gives us real-time visibility into available materials. Route optimization saved us 40% on fuel costs.',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=100',
+    image: '/images/default-avatar.svg',
     metrics: {
       savings: '40% fuel',
       volume: '1247T/month'
@@ -67,7 +67,7 @@ const testimonials = [
     type: 'driver',
     content: 'I earn RWF 15,000 daily on average. The offline navigation works perfectly even in areas with poor network. Best decision I made.',
     rating: 5,
-    image: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=100',
+    image: '/images/default-avatar.svg',
     metrics: {
       earnings: 'RWF 15k/day',
       trips: '500+ completed'
@@ -96,13 +96,13 @@ const TestimonialsSection = () => {
   if (!currentTestimonial) return null;
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-white dark:bg-gray-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             What Our <span className="text-cyan-600">Clients Say</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Real stories from hotels, recyclers, and drivers using EcoTrade
           </p>
         </div>
@@ -117,7 +117,7 @@ const TestimonialsSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
             }`}
           >
             All
@@ -130,7 +130,7 @@ const TestimonialsSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'hotel'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
             }`}
           >
             Hotels
@@ -143,7 +143,7 @@ const TestimonialsSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'recycler'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
             }`}
           >
             Recyclers
@@ -156,7 +156,7 @@ const TestimonialsSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'driver'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
             }`}
           >
             Drivers
@@ -165,13 +165,13 @@ const TestimonialsSection = () => {
 
         {/* Testimonial Card */}
         <div className="relative">
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl shadow-xl p-8 lg:p-12">
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-3xl shadow-xl p-8 lg:p-12">
             <Quote className="w-12 h-12 text-cyan-600/20 mb-6" />
             
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Left Column - Content */}
               <div className="lg:col-span-2">
-                <p className="text-xl text-gray-700 leading-relaxed mb-6">
+                <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
                   "{currentTestimonial.content}"
                 </p>
 
@@ -191,21 +191,21 @@ const TestimonialsSection = () => {
 
                 {/* Author Info */}
                 <div>
-                  <p className="font-bold text-gray-900">{currentTestimonial.name}</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="font-bold text-gray-900 dark:text-white">{currentTestimonial.name}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {currentTestimonial.role}, {currentTestimonial.company}
                   </p>
                 </div>
               </div>
 
               {/* Right Column - Metrics */}
-              <div className="bg-cyan-50 rounded-2xl p-6">
-                <h4 className="font-semibold text-cyan-800 mb-4">Key Results</h4>
+              <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-2xl p-6">
+                <h4 className="font-semibold text-cyan-800 dark:text-cyan-300 mb-4">Key Results</h4>
                 <div className="space-y-4">
                   {Object.entries(currentTestimonial.metrics).map(([key, value]) => (
                     <div key={key}>
                       <p className="text-sm text-cyan-600 capitalize">{key}</p>
-                      <p className="text-2xl font-bold text-cyan-800">{value}</p>
+                      <p className="text-2xl font-bold text-cyan-800 dark:text-cyan-300">{value}</p>
                     </div>
                   ))}
                 </div>
@@ -218,15 +218,15 @@ const TestimonialsSection = () => {
             <>
               <button
                 onClick={prev}
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-6 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-6 bg-white dark:bg-gray-900 rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow"
               >
-                <ChevronLeft className="w-6 h-6 text-gray-600" />
+                <ChevronLeft className="w-6 h-6 text-gray-600 dark:text-gray-400" />
               </button>
               <button
                 onClick={next}
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-6 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 lg:translate-x-6 bg-white dark:bg-gray-900 rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow"
               >
-                <ChevronRight className="w-6 h-6 text-gray-600" />
+                <ChevronRight className="w-6 h-6 text-gray-600 dark:text-gray-400" />
               </button>
             </>
           )}

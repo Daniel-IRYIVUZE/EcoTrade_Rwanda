@@ -9,7 +9,6 @@ import LiveChatWidget from '../../components/contact/LiveChatWidget';
 import OfficeLocation from '../../components/contact/OfficeLocation';
 import FAQAccordion from '../../components/contact/FAQAccordion';
 import ContactMethods from '../../components/contact/ContactMethods';
-import SocialFeed from '../../components/contact/SocialFeed';
 import Modal from '../../components/common/Modal/Modal';
 
 interface ContactModalContent {
@@ -50,14 +49,14 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
       <Navbar />
       
       <main className="pt-20 pb-12">
         {/* Hero Section */}
         <ContactHero />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
           {/* Main Contact Section */}
           <div className="grid lg:grid-cols-3 gap-8 mt-12">
             {/* Contact Form - Takes 2 columns on large screens */}
@@ -87,8 +86,6 @@ const ContactPage = () => {
           {/* FAQ Section */}
           <FAQAccordion onOpenChat={handleOpenChat} />
 
-          {/* Social Media Feed */}
-          <SocialFeed />
         </div>
       </main>
 
@@ -106,7 +103,7 @@ const ContactPage = () => {
       >
         {modalContent && (
           <div className="space-y-6">
-            <p className="text-gray-600">{modalContent.description}</p>
+            <p className="text-gray-600 dark:text-gray-400">{modalContent.description}</p>
             <div className="flex flex-wrap gap-3">
               {modalContent.primaryHref && modalContent.primaryLabel && (
                 <a
@@ -119,7 +116,7 @@ const ContactPage = () => {
               {modalContent.secondaryHref && modalContent.secondaryLabel && (
                 <a
                   href={modalContent.secondaryHref}
-                  className="px-4 py-2 border border-gray-300 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900 transition-colors text-gray-700 dark:text-gray-300"
                 >
                   {modalContent.secondaryLabel}
                 </a>
@@ -128,7 +125,7 @@ const ContactPage = () => {
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="px-4 py-2 border border-gray-300 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900 transition-colors text-gray-700 dark:text-gray-300"
                 >
                   Close
                 </button>

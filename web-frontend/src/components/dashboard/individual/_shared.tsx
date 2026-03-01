@@ -59,8 +59,8 @@ export const wasteByType = {
 
 export const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
-    delivered: 'bg-green-100 text-green-800', in_transit: 'bg-blue-100 text-blue-800',
-    processing: 'bg-yellow-100 text-yellow-800', cancelled: 'bg-red-100 text-red-800',
+    delivered: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200', in_transit: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200',
+    processing: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', cancelled: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200',
   };
-  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}>{status.replace(/_/g, ' ')}</span>;
+  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{status.replace(/_/g, ' ')}</span>;
 };

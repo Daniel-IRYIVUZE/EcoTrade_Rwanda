@@ -141,14 +141,14 @@ const ContactForm = ({
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 border border-gray-100">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 lg:p-8 border border-gray-100 dark:border-gray-800">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send us a Message</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name and Email Row */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Full Name *
             </label>
             <input
@@ -158,13 +158,13 @@ const ContactForm = ({
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
-              placeholder="John Doe"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              placeholder="John Karambizi"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address *
             </label>
             <input
@@ -174,8 +174,8 @@ const ContactForm = ({
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
-              placeholder="umuntu@ecotrade.rw"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              placeholder="username@ecotrade.rw"
             />
           </div>
         </div>
@@ -183,7 +183,7 @@ const ContactForm = ({
         {/* Phone and User Type Row */}
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Phone Number (optional)
             </label>
             <input
@@ -192,13 +192,13 @@ const ContactForm = ({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               placeholder="+250 780 162 164"
             />
           </div>
 
           <div>
-            <label htmlFor="userType" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="userType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               I am a *
             </label>
             <select
@@ -207,7 +207,7 @@ const ContactForm = ({
               value={formData.userType}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white"
+              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
             >
               <option value="">Select user type</option>
               {userTypes.map(type => (
@@ -219,7 +219,7 @@ const ContactForm = ({
 
         {/* Subject */}
         <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Subject *
           </label>
           <select
@@ -228,7 +228,7 @@ const ContactForm = ({
             value={formData.subject}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           >
             <option value="">Select a subject</option>
             {subjects.map(subject => (
@@ -239,7 +239,7 @@ const ContactForm = ({
 
         {/* Message */}
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Message *
           </label>
           <textarea
@@ -251,28 +251,28 @@ const ContactForm = ({
             required
             minLength={20}
             maxLength={500}
-            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all resize-none"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             placeholder="Tell us how we can help you..."
           />
           <div className="flex justify-between mt-2 text-xs">
-            <span className={charCount < 20 ? 'text-red-500' : 'text-gray-400'}>
+            <span className={charCount < 20 ? 'text-red-500' : 'text-gray-400 dark:text-gray-500'}>
               Minimum 20 characters
             </span>
-            <span className="text-gray-400">{charCount}/500</span>
+            <span className="text-gray-400 dark:text-gray-500">{charCount}/500</span>
           </div>
         </div>
 
         {/* File Attachment */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Attachments (optional)
           </label>
           
           <div
             className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
               dragActive 
-                ? 'border-cyan-500 bg-cyan-50' 
-                : 'border-gray-300 hover:border-cyan-400'
+                ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20' 
+                : 'border-gray-300 dark:border-gray-600 hover:border-cyan-400'
             }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
@@ -288,18 +288,18 @@ const ContactForm = ({
               className="hidden"
             />
             
-            <Paperclip className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600 mb-1">
+            <Paperclip className="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
               Drag & drop files here, or{' '}
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="text-cyan-600 font-semibold hover:text-cyan-700"
+                className="text-cyan-600 font-semibold hover:text-cyan-700 dark:text-cyan-400"
               >
                 browse
               </button>
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 dark:text-gray-500">
               Supported: JPG, PNG, PDF, DOC (Max 10MB each)
             </p>
           </div>
@@ -310,12 +310,12 @@ const ContactForm = ({
               {attachments.map((file, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between bg-gray-50 rounded-lg p-2"
+                  className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 rounded-lg p-2"
                 >
                   <div className="flex items-center">
-                    <FileText className="w-4 h-4 text-gray-400 mr-2" />
-                    <span className="text-sm text-gray-700">{file.name}</span>
-                    <span className="text-xs text-gray-400 ml-2">
+                    <FileText className="w-4 h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{file.name}</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500 ml-2">
                       ({(file.size / 1024).toFixed(0)} KB)
                     </span>
                   </div>
@@ -333,7 +333,7 @@ const ContactForm = ({
         </div>
 
         {/* reCAPTCHA Notice */}
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-gray-400 dark:text-gray-500">
           This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
         </p>
 
@@ -380,7 +380,7 @@ const ContactForm = ({
 
         {/* Success Message */}
         {formStatus === 'success' && (
-          <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4 text-cyan-700">
+          <div className="bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-200 dark:border-cyan-800 rounded-xl p-4 text-cyan-700 dark:text-cyan-400">
             <p className="text-sm font-medium">
               Thank you for reaching out! We'll respond within 24 hours.
             </p>
@@ -389,7 +389,7 @@ const ContactForm = ({
 
         {/* Error Message */}
         {formStatus === 'error' && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-red-700">
             <p className="text-sm font-medium">
               Something went wrong. Please try again or contact us directly.
             </p>

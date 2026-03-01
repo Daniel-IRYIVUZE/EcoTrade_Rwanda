@@ -77,9 +77,9 @@ export default function AdminAnalytics() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2"><BarChart2 size={20} className="text-cyan-600"/>Platform Analytics</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2"><BarChart2 size={20} className="text-cyan-600"/>Platform Analytics</h2>
         <div className="flex gap-2">
-          <select value={period} onChange={e => setPeriod(e.target.value as any)} className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+          <select value={period} onChange={e => setPeriod(e.target.value as any)} className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <option value="week">This Week</option>
             <option value="month">This Month</option>
             <option value="year">This Year</option>
@@ -95,24 +95,24 @@ export default function AdminAnalytics() {
           { label: 'CO₂ Saved', value: `${totalCO2.toFixed(0)} kg`, icon: <Leaf size={18} className="text-teal-500"/> },
           { label: 'Transactions', value: completedTxn.length, icon: <BarChart2 size={18} className="text-blue-500"/> },
         ].map(s => (
-          <div key={s.label} className="bg-white border rounded-xl p-4 shadow-sm">
-            <div className="flex items-center gap-2 mb-2">{s.icon}<span className="text-xs text-gray-500">{s.label}</span></div>
-            <p className="text-xl font-bold text-gray-800">{s.value}</p>
+          <div key={s.label} className="bg-white dark:bg-gray-800 border rounded-xl p-4 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">{s.icon}<span className="text-xs text-gray-500 dark:text-gray-400">{s.label}</span></div>
+            <p className="text-xl font-bold text-gray-800 dark:text-gray-200">{s.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white border rounded-xl p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-700 mb-3">Waste by Type (kg)</h3>
+        <div className="bg-white dark:bg-gray-800 border rounded-xl p-4 shadow-sm">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">Waste by Type (kg)</h3>
           <ChartComponent type="bar" data={wasteChartData} height={240}/>
         </div>
-        <div className="bg-white border rounded-xl p-4 shadow-sm">
-          <h3 className="font-semibold text-gray-700 mb-3">Users by Role</h3>
+        <div className="bg-white dark:bg-gray-800 border rounded-xl p-4 shadow-sm">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">Users by Role</h3>
           <ChartComponent type="pie" data={roleChartData as any} height={240}/>
         </div>
-        <div className="bg-white border rounded-xl p-4 shadow-sm md:col-span-2">
-          <h3 className="font-semibold text-gray-700 mb-3">Revenue Trend</h3>
+        <div className="bg-white dark:bg-gray-800 border rounded-xl p-4 shadow-sm md:col-span-2">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">Revenue Trend</h3>
           <ChartComponent type="line" data={txnChartData} height={200}/>
         </div>
       </div>

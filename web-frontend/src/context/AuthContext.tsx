@@ -32,7 +32,7 @@ const DEMO_USERS = [
     email: 'admin@ecotrade.rw',
     password: 'admin123',
     role: 'admin' as const,
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+    avatar: '/images/default-avatar.svg',
     verified: true,
     twoFactorEnabled: false
   },
@@ -42,7 +42,7 @@ const DEMO_USERS = [
     email: 'hotel@millecollines.rw',
     password: 'hotel123',
     role: 'business' as const,
-    avatar: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=100',
+    avatar: '/images/default-avatar.svg',
     verified: true,
     twoFactorEnabled: false
   },
@@ -52,7 +52,7 @@ const DEMO_USERS = [
     email: 'recycler@greenenergy.rw',
     password: 'recycler123',
     role: 'recycler' as const,
-    avatar: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=100',
+    avatar: '/images/default-avatar.svg',
     verified: true,
     twoFactorEnabled: false
   },
@@ -62,7 +62,7 @@ const DEMO_USERS = [
     email: 'driver@ecotrade.rw',
     password: 'driver123',
     role: 'driver' as const,
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100',
+    avatar: '/images/default-avatar.svg',
     verified: true,
     twoFactorEnabled: false
   },
@@ -72,7 +72,7 @@ const DEMO_USERS = [
     email: 'individual@ecotrade.rw',
     password: 'user123',
     role: 'individual' as const,
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100',
+    avatar: '/images/default-avatar.svg',
     verified: true,
     twoFactorEnabled: false
   }

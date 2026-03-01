@@ -20,7 +20,7 @@ const technologies = [
       { name: 'Leaflet.js', description: 'Interactive map visualization' },
       { name: 'PostgreSQL', description: 'Relational data storage' }
     ],
-    color: 'from-cyan-500 to-teal-500'
+    color: 'bg-cyan-600'
   },
   {
     category: 'Mobile First',
@@ -30,7 +30,7 @@ const technologies = [
       { name: 'Offline Sync', description: 'Works without internet' },
       { name: 'Hive', description: 'Local data storage' }
     ],
-    color: 'from-blue-500 to-indigo-500'
+    color: 'bg-blue-600'
   },
   {
     category: 'Web Platform',
@@ -40,7 +40,7 @@ const technologies = [
       { name: 'TypeScript', description: 'Type-safe code' },
       { name: 'Tailwind CSS', description: 'Modern styling' }
     ],
-    color: 'from-purple-500 to-pink-500'
+    color: 'bg-purple-600'
   },
   {
     category: 'Backend Infrastructure',
@@ -50,7 +50,7 @@ const technologies = [
       { name: 'Python', description: 'Business logic' },
       { name: 'JWT', description: 'Secure authentication' }
     ],
-    color: 'from-orange-500 to-red-500'
+    color: 'bg-orange-300'
   },
   {
     category: 'Cloud Services',
@@ -60,7 +60,7 @@ const technologies = [
       { name: 'Docker', description: 'Containerization' },
       { name: 'Nginx', description: 'Load balancing' }
     ],
-    color: 'from-cyan-500 to-blue-500'
+    color: 'bg-cyan-600'
   },
   {
     category: 'Security & Compliance',
@@ -70,7 +70,7 @@ const technologies = [
       { name: 'Encryption', description: 'End-to-end security' },
       { name: 'Audit Logs', description: 'Full traceability' }
     ],
-    color: 'from-cyan-500 to-cyan-500'
+    color: 'bg-cyan-600'
   }
 ];
 
@@ -89,16 +89,16 @@ const TechnologyStack = ({ onReadMore }: TechnologyStackProps) => {
   };
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-white dark:bg-gray-900">
+      <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-cyan-600 font-semibold text-sm uppercase tracking-wider">
             Powered By
           </span>
-          <h2 className="text-4xl font-bold text-gray-900 mt-2 mb-6">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mt-2 mb-6">
             Our <span className="text-cyan-600">Technology</span> Stack
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Built with modern, open-source technologies for reliability and scalability
           </p>
         </div>
@@ -107,20 +107,20 @@ const TechnologyStack = ({ onReadMore }: TechnologyStackProps) => {
           {technologies.map((tech, index) => (
             <div
               key={index}
-              className="bg-gray-50 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group"
+              className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group"
             >
               <div className="flex items-center mb-6">
-                <div className={`p-3 rounded-xl bg-gradient-to-r ${tech.color} text-white mr-4`}>
+                <div className={`p-3 rounded-xl ${tech.color} text-white mr-4`}>
                   <tech.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">{tech.category}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">{tech.category}</h3>
               </div>
 
               <div className="space-y-4">
                 {tech.items.map((item, idx) => (
-                  <div key={idx} className="border-l-2 border-gray-200 pl-4 hover:border-cyan-500 transition-colors">
-                    <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                    <p className="text-sm text-gray-600">{item.description}</p>
+                  <div key={idx} className="border-l-2 border-gray-200 dark:border-gray-700 pl-4 hover:border-cyan-500 transition-colors">
+                    <h4 className="font-semibold text-gray-900 dark:text-white">{item.name}</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{item.description}</p>
                   </div>
                 ))}
               </div>
@@ -129,20 +129,20 @@ const TechnologyStack = ({ onReadMore }: TechnologyStackProps) => {
         </div>
 
         {/* Architecture Diagram Placeholder */}
-        <div className="mt-16 bg-gradient-to-r from-cyan-900 to-teal-800 rounded-2xl p-8 text-white">
+        <div className="mt-16 bg-cyan-900 rounded-2xl p-8 text-white">
           <h3 className="text-2xl font-bold mb-4">Three-Tier Architecture</h3>
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+            <div className="bg-white dark:bg-gray-800/10 backdrop-blur-sm rounded-xl p-4">
               <Globe className="w-8 h-8 mb-2 text-cyan-300" />
               <h4 className="font-semibold mb-2">Presentation Tier</h4>
               <p className="text-sm text-cyan-100">React Web + Flutter Mobile</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+            <div className="bg-white dark:bg-gray-800/10 backdrop-blur-sm rounded-xl p-4">
               <Zap className="w-8 h-8 mb-2 text-cyan-300" />
               <h4 className="font-semibold mb-2">Application Tier</h4>
               <p className="text-sm text-cyan-100">FastAPI + Business Logic</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+            <div className="bg-white dark:bg-gray-800/10 backdrop-blur-sm rounded-xl p-4">
               <Database className="w-8 h-8 mb-2 text-cyan-300" />
               <h4 className="font-semibold mb-2">Data Tier</h4>
               <p className="text-sm text-cyan-100">PostgreSQL + PostGIS</p>

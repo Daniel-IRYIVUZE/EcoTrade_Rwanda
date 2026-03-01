@@ -11,14 +11,14 @@ const InteractiveMap = () => {
   // For now, we'll create a placeholder with sample data
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center justify-between mb-12">
           <div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Live <span className="text-cyan-600">Marketplace Map</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
               See real-time waste listings and collection activity across Kigali
             </p>
           </div>
@@ -30,15 +30,15 @@ const InteractiveMap = () => {
         </div>
 
         {/* Map Placeholder with Interactive Elements */}
-        <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-          <div ref={mapRef} className="h-[500px] bg-gray-100 relative">
+        <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div ref={mapRef} className="h-[500px] bg-gray-100 dark:bg-gray-700 relative">
             {/* Map Controls */}
             <div className="absolute top-4 right-4 flex flex-col space-y-2 z-10">
-              <button className="bg-white p-2 rounded-lg shadow-lg hover:bg-gray-50">
-                <ZoomIn className="w-5 h-5 text-gray-600" />
+              <button className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                <ZoomIn className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>
-              <button className="bg-white p-2 rounded-lg shadow-lg hover:bg-gray-50">
-                <ZoomOut className="w-5 h-5 text-gray-600" />
+              <button className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                <ZoomOut className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>
             </div>
 
@@ -54,29 +54,29 @@ const InteractiveMap = () => {
               <div className="absolute top-1/4 left-1/3 transform -translate-x-1/2 -translate-y-1/2 group">
                 <div className="relative">
                   <MapPin className="w-8 h-8 text-cyan-600 fill-cyan-600/30 animate-bounce" />
-                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-900 px-3 py-1 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                     <p className="text-sm font-medium">Mille Collines Hotel</p>
-                    <p className="text-xs text-gray-600">50kg UCO Available</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">50kg UCO Available</p>
                   </div>
                 </div>
               </div>
 
               <div className="absolute top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group">
                 <div className="relative">
-                  <MapPin className="w-8 h-8 text-blue-600 fill-blue-600/30" />
-                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MapPin className="w-8 h-8 text-blue-600 dark:text-blue-400 fill-blue-600/30" />
+                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-900 px-3 py-1 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                     <p className="text-sm font-medium">GreenEnergy Recycler</p>
-                    <p className="text-xs text-gray-600">Accepting UCO & Glass</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">Accepting UCO & Glass</p>
                   </div>
                 </div>
               </div>
 
               <div className="absolute top-1/2 left-2/3 transform -translate-x-1/2 -translate-y-1/2 group">
                 <div className="relative">
-                  <MapPin className="w-8 h-8 text-orange-600 fill-orange-600/30" />
-                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white px-3 py-1 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                  <MapPin className="w-8 h-8 text-orange-300 dark:text-orange-300 fill-orange-300/30" />
+                  <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-900 px-3 py-1 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
                     <p className="text-sm font-medium">Driver Jean</p>
-                    <p className="text-xs text-gray-600">En Route - 3 stops left</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">En Route - 3 stops left</p>
                   </div>
                 </div>
               </div>
@@ -95,19 +95,19 @@ const InteractiveMap = () => {
             </div>
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-              <h4 className="font-semibold text-gray-900 mb-2">Map Legend</h4>
+            <div className="absolute bottom-4 left-4 bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Map Legend</h4>
               <div className="space-y-2">
                 <div className="flex items-center">
                   <MapPin className="w-5 h-5 text-cyan-600 mr-2" />
                   <span className="text-sm">Hotels (waste generators)</span>
                 </div>
                 <div className="flex items-center">
-                  <MapPin className="w-5 h-5 text-blue-600 mr-2" />
+                  <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" />
                   <span className="text-sm">Recyclers</span>
                 </div>
                 <div className="flex items-center">
-                  <MapPin className="w-5 h-5 text-orange-600 mr-2" />
+                  <MapPin className="w-5 h-5 text-orange-300 dark:text-orange-300 mr-2" />
                   <span className="text-sm">Active Drivers</span>
                 </div>
                 <div className="flex items-center">
@@ -118,15 +118,15 @@ const InteractiveMap = () => {
             </div>
 
             {/* Location Info */}
-            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg">
+            <div className="absolute top-4 left-4 bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg">
               <p className="text-sm font-medium">📍 Kigali, Rwanda</p>
-              <p className="text-xs text-gray-600">Nyarugenge • Gasabo • Kicukiro</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Nyarugenge • Gasabo • Kicukiro</p>
             </div>
           </div>
 
           {/* Map Footer */}
-          <div className="bg-white px-6 py-4 border-t border-gray-200">
-            <div className="flex items-center justify-between text-sm text-gray-600">
+          <div className="bg-white dark:bg-gray-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-center space-x-4">
                 <span className="flex items-center">
                   <span className="w-3 h-3 bg-cyan-500 rounded-full mr-2"></span>
@@ -137,7 +137,7 @@ const InteractiveMap = () => {
                   12 Recyclers Online
                 </span>
                 <span className="flex items-center">
-                  <span className="w-3 h-3 bg-orange-500 rounded-full mr-2"></span>
+                  <span className="w-3 h-3 bg-orange-300 rounded-full mr-2"></span>
                   23 Drivers on Route
                 </span>
               </div>
@@ -148,7 +148,7 @@ const InteractiveMap = () => {
 
         {/* "See Live Marketplace" Link */}
         <div className="text-center mt-8">
-          <button onClick={() => navigate('/marketplace')} className="text-cyan-600 font-semibold hover:text-cyan-700 inline-flex items-center group">
+          <button onClick={() => navigate('/marketplace')} className="text-cyan-600 font-semibold hover:text-cyan-700 dark:text-cyan-400 inline-flex items-center group">
             Explore full marketplace
             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>

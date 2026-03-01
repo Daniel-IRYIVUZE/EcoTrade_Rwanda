@@ -9,6 +9,7 @@ import {
   CheckCircle, Warehouse, Route
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 interface SidebarProps {
   userRole: 'admin' | 'business' | 'recycler' | 'driver' | 'individual';
@@ -18,6 +19,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logout } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -121,39 +123,39 @@ const Sidebar = ({ userRole }: SidebarProps) => {
 
   return (
     <>
-      <button onClick={() => setMobileOpen(true)} className="md:hidden fixed top-3 left-3 z-50 p-2 bg-gray-900 text-white rounded-lg shadow-lg" aria-label="Open sidebar">
+      <button onClick={() => setMobileOpen(true)} className="md:hidden fixed top-3 left-3 z-50 p-2 bg-gray-900 dark:bg-gray-800 text-white rounded-lg shadow-lg" aria-label="Open sidebar">
         <Menu size={20} />
       </button>
       {mobileOpen && <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setMobileOpen(false)} />}
-      <aside className={`${collapsed ? 'w-20' : 'w-64'} bg-gray-900 text-white flex flex-col transition-all duration-300 fixed md:relative inset-y-0 left-0 z-50 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between min-h-[64px]">
+      <aside className={`${collapsed ? 'w-20' : 'w-64'} ${isDark ? 'bg-gray-900 text-white' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-r border-gray-200'} flex flex-col transition-all duration-300 fixed md:relative inset-y-0 left-0 z-50 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between min-h-[64px]">
           {!collapsed ? (
             <div className="flex items-center space-x-3"><img src="/images/EcoTrade1.png" alt="EcoTrade" className="h-10" /></div>
           ) : (
             <img src="/images/EcoTrade.png" alt="EcoTrade" className="h-10 mx-auto" />
           )}
           <div className="flex items-center gap-1">
-            <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 rounded hover:bg-gray-800"><X size={20} /></button>
-            <button onClick={() => setCollapsed(!collapsed)} className="hidden md:block p-1 rounded hover:bg-gray-800">
+            <button onClick={() => setMobileOpen(false)} className="md:hidden p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800"><X size={20} /></button>
+            <button onClick={() => setCollapsed(!collapsed)} className="hidden md:block p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800">
               {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
             </button>
           </div>
         </div>
-        {!collapsed && <div className="px-4 py-2 border-b border-gray-800"><p className="text-xs text-gray-500 uppercase tracking-wider">{config.label}</p></div>}
+        {!collapsed && <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-800"><p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wider">{config.label}</p></div>}
         <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
-          <NavLink to="/" onClick={() => setMobileOpen(false)} className="flex items-center space-x-3 p-2.5 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 border-b border-gray-800 mb-1 pb-2.5">
+          <NavLink to="/" onClick={() => setMobileOpen(false)} className="flex items-center space-x-3 p-2.5 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 border-b border-gray-100 dark:border-gray-800 mb-1 pb-2.5">
             <Home size={18} />{!collapsed && <span className="text-sm">Home</span>}
           </NavLink>
           {config.navItems.map((item) => (
             <NavLink key={item.path} to={item.path} end={item.path === `/dashboard/${userRole}`} onClick={() => setMobileOpen(false)}
-              className={({ isActive }) => `flex items-center space-x-3 p-2.5 rounded-lg transition-colors text-sm ${isActive ? 'bg-cyan-600 text-white' : 'hover:bg-gray-800 text-gray-300'}`}>
+              className={({ isActive }) => `flex items-center space-x-3 p-2.5 rounded-lg transition-colors text-sm ${isActive ? 'bg-cyan-600 text-white' : `hover:bg-gray-100 dark:hover:bg-gray-800 ${isDark ? 'text-gray-300' : 'text-gray-700 dark:text-gray-300'}`}`}>
               {item.icon}{!collapsed && <span>{item.label}</span>}
             </NavLink>
           ))}
         </nav>
-        <div className="p-3 border-t border-gray-800">
-          {!collapsed && <div className="mb-3"><p className="text-xs text-gray-500">Logged in as</p><p className="text-sm font-medium capitalize">{userRole}</p></div>}
-          <button onClick={handleLogout} className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-red-900/50 text-gray-300 hover:text-red-300 w-full transition-colors">
+        <div className="p-3 border-t border-gray-200 dark:border-gray-800">
+          {!collapsed && <div className="mb-3"><p className="text-xs text-gray-400 dark:text-gray-500">Logged in as</p><p className="text-sm font-medium capitalize text-gray-700 dark:text-gray-200">{userRole}</p></div>}
+          <button onClick={handleLogout} className="flex items-center space-x-3 p-2.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/50 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-300 w-full transition-colors">
             <LogOut size={18} />{!collapsed && <span className="text-sm">Logout</span>}
           </button>
         </div>

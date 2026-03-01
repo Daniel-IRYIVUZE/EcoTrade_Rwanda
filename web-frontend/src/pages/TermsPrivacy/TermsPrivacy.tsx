@@ -150,12 +150,12 @@ const TermsPrivacyPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-cyan-50/30">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-cyan-50/30 dark:from-gray-950 dark:to-gray-950 transition-colors duration-300">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-slate-200">
-        <div className="lg:w-11/12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-800/90 dark:bg-gray-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-gray-800">
+        <div className="lg:w-11/12 max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/login" className="flex items-center gap-3 text-slate-700 hover:text-slate-900 transition-colors">
+            <Link to="/login" className="flex items-center gap-3 text-slate-700 dark:text-gray-300 hover:text-slate-900 dark:hover:text-white transition-colors">
               <ArrowLeft size={20} />
               <span className="font-medium">Back to Login</span>
             </Link>
@@ -163,17 +163,17 @@ const TermsPrivacyPage = () => {
         </div>
       </header>
 
-      <main className="lg:w-11/12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="lg:w-11/12 max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 text-center"
         >
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-4">
             Terms & Privacy Policy
           </h1>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
             Your trust is important to us. Please review our terms and privacy practices before using the EcoTrade platform.
           </p>
         </motion.div>
@@ -184,10 +184,10 @@ const TermsPrivacyPage = () => {
             <button
               key={section.id}
               onClick={() => document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl hover:border-cyan-300 hover:shadow-sm transition-all"
+              className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-900 border border-slate-200 rounded-xl hover:border-cyan-300 dark:border-cyan-700 hover:shadow-sm transition-all"
             >
               {section.icon}
-              <span className="font-medium text-slate-700">{section.title}</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200">{section.title}</span>
             </button>
           ))}
         </div>
@@ -197,14 +197,14 @@ const TermsPrivacyPage = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* Terms of Service */}
             <section id="terms" className="scroll-mt-24">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-cyan-50 to-white">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-100 bg-white dark:bg-gray-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <FileText className="text-cyan-600" size={24} />
-                      <h2 className="text-2xl font-bold text-slate-900">Terms of Service</h2>
+                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Terms of Service</h2>
                     </div>
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-500 dark:text-slate-400">
                       Last updated: {sections[0].lastUpdated}
                     </div>
                   </div>
@@ -219,8 +219,8 @@ const TermsPrivacyPage = () => {
                       transition={{ delay: index * 0.1 }}
                       className="pb-6 border-b border-slate-100 last:border-b-0 last:pb-0"
                     >
-                      <h3 className="text-lg font-bold text-slate-900 mb-3">{term.title}</h3>
-                      <p className="text-slate-600 leading-relaxed">{term.content}</p>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{term.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{term.content}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -229,14 +229,14 @@ const TermsPrivacyPage = () => {
 
             {/* Privacy Policy */}
             <section id="privacy" className="scroll-mt-24">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-cyan-50 to-white">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-100 bg-white dark:bg-gray-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Lock className="text-cyan-600" size={24} />
-                      <h2 className="text-2xl font-bold text-slate-900">Privacy Policy</h2>
+                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Privacy Policy</h2>
                     </div>
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-500 dark:text-slate-400">
                       Last updated: {sections[1].lastUpdated}
                     </div>
                   </div>
@@ -244,7 +244,7 @@ const TermsPrivacyPage = () => {
                 
                 <div className="p-6">
                   <div className="mb-6">
-                    <p className="text-slate-600 mb-6">
+                    <p className="text-slate-600 dark:text-slate-400 mb-6">
                       This Privacy Policy describes how EcoTrade collects, uses, and shares your personal information when you use our platform.
                     </p>
                   </div>
@@ -260,7 +260,7 @@ const TermsPrivacyPage = () => {
                       >
                         <div className="flex items-center gap-3 mb-3">
                           {item.icon}
-                          <h3 className="font-bold text-slate-900">{item.title}</h3>
+                          <h3 className="font-bold text-slate-900 dark:text-white">{item.title}</h3>
                         </div>
                         <p className="text-slate-600 text-sm leading-relaxed">{item.content}</p>
                       </motion.div>
@@ -272,14 +272,14 @@ const TermsPrivacyPage = () => {
 
             {/* Data Protection */}
             <section id="data" className="scroll-mt-24">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-cyan-50 to-white">
+              <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-100 bg-white dark:bg-gray-800">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Database className="text-cyan-600" size={24} />
-                      <h2 className="text-2xl font-bold text-slate-900">Data Protection</h2>
+                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Data Protection</h2>
                     </div>
-                    <div className="text-sm text-slate-500">
+                    <div className="text-sm text-slate-500 dark:text-slate-400">
                       Last updated: {sections[2].lastUpdated}
                     </div>
                   </div>
@@ -294,8 +294,8 @@ const TermsPrivacyPage = () => {
                       transition={{ delay: index * 0.1 }}
                       className="pb-6 border-b border-slate-100 last:border-b-0 last:pb-0"
                     >
-                      <h3 className="text-lg font-bold text-slate-900 mb-3">{item.title}</h3>
-                      <p className="text-slate-600 leading-relaxed">{item.content}</p>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{item.content}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -306,52 +306,52 @@ const TermsPrivacyPage = () => {
           {/* Right Column - Accept Box */}
           <div className="lg:col-span-1">
             <div className="sticky top-32">
-              <div className="bg-gradient-to-b from-white to-cyan-50/30 rounded-2xl border-2 border-cyan-200 shadow-lg p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-cyan-200 dark:border-cyan-800 shadow-lg p-6">
                 <div className="text-center mb-6">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 text-cyan-600 rounded-2xl mb-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 rounded-2xl mb-4">
                     <Shield size={32} />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Accept Terms</h3>
-                  <p className="text-sm text-slate-600">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Accept Terms</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
                     By accepting, you agree to our Terms of Service and Privacy Policy
                   </p>
                 </div>
 
                 {/* Agreement Checkboxes */}
                 <div className="space-y-4 mb-6">
-                  <label className="flex items-start gap-3 p-3 bg-white/50 rounded-xl border border-slate-200 cursor-pointer hover:bg-white">
+                  <label className="flex items-start gap-3 p-3 bg-white dark:bg-gray-800/50 rounded-xl border border-slate-200 cursor-pointer hover:bg-white dark:bg-gray-900">
                     <input
                       type="checkbox"
                       className="mt-1 w-4 h-4 text-cyan-600 border-slate-300 rounded focus:ring-cyan-500"
                       defaultChecked
                     />
                     <div>
-                      <div className="font-medium text-slate-900">Terms of Service</div>
-                      <div className="text-xs text-slate-500">I have read and agree to the Terms of Service</div>
+                      <div className="font-medium text-slate-900 dark:text-white">Terms of Service</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">I have read and agree to the Terms of Service</div>
                     </div>
                   </label>
 
-                  <label className="flex items-start gap-3 p-3 bg-white/50 rounded-xl border border-slate-200 cursor-pointer hover:bg-white">
+                  <label className="flex items-start gap-3 p-3 bg-white dark:bg-gray-800/50 rounded-xl border border-slate-200 cursor-pointer hover:bg-white dark:bg-gray-900">
                     <input
                       type="checkbox"
                       className="mt-1 w-4 h-4 text-cyan-600 border-slate-300 rounded focus:ring-cyan-500"
                       defaultChecked
                     />
                     <div>
-                      <div className="font-medium text-slate-900">Privacy Policy</div>
-                      <div className="text-xs text-slate-500">I agree to the data collection and usage practices</div>
+                      <div className="font-medium text-slate-900 dark:text-white">Privacy Policy</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">I agree to the data collection and usage practices</div>
                     </div>
                   </label>
 
-                  <label className="flex items-start gap-3 p-3 bg-white/50 rounded-xl border border-slate-200 cursor-pointer hover:bg-white">
+                  <label className="flex items-start gap-3 p-3 bg-white dark:bg-gray-800/50 rounded-xl border border-slate-200 cursor-pointer hover:bg-white dark:bg-gray-900">
                     <input
                       type="checkbox"
                       className="mt-1 w-4 h-4 text-cyan-600 border-slate-300 rounded focus:ring-cyan-500"
                       defaultChecked
                     />
                     <div>
-                      <div className="font-medium text-slate-900">Data Protection</div>
-                      <div className="text-xs text-slate-500">I acknowledge the data protection measures</div>
+                      <div className="font-medium text-slate-900 dark:text-white">Data Protection</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">I acknowledge the data protection measures</div>
                     </div>
                   </label>
                 </div>
@@ -362,7 +362,7 @@ const TermsPrivacyPage = () => {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleAccept}
                   disabled={loading || accepted}
-                  className="w-full bg-gradient-to-r from-cyan-600 to-cyan-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-cyan-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>
@@ -383,18 +383,18 @@ const TermsPrivacyPage = () => {
                 </motion.button>
 
                 <div className="mt-4 text-center">
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     Returning to login page after acceptance
                   </p>
                 </div>
 
                 {/* Important Notes */}
-                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
                   <div className="flex items-start gap-3">
-                    <AlertTriangle className="text-amber-600 flex-shrink-0" size={18} />
+                    <AlertTriangle className="text-amber-600 dark:text-amber-400 flex-shrink-0" size={18} />
                     <div>
-                      <h4 className="font-medium text-slate-900 mb-1">Important Notes</h4>
-                      <ul className="text-xs text-slate-600 space-y-1">
+                      <h4 className="font-medium text-slate-900 dark:text-white mb-1">Important Notes</h4>
+                      <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-1">
                         <li>• You must be 18+ or have parental consent</li>
                         <li>• Business accounts require valid registration</li>
                         <li>• Keep your login credentials secure</li>
@@ -406,7 +406,7 @@ const TermsPrivacyPage = () => {
 
                 {/* Contact Info */}
                 <div className="mt-6 p-4 bg-slate-50 rounded-xl">
-                  <h4 className="font-medium text-slate-900 mb-2">Contact Information</h4>
+                  <h4 className="font-medium text-slate-900 dark:text-white mb-2">Contact Information</h4>
                   <div className="space-y-2 text-sm text-slate-600">
                     <div>Email: legal@EcoTrade.rw</div>
                     <div>Phone: +250 780 162 164</div>
@@ -418,7 +418,7 @@ const TermsPrivacyPage = () => {
               {/* Scroll to top button */}
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="mt-4 w-full py-3 bg-white border border-slate-200 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-all"
+                className="mt-4 w-full py-3 bg-white dark:bg-gray-900 border border-slate-200 rounded-xl font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 transition-all"
               >
                 Back to Top
               </button>
@@ -427,10 +427,10 @@ const TermsPrivacyPage = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-12 p-6 bg-gradient-to-r from-cyan-900/5 to-cyan-900/5 rounded-2xl border border-cyan-100">
+        <div className="mt-12 p-6 bg-cyan-50 dark:bg-cyan-900/20 rounded-2xl border border-cyan-100 dark:border-cyan-800">
           <div className="text-center">
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Questions?</h3>
-            <p className="text-slate-600 mb-4 max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Questions?</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-4 max-w-2xl mx-auto">
               If you have any questions about our terms or privacy practices, please don't hesitate to contact our legal team.
             </p>
             <a
@@ -445,16 +445,16 @@ const TermsPrivacyPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 border-t border-slate-200 bg-white">
-        <div className="lg:w-11/12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <footer className="mt-12 border-t border-slate-200 bg-white dark:bg-gray-900">
+        <div className="lg:w-11/12 max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-3">
               <Globe className="text-slate-400" size={20} />
-              <span className="text-sm text-slate-600">© 2026 EcoTrade. All rights reserved.</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400">© 2026 EcoTrade. All rights reserved.</span>
             </div>
             
             <div className="flex items-center gap-6">
-              <Link to="/contact" className="text-sm text-slate-600 hover:text-slate-900">
+              <Link to="/contact" className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900">
                 Contact Us
               </Link>
             </div>

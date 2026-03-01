@@ -11,45 +11,45 @@ const MarketplaceStats = ({ listings }: MarketplaceStatsProps) => {
   const activeBids = listings.reduce((acc, curr) => acc + curr.bidCount, 0);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-4 sm:p-6 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-cyan-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600 dark:text-cyan-400" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-gray-600 truncate">Active Listings</p>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{listings.length}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Active Listings</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{listings.length}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Factory className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Factory className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-gray-600 truncate">Active Recyclers</p>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{uniqueRecyclers}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Active Recyclers</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{uniqueRecyclers}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-gray-600 truncate">Total Volume</p>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{totalVolume} kg</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Total Volume</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{totalVolume} kg</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-orange-100 dark:bg-orange-300/30 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-orange-300 dark:text-orange-300" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-gray-600 truncate">Active Bids</p>
-            <p className="text-xl sm:text-2xl font-bold text-gray-900">{activeBids}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Active Bids</p>
+            <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{activeBids}</p>
           </div>
         </div>
       </div>

@@ -40,21 +40,21 @@ const TwoFactorModal = ({ email, onClose, onVerify }: TwoFactorModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-2xl max-w-md w-full">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl max-w-md w-full">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
           <div className="flex items-center">
             <Shield className="w-5 h-5 text-cyan-600 mr-2" />
-            <h2 className="text-xl font-bold text-gray-900">OTP Verification</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">OTP Verification</h2>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6">
-          <p className="text-sm text-gray-600 mb-6">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
             Enter the OTP sent to {email.replace(/(.{2}).*(.{2}@)/, '$1***$2')}
           </p>
 
@@ -68,27 +68,27 @@ const TwoFactorModal = ({ email, onClose, onVerify }: TwoFactorModalProps) => {
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleCodeChange(index, e.target.value)}
-                className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+                className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             ))}
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl flex items-center">
-              <AlertCircle className="w-4 h-4 text-red-600 mr-2" />
-              <p className="text-xs text-red-600">{error}</p>
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center">
+              <AlertCircle className="w-4 h-4 text-red-600 dark:text-red-400 mr-2" />
+              <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
             </div>
           )}
 
           {/* Actions */}
           <button
             onClick={handleSubmit}
-            className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+            className="w-full bg-cyan-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
           >
             Verify OTP
           </button>
 
-          <p className="text-xs text-gray-500 text-center mt-4">
+          <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
             Didn't receive it? <button className="text-cyan-600 font-semibold">Resend OTP</button>
           </p>
         </div>

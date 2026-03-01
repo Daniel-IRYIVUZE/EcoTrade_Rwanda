@@ -17,14 +17,14 @@ const ServicesPage = () => {
   const [activeTab, setActiveTab] = useState<'hotels' | 'recyclers' | 'drivers'>('hotels');
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
       <Navbar />
       
       <main>
         <ServicesHero />
         
         {/* Service Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
+        <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
           <ServiceTabs activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
 

@@ -60,15 +60,15 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <Sliders className="w-5 h-5 text-cyan-600 mr-2" />
-          <h3 className="font-bold text-gray-900">Filters</h3>
+          <h3 className="font-bold text-gray-900 dark:text-white">Filters</h3>
         </div>
         <button
           onClick={clearFilters}
-          className="text-sm text-cyan-600 hover:text-cyan-700"
+          className="text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400"
         >
           Clear all
         </button>
@@ -76,11 +76,11 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
 
       {/* Sort By */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Sort By</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Sort By</h4>
         <select
           value={filters.sortBy}
           onChange={(e) => handleSortChange(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
         >
           <option value="newest">Newest First</option>
           <option value="ending-soon">Ending Soon</option>
@@ -93,7 +93,7 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
 
       {/* Waste Type */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Waste Type</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Waste Type</h4>
         <div className="space-y-2">
           {wasteTypes.map((type) => (
             <label key={type.id} className="flex items-center justify-between cursor-pointer">
@@ -102,11 +102,11 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
                   type="checkbox"
                   checked={filters.wasteTypes.includes(type.id)}
                   onChange={() => handleWasteTypeChange(type.id)}
-                  className="w-4 h-4 text-cyan-600 rounded border-gray-300 focus:ring-cyan-500"
+                  className="w-4 h-4 text-cyan-600 rounded border-gray-300 dark:border-gray-600 focus:ring-cyan-500"
                 />
-                <span className="ml-2 text-sm text-gray-700">{type.label}</span>
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">{type.label}</span>
               </div>
-              <span className="text-xs text-gray-400">({type.count})</span>
+              <span className="text-xs text-gray-400 dark:text-gray-500">({type.count})</span>
             </label>
           ))}
         </div>
@@ -114,11 +114,11 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
 
       {/* Location */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Location</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Location</h4>
         <select
           value={filters.location}
           onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
         >
           <option value="">All Districts</option>
           {locations.map(loc => (
@@ -129,7 +129,7 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
 
       {/* Distance */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Distance (km)</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Distance (km)</h4>
         <div className="space-y-2">
           <input
             type="range"
@@ -139,7 +139,7 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
             onChange={handleDistanceChange}
             className="w-full accent-cyan-600"
           />
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>Within {filters.distance} km</span>
           </div>
         </div>
@@ -147,28 +147,28 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
 
       {/* Volume Range */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Volume (kg)</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Volume (kg)</h4>
         <div className="grid grid-cols-2 gap-3">
           <input
             type="number"
             value={filters.minVolume}
             onChange={(e) => handleVolumeChange('min', parseInt(e.target.value))}
             placeholder="Min"
-            className="px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           />
           <input
             type="number"
             value={filters.maxVolume}
             onChange={(e) => handleVolumeChange('max', parseInt(e.target.value))}
             placeholder="Max"
-            className="px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           />
         </div>
       </div>
 
       {/* Hotel Rating */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Hotel Rating</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Hotel Rating</h4>
         <div className="flex items-center space-x-2">
           {[4, 3, 2, 1].map((rating) => (
             <button
@@ -177,7 +177,7 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
               className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                 filters.hotelRating === rating
                   ? 'bg-cyan-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
               }`}
             >
               {rating}+ ★
@@ -188,11 +188,11 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
 
       {/* Time Remaining */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 mb-3">Time Remaining</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Time Remaining</h4>
         <select
           value={filters.timeRemaining}
           onChange={(e) => setFilters({ ...filters, timeRemaining: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
         >
           <option value="">Any time</option>
           <option value="1h">Last hour</option>

@@ -7,13 +7,13 @@ interface ContactInfoProps {
 
 const ContactInfo = ({ onOpenChat }: ContactInfoProps) => {
   return (
-    <div className="bg-gradient-to-br from-cyan-600 to-teal-600 rounded-2xl shadow-xl p-6 text-white">
+    <div className="bg-cyan-600 rounded-2xl shadow-xl p-6 text-white">
       <h3 className="text-xl font-bold mb-6">Contact Information</h3>
       
       <div className="space-y-6">
         {/* Address */}
         <div className="flex items-start space-x-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+          <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-lg p-2">
             <MapPin className="w-5 h-5" />
           </div>
           <div>
@@ -26,7 +26,7 @@ const ContactInfo = ({ onOpenChat }: ContactInfoProps) => {
 
         {/* Phone */}
         <div className="flex items-start space-x-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+          <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-lg p-2">
             <Phone className="w-5 h-5" />
           </div>
           <div>
@@ -45,7 +45,7 @@ const ContactInfo = ({ onOpenChat }: ContactInfoProps) => {
 
         {/* Email */}
         <div className="flex items-start space-x-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+          <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-lg p-2">
             <Mail className="w-5 h-5" />
           </div>
           <div>
@@ -63,7 +63,7 @@ const ContactInfo = ({ onOpenChat }: ContactInfoProps) => {
 
         {/* Hours */}
         <div className="flex items-start space-x-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+          <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-lg p-2">
             <Clock className="w-5 h-5" />
           </div>
           <div>
@@ -76,7 +76,7 @@ const ContactInfo = ({ onOpenChat }: ContactInfoProps) => {
 
         {/* Website */}
         <div className="flex items-start space-x-4">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
+          <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-lg p-2">
             <Globe className="w-5 h-5" />
           </div>
           <div>
@@ -109,7 +109,7 @@ const ContactInfo = ({ onOpenChat }: ContactInfoProps) => {
         <button
           type="button"
           onClick={onOpenChat}
-          className="w-full bg-white/10 hover:bg-white/20 text-white rounded-xl py-3 font-semibold flex items-center justify-center transition-colors"
+          className="w-full bg-gray-800/10/20 hover:bg-gray-800/10/30 dark:bg-gray-800/20 dark:hover:bg-gray-800/40 text-white rounded-xl py-10 font-semibold flex items-center justify-center transition-colors"
         >
           <MessageCircle className="w-4 h-4 mr-2" />
           Start Live Chat

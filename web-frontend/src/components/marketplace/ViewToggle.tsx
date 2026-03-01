@@ -8,13 +8,13 @@ interface ViewToggleProps {
 
 const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
   return (
-    <div className="bg-white rounded-xl shadow-md p-1 flex">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-md p-1 flex">
       <button
         onClick={() => setViewMode('grid')}
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
           viewMode === 'grid'
             ? 'bg-cyan-600 text-white'
-            : 'text-gray-600 hover:bg-gray-100'
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:bg-gray-800'
         }`}
       >
         <Grid className="w-4 h-4" />
@@ -25,7 +25,7 @@ const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
           viewMode === 'map'
             ? 'bg-cyan-600 text-white'
-            : 'text-gray-600 hover:bg-gray-100'
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:bg-gray-800'
         }`}
       >
         <Map className="w-4 h-4" />

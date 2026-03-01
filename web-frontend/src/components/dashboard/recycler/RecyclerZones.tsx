@@ -12,20 +12,20 @@ const zones = [
 export default function RecyclerZones() {
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Collection Zones</h1>
-      <div className="bg-white rounded-lg shadow border p-6 mb-4">
-        <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg h-64 flex items-center justify-center">
-          <div className="text-center text-gray-500"><MapPin size={48} className="mx-auto mb-2 opacity-50" /><p className="text-sm">Zone Map — Coverage areas and hotel locations</p></div>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Collection Zones</h1>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 mb-4">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-64 flex items-center justify-center">
+          <div className="text-center text-gray-500 dark:text-gray-400"><MapPin size={48} className="mx-auto mb-2 opacity-50" /><p className="text-sm">Zone Map — Coverage areas and hotel locations</p></div>
         </div>
       </div>
-      <div className="bg-white rounded-lg shadow border p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
         <DataTable
           columns={[
-            { key: 'name', label: 'Zone', render: (v: string) => <span className="font-medium text-gray-900">{v}</span> },
+            { key: 'name', label: 'Zone', render: (v: string) => <span className="font-medium text-gray-900 dark:text-white">{v}</span> },
             { key: 'hotels', label: 'Hotels' },
             { key: 'activeListings', label: 'Active Listings' },
             { key: 'distance', label: 'Distance' },
-            { key: 'priority', label: 'Priority', render: (v: string) => <span className={`capitalize px-2 py-0.5 rounded text-xs font-medium ${v === 'high' ? 'bg-red-100 text-red-700' : v === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>{v}</span> },
+            { key: 'priority', label: 'Priority', render: (v: string) => <span className={`capitalize px-2 py-0.5 rounded text-xs font-medium ${v === 'high' ? 'bg-red-100 text-red-700' : v === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}>{v}</span> },
           ]}
           data={zones}
         />

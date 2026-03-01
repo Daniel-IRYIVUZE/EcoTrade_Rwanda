@@ -14,7 +14,7 @@ const NewsletterWidget = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-cyan-600 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
+    <div className="bg-cyan-600 rounded-2xl shadow-lg p-6 text-white">
       <div className="flex items-center mb-4">
         <Mail className="w-6 h-6 mr-2" />
         <h3 className="text-lg font-bold">Weekly Newsletter</h3>
@@ -31,12 +31,12 @@ const NewsletterWidget = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email address"
           required
-          className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-cyan-200 focus:ring-2 focus:ring-white outline-none"
+          className="w-full px-4 py-3 bg-white dark:bg-gray-800/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-cyan-200 focus:ring-2 focus:ring-white outline-none"
         />
 
         <button
           type="submit"
-          className="w-full bg-white text-cyan-600 px-4 py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
+          className="w-full bg-white dark:bg-gray-900 text-cyan-600 px-4 py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
         >
           {subscribed ? (
             <>
@@ -62,7 +62,7 @@ const NewsletterWidget = () => {
           {[1, 2, 3, 4].map((i) => (
             <img
               key={i}
-              src={`https://images.unsplash.com/photo-${i === 1 ? '149479010877-877f7a1e4b1f' : i === 2 ? '1507003211169-0a1dd7228f2d' : i === 3 ? '1472099645785-5658abf4ff4e' : '1500648767791-00dcc994a43e'}?w=32`}
+              src="/images/default-avatar.svg"
               alt="Subscriber"
               className="w-8 h-8 rounded-full border-2 border-white object-cover"
             />

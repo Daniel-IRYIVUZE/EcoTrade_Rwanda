@@ -30,8 +30,8 @@ export default function RecyclerRevenue() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Revenue & Payouts</h1>
-        <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm hover:bg-gray-50"><Download size={16} /> Export CSV</button>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Revenue & Payouts</h1>
+        <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900"><Download size={16} /> Export CSV</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <StatCard title="Total Revenue" value={`RWF ${(totalRevenue / 1000).toFixed(0)}K`} icon={<DollarSign size={22} />} color="cyan" />
@@ -41,9 +41,9 @@ export default function RecyclerRevenue() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Widget title="Monthly Revenue Trend" icon={<TrendingUp size={20} className="text-cyan-600" />}><ChartComponent type="line" data={revenueTrend} height={280} /></Widget>
-        <Widget title="Revenue by Waste Type" icon={<BarChart3 size={20} className="text-purple-600" />}><ChartComponent type="bar" data={revenueByType} height={280} /></Widget>
+        <Widget title="Revenue by Waste Type" icon={<BarChart3 size={20} className="text-purple-600 dark:text-purple-400" />}><ChartComponent type="bar" data={revenueByType} height={280} /></Widget>
       </div>
-      <div className="bg-white rounded-lg shadow border p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
         <h3 className="font-semibold mb-4">Transaction History</h3>
         <DataTable
           columns={[
@@ -51,13 +51,13 @@ export default function RecyclerRevenue() {
             { key: 'date', label: 'Date', render: (v: string) => new Date(v).toLocaleDateString() },
             { key: 'from', label: 'Hotel' }, { key: 'wasteType', label: 'Type' },
             { key: 'amount', label: 'Amount', render: (v: number) => <span className="font-semibold">RWF {v.toLocaleString()}</span> },
-            { key: 'fee', label: 'Fee', render: (v: number) => <span className="text-orange-600">RWF {v.toLocaleString()}</span> },
+            { key: 'fee', label: 'Fee', render: (v: number) => <span className="text-orange-300">RWF {v.toLocaleString()}</span> },
             { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
           ]}
           data={transactions}
           pageSize={5}
         />
-        {transactions.length === 0 && <p className="text-sm text-gray-400 text-center py-8">No transactions yet.</p>}
+        {transactions.length === 0 && <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No transactions yet.</p>}
       </div>
     </div>
   );

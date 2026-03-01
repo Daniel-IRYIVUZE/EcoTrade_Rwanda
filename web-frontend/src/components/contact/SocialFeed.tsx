@@ -24,7 +24,7 @@ const socialPosts = [
     time: '5h ago',
     likes: 892,
     comments: 45,
-    image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400',
+    image: '/images/default-avatar.svg',
     url: 'https://instagram.com/ecotrade.rw'
   },
   {
@@ -45,7 +45,7 @@ const SocialFeed = () => {
   return (
     <section className="mt-12">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Follow Us</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Follow Us</h2>
         <div className="flex space-x-4">
           <a
             href="https://twitter.com/EcoTradeRW"
@@ -69,7 +69,7 @@ const SocialFeed = () => {
             href="https://www.linkedin.com/company/ecotrade-rwanda/"
             target="_blank"
             rel="noreferrer"
-            className="text-blue-700 hover:text-blue-800"
+            className="text-blue-700 hover:text-blue-800 dark:text-blue-200"
             aria-label="EcoTrade on LinkedIn"
           >
             <Linkedin className="w-5 h-5" />
@@ -81,33 +81,34 @@ const SocialFeed = () => {
         {socialPosts.map((post, index) => (
           <div
             key={index}
-            className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
+            className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
           >
             {/* Post Header */}
-            <div className="p-4 border-b border-gray-100">
+            <div className="p-4 border-b border-gray-100 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <post.icon className={`w-5 h-5 ${post.color} mr-2`} />
-                  <span className="font-semibold text-gray-900">{post.username}</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{post.username}</span>
                 </div>
-                <span className="text-xs text-gray-400">{post.time}</span>
+                <span className="text-xs text-gray-400 dark:text-gray-500">{post.time}</span>
               </div>
             </div>
 
             {/* Post Content */}
             <div className="p-4">
-              <p className="text-sm text-gray-800 mb-4">{post.content}</p>
+              <p className="text-sm text-gray-800 dark:text-gray-200 mb-4">{post.content}</p>
               
               {post.image && (
                 <img
                   src={post.image}
                   alt="Post"
                   className="w-full h-48 object-cover rounded-xl mb-4"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/placeholder-image.svg'; }}
                 />
               )}
 
               {/* Engagement Metrics */}
-              <div className="flex items-center justify-between text-gray-500 text-xs">
+              <div className="flex items-center justify-between text-gray-500 dark:text-gray-400 text-xs">
                 <div className="flex items-center space-x-4">
                   <button className="flex items-center hover:text-red-500 transition-colors">
                     <Heart className="w-4 h-4 mr-1" />
@@ -129,7 +130,7 @@ const SocialFeed = () => {
                   href={post.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-cyan-600 hover:text-cyan-700"
+                  className="text-cyan-600 hover:text-cyan-700 dark:text-cyan-400"
                   aria-label="Open social post"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -142,7 +143,7 @@ const SocialFeed = () => {
 
       {/* Follow CTA */}
       <div className="mt-8 text-center">
-        <p className="text-gray-600 mb-4">Join the conversation on social media</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">Join the conversation on social media</p>
         <div className="flex flex-wrap justify-center gap-4">
           <a
             href="https://twitter.com/EcoTradeRW"

@@ -8,11 +8,11 @@ import { driverProfile, assignments } from './_shared';
 
 const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
-    completed: 'bg-green-100 text-green-800', in_progress: 'bg-blue-100 text-blue-800',
-    'en-route': 'bg-blue-100 text-blue-800',
-    pending: 'bg-yellow-100 text-yellow-800', scheduled: 'bg-cyan-100 text-cyan-800',
+    completed: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200', in_progress: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200',
+    'en-route': 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200',
+    pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', scheduled: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-300',
   };
-  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}>{status.replace(/_/g, ' ')}</span>;
+  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{status.replace(/_/g, ' ')}</span>;
 };
 
 export default function DriverAssignments() {
@@ -35,17 +35,17 @@ export default function DriverAssignments() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">My Assignments</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Assignments</h1>
         <button onClick={() => downloadCSV('assignments', ['ID','Date','Route','Status','Earnings'],
           liveData.map(r => [r.id, r.date, r.route, r.status, r.earnings]))}
-          className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm hover:bg-gray-50"><Download size={16}/> Export</button>
+          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900"><Download size={16}/> Export</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard title="Total Assignments" value={liveData.length} icon={<ClipboardList size={22} />} color="cyan" />
         <StatCard title="In Progress" value={liveData.filter(a => a.status === 'in_progress' || a.status === 'en-route').length} icon={<Activity size={22} />} color="blue" />
         <StatCard title="Scheduled" value={liveData.filter(a => a.status === 'scheduled').length} icon={<Calendar size={22} />} color="purple" />
       </div>
-      <div className="bg-white rounded-lg shadow border p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
         <DataTable
           columns={[
             { key: 'id', label: 'ID', render: (v: string) => <span className="font-mono text-sm font-semibold text-cyan-600">{v}</span> },
@@ -54,20 +54,20 @@ export default function DriverAssignments() {
             { key: 'stops', label: 'Stops' },
             { key: 'totalWeight', label: 'Weight' },
             { key: 'estimatedTime', label: 'Est. Time' },
-            { key: 'earnings', label: 'Earnings', render: (v: string) => <span className="font-semibold text-green-600">{v}</span> },
+            { key: 'earnings', label: 'Earnings', render: (v: string) => <span className="font-semibold text-green-600 dark:text-green-400">{v}</span> },
             { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
             { key: '_id', label: 'Action', render: (_v: string, r: typeof liveData[0]) => (r.status === 'in_progress' || r.status === 'en-route') ? (
               <button className="px-3 py-1 text-xs bg-cyan-600 text-white rounded hover:bg-cyan-700 font-medium flex items-center gap-1"><Navigation size={12} /> Resume</button>
             ) : r.status === 'scheduled' ? (
               <button onClick={() => handleStartRoute(r._id || r.id)} className="px-3 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 font-medium">Start</button>
             ) : (
-              <button className="px-3 py-1 text-xs bg-gray-100 text-gray-600 rounded hover:bg-gray-200 font-medium"><Eye size={12} /></button>
+              <button className="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded hover:bg-gray-200 font-medium"><Eye size={12} /></button>
             )},
           ]}
           data={liveData}
           pageSize={6}
         />
-        {liveData.length === 0 && <p className="text-sm text-gray-400 text-center py-8">No assignments yet.</p>}
+        {liveData.length === 0 && <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No assignments yet.</p>}
       </div>
     </div>
   );

@@ -56,13 +56,13 @@ const FAQSection = () => {
     : faqs.filter(faq => faq.category === filter || faq.category === 'all');
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Frequently Asked <span className="text-cyan-600">Questions</span>
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 dark:text-gray-400">
             Find answers to common questions about our services
           </p>
         </div>
@@ -74,7 +74,7 @@ const FAQSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
             }`}
           >
             All
@@ -84,7 +84,7 @@ const FAQSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'hotels'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
             }`}
           >
             Hotels
@@ -94,7 +94,7 @@ const FAQSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'recyclers'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
             }`}
           >
             Recyclers
@@ -104,7 +104,7 @@ const FAQSection = () => {
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === 'drivers'
                 ? 'bg-cyan-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
             }`}
           >
             Drivers
@@ -112,23 +112,23 @@ const FAQSection = () => {
         </div>
 
         {/* FAQ Accordion */}
-        <div className="bg-white rounded-2xl shadow-lg divide-y divide-gray-200">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg divide-y divide-gray-200 dark:divide-gray-700">
           {filteredFaqs.map((faq, index) => (
             <div key={index} className="p-6">
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 className="w-full flex items-center justify-between text-left"
               >
-                <h3 className="text-lg font-semibold text-gray-900 pr-8">{faq.question}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white pr-8">{faq.question}</h3>
                 <ChevronDown
-                  className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${
+                  className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300 ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 />
               </button>
               
               {openIndex === index && (
-                <div className="mt-4 text-gray-600 leading-relaxed">
+                <div className="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed">
                   {faq.answer}
                 </div>
               )}
@@ -138,7 +138,7 @@ const FAQSection = () => {
 
         {/* Still Have Questions */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600 mb-4">Still have questions?</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Still have questions?</p>
           <button onClick={() => navigate('/contact')} className="bg-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-cyan-700 transition-colors inline-flex items-center">
             <HelpCircle className="w-4 h-4 mr-2" />
             Contact Support

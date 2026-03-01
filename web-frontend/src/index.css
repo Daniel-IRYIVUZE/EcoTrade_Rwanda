@@ -1,11 +1,148 @@
 @import "tailwindcss";
+@variant dark (&:is(.dark *));
+
+/* ============================================================
+   DARK / LIGHT THEME — Global Design Token Overrides
+   EcoTrade Rwanda — Cyan/Teal palette
+   ============================================================ */
 
 @layer base {
   :root {
     color-scheme: light;
   }
-  
+
   :root.dark {
     color-scheme: dark;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
+  }
+
+  /* Smooth transitions on theme switch — exclude animations */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+  .animate-spin,
+  .animate-ping,
+  .animate-pulse,
+  .animate-bounce,
+  [class*="animate-"] {
+    transition: none !important;
+  }
+
+  /* ---- Typography ---- */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-gray-900 dark:text-white;
+  }
+
+  p {
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  a {
+    @apply text-inherit;
+  }
+
+  /* ---- Form Controls ---- */
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+  textarea,
+  select {
+    @apply bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600
+           text-gray-900 dark:text-gray-100;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-gray-400 dark:text-gray-500;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    @apply border-gray-300 dark:border-gray-600;
+  }
+
+  /* ---- Tables ---- */
+  table {
+    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+
+  thead, thead tr {
+    @apply bg-gray-50 dark:bg-gray-800;
+  }
+
+  th {
+    @apply text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700;
+  }
+
+  td {
+    @apply border-gray-100 dark:border-gray-800 text-gray-700 dark:text-gray-300;
+  }
+
+  tr:hover td {
+    @apply bg-gray-50 dark:bg-gray-800/60;
+  }
 }
+
+/* ============================================================
+   DARK MODE — Scrollbars
+   ============================================================ */
+
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgb(17 24 39);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgb(55 65 81);
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgb(75 85 99);
+}
+
+/* ============================================================
+   DARK MODE SECTION / CARD HELPERS
+   Apply these utility classes in components for quick dark support
+   ============================================================ */
+
+@layer utilities {
+  /* Sections */
+  .section-light {
+    @apply bg-white dark:bg-gray-950;
+  }
+
+  .section-alt {
+    @apply bg-gray-50 dark:bg-gray-900;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm;
+  }
+
+  /* Muted text */
+  .text-muted {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+
+  /* Dividers */
+  .divider {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+}
+

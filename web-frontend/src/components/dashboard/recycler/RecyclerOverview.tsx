@@ -27,7 +27,7 @@ export default function RecyclerOverview() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div><h1 className="text-2xl font-bold text-gray-900">Recycler Dashboard</h1><p className="text-gray-500 text-sm mt-1">Welcome back, {companyProfile.name}</p></div>
+        <div><h1 className="text-2xl font-bold text-gray-900 dark:text-white">Recycler Dashboard</h1><p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Welcome back, {companyProfile.name}</p></div>
         <button className="flex items-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm hover:bg-cyan-700"><ShoppingCart size={16} /> Browse Marketplace</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -40,7 +40,7 @@ export default function RecyclerOverview() {
         <Widget title="Revenue Trend" icon={<TrendingUp size={20} className="text-cyan-600" />}>
           <ChartComponent type="line" data={revenueTrend} height={260} />
         </Widget>
-        <Widget title="Collections by Type" icon={<BarChart3 size={20} className="text-purple-600" />}>
+        <Widget title="Collections by Type" icon={<BarChart3 size={20} className="text-purple-600 dark:text-purple-400" />}>
           <ChartComponent type="pie" data={collectionsByType} height={260} />
         </Widget>
       </div>
@@ -48,34 +48,34 @@ export default function RecyclerOverview() {
         <Widget title="Active Bids" icon={<Eye size={20} className="text-cyan-600" />} action={<button className="text-sm text-cyan-600 hover:underline">View All</button>}>
           <div className="space-y-3">
             {liveBids.length > 0 ? liveBids.map(bid => (
-              <div key={bid.id} className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-100">
-                <div><p className="text-sm font-medium">{bid.hotel} — {bid.type}</p><p className="text-xs text-gray-500">{bid.quantity} · My bid: {bid.myBid}</p></div>
+              <div key={bid.id} className="flex items-center justify-between p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-100">
+                <div><p className="text-sm font-medium">{bid.hotel} — {bid.type}</p><p className="text-xs text-gray-500 dark:text-gray-400">{bid.quantity} · My bid: {bid.myBid}</p></div>
                 <StatusBadge status={bid.status} />
               </div>
-            )) : <p className="text-sm text-gray-400 text-center py-4">No active bids. Browse the marketplace to start bidding.</p>}
+            )) : <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">No active bids. Browse the marketplace to start bidding.</p>}
           </div>
         </Widget>
-        <Widget title="Fleet Status" icon={<Truck size={20} className="text-blue-600" />} action={<button className="text-sm text-cyan-600 hover:underline">Manage Fleet</button>}>
+        <Widget title="Fleet Status" icon={<Truck size={20} className="text-blue-600 dark:text-blue-400" />} action={<button className="text-sm text-cyan-600 hover:underline">Manage Fleet</button>}>
           <div className="space-y-3">
             {fleetData.filter(f => f.currentRoute !== '—').slice(0, 4).map(vehicle => (
-              <div key={vehicle.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div><p className="text-sm font-medium">{vehicle.driver}</p><p className="text-xs text-gray-500">{vehicle.vehicle} · {vehicle.plate}</p></div>
-                <div className="text-right"><span className="text-xs font-medium text-blue-600 block">Route: {vehicle.currentRoute}</span><StatusBadge status={vehicle.status} /></div>
+              <div key={vehicle.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div><p className="text-sm font-medium">{vehicle.driver}</p><p className="text-xs text-gray-500 dark:text-gray-400">{vehicle.vehicle} · {vehicle.plate}</p></div>
+                <div className="text-right"><span className="text-xs font-medium text-blue-600 dark:text-blue-400 block">Route: {vehicle.currentRoute}</span><StatusBadge status={vehicle.status} /></div>
               </div>
             ))}
           </div>
         </Widget>
       </div>
-      <Widget title="Inventory Alerts" icon={<Warehouse size={20} className="text-yellow-600" />}>
+      <Widget title="Inventory Alerts" icon={<Warehouse size={20} className="text-yellow-600 dark:text-yellow-400" />}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {inventoryData.map(item => (
-            <div key={item.id} className="p-3 bg-gray-50 rounded-lg">
+            <div key={item.id} className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <p className="text-sm font-medium">{item.type}</p>
-              <p className="text-lg font-bold text-gray-900 mt-1">{item.currentStock}</p>
-              <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+              <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">{item.currentStock}</p>
+              <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div className={`h-full rounded-full ${item.utilization > 75 ? 'bg-red-500' : item.utilization > 50 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${item.utilization}%` }} />
               </div>
-              <p className="text-xs text-gray-500 mt-1">{item.utilization}% of capacity</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.utilization}% of capacity</p>
             </div>
           ))}
         </div>

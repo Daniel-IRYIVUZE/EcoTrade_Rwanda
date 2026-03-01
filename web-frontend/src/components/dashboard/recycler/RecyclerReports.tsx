@@ -39,15 +39,15 @@ export default function RecyclerReports() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-      <div className="bg-white rounded-lg shadow border p-4">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Reports</h1>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
         <DataTable
           columns={[
             { key: 'name', label: 'Report', render: (v: string) => <span className="font-medium">{v}</span> },
-            { key: 'type', label: 'Type', render: (v: string) => <span className="bg-gray-100 px-2 py-1 rounded text-xs">{v}</span> },
+            { key: 'type', label: 'Type', render: (v: string) => <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs">{v}</span> },
             { key: 'date', label: 'Date' },
             { key: 'id', label: 'Download', render: (v: number, r: typeof reports[0]) => (
-              <button onClick={() => generateReport(r.type, v)} disabled={generating === v} className="flex items-center gap-1 text-xs px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded hover:bg-cyan-100 font-medium disabled:opacity-50">
+              <button onClick={() => generateReport(r.type, v)} disabled={generating === v} className="flex items-center gap-1 text-xs px-3 py-1.5 bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 rounded hover:bg-cyan-100 font-medium disabled:opacity-50">
                 {generating === v ? 'Generating...' : <><Download size={14} /> {r.type === 'Impact' || r.type === 'Fleet' ? 'PDF' : 'CSV'}</>}
               </button>
             )},

@@ -28,10 +28,10 @@ export default function DriverCompletedJobs() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Completed Jobs</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Completed Jobs</h1>
         <button onClick={() => downloadCSV('completed_jobs', ['ID','Date','Route','Weight','Earnings','Rating'],
           tableData.map(r => [r.id, r.date, r.route, r.totalWeight, r.earnings, String(r.rating)]))}
-          className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg text-sm hover:bg-gray-50"><Download size={16} /> Export</button>
+          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900"><Download size={16} /> Export</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <StatCard title="Total Jobs" value={tableData.length} icon={<CheckCircle size={22} />} color="cyan" />
@@ -39,7 +39,7 @@ export default function DriverCompletedJobs() {
         <StatCard title="Avg Rating" value={avgRating} icon={<Star size={22} />} color="yellow" />
         <StatCard title="Total Earned" value={`RWF ${(totalEarnings / 1000).toFixed(0)}K`} icon={<DollarSign size={22} />} color="purple" />
       </div>
-      <div className="bg-white rounded-lg shadow border p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-4">
         <DataTable
           columns={[
             { key: 'id', label: 'Job', render: (v: string) => <span className="font-mono text-sm">{v}</span> },
@@ -48,9 +48,9 @@ export default function DriverCompletedJobs() {
             { key: 'stops', label: 'Stops' },
             { key: 'totalWeight', label: 'Weight' },
             { key: 'duration', label: 'Duration' },
-            { key: 'earnings', label: 'Earnings', render: (v: string) => <span className="font-semibold text-green-600">{v}</span> },
-            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-600 font-semibold">⭐ {v}</span> },
-            { key: 'issues', label: 'Issues', render: (v: string) => !v || v === 'None' ? <span className="text-green-600 text-xs">✓ Clean</span> : <span className="text-yellow-600 text-xs">{v}</span> },
+            { key: 'earnings', label: 'Earnings', render: (v: string) => <span className="font-semibold text-green-600 dark:text-green-400">{v}</span> },
+            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-600 dark:text-yellow-400 font-semibold">⭐ {v}</span> },
+            { key: 'issues', label: 'Issues', render: (v: string) => !v || v === 'None' ? <span className="text-green-600 dark:text-green-400 text-xs">✓ Clean</span> : <span className="text-yellow-600 dark:text-yellow-400 text-xs">{v}</span> },
           ]}
           data={tableData}
           pageSize={6}

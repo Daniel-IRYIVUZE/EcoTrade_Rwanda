@@ -37,13 +37,13 @@ const BlogPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       <Navbar />
       
       <main className="pt-20 pb-12">
         <BlogHero />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
           {/* Search Bar */}
           <BlogSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
@@ -95,19 +95,20 @@ const BlogPage = () => {
               src={selectedPost.image}
               alt={selectedPost.title}
               className="w-full h-64 object-cover rounded-xl"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/placeholder-image.svg'; }}
             />
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-              <span className="font-medium text-gray-900">{selectedPost.author}</span>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-medium text-gray-900 dark:text-white">{selectedPost.author}</span>
               <span>{selectedPost.date}</span>
               <span>{selectedPost.readTime} read</span>
-              <span className="px-3 py-1 rounded-full bg-cyan-50 text-cyan-700 text-xs font-semibold">
+              <span className="px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 text-xs font-semibold">
                 {selectedPost.category}
               </span>
             </div>
-            <p className="text-gray-600">{selectedPost.excerpt}</p>
+            <p className="text-gray-600 dark:text-gray-400">{selectedPost.excerpt}</p>
             <div className="space-y-3">
               {selectedPost.content.map((paragraph, index) => (
-                <p key={index} className="text-gray-700 leading-relaxed">
+                <p key={index} className="text-gray-700 dark:text-gray-300 leading-relaxed">
                   {paragraph}
                 </p>
               ))}
@@ -118,7 +119,7 @@ const BlogPage = () => {
                   key={tag}
                   type="button"
                   onClick={() => handleTagClick(tag)}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs hover:bg-cyan-100 hover:text-cyan-700 transition-colors"
+                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-xs hover:bg-cyan-100 hover:text-cyan-700 dark:text-cyan-400 transition-colors"
                 >
                   #{tag}
                 </button>

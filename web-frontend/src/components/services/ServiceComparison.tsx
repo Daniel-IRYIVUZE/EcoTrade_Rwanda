@@ -78,13 +78,13 @@ const ServiceComparison = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-white dark:bg-gray-900">
+      <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Service <span className="text-cyan-600">Comparison</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             See what's included for each user type
           </p>
         </div>
@@ -92,17 +92,17 @@ const ServiceComparison = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-200">
-                <th className="text-left py-4 px-6 font-bold text-gray-900">Feature</th>
+              <tr className="border-b-2 border-gray-200 dark:border-gray-700">
+                <th className="text-left py-4 px-6 font-bold text-gray-900 dark:text-white">Feature</th>
                 <th className="text-center py-4 px-6 font-bold text-cyan-600">Hotels</th>
-                <th className="text-center py-4 px-6 font-bold text-blue-600">Recyclers</th>
-                <th className="text-center py-4 px-6 font-bold text-orange-600">Drivers</th>
+                <th className="text-center py-4 px-6 font-bold text-blue-600 dark:text-blue-400">Recyclers</th>
+                <th className="text-center py-4 px-6 font-bold text-orange-300">Drivers</th>
               </tr>
             </thead>
             <tbody>
               {features.map((feature, index) => (
-                <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-4 px-6 text-gray-800">{feature.name}</td>
+                <tr key={index} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900">
+                  <td className="py-4 px-6 text-gray-800 dark:text-gray-200">{feature.name}</td>
                   <td className="text-center py-4 px-6">
                     {feature.hotels ? (
                       <Check className="w-5 h-5 text-cyan-600 mx-auto" />
@@ -112,14 +112,14 @@ const ServiceComparison = () => {
                   </td>
                   <td className="text-center py-4 px-6">
                     {feature.recyclers ? (
-                      <Check className="w-5 h-5 text-blue-600 mx-auto" />
+                      <Check className="w-5 h-5 text-blue-600 dark:text-blue-400 mx-auto" />
                     ) : (
                       <X className="w-5 h-5 text-gray-300 mx-auto" />
                     )}
                   </td>
                   <td className="text-center py-4 px-6">
                     {feature.drivers ? (
-                      <Check className="w-5 h-5 text-orange-600 mx-auto" />
+                      <Check className="w-5 h-5 text-orange-300 mx-auto" />
                     ) : (
                       <X className="w-5 h-5 text-gray-300 mx-auto" />
                     )}

@@ -19,19 +19,19 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
   };
 
   const getTimeColor = (timeLeft: string) => {
-    if (timeLeft.includes('1h') || timeLeft.includes('45m')) return 'text-red-600 bg-red-50';
-    if (timeLeft.includes('2h')) return 'text-orange-600 bg-orange-50';
-    return 'text-cyan-600 bg-cyan-50';
+    if (timeLeft.includes('1h') || timeLeft.includes('45m')) return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20';
+    if (timeLeft.includes('2h')) return 'text-orange-300 bg-orange-50';
+    return 'text-cyan-600 bg-cyan-50 dark:bg-cyan-900/20';
   };
 
   if (listings.length === 0) {
     return (
-      <div className="text-center py-12 bg-white rounded-2xl">
-        <p className="text-gray-500">No listings match your filters.</p>
+      <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl">
+        <p className="text-gray-500 dark:text-gray-400">No listings match your filters.</p>
         <button
           type="button"
           onClick={onClearFilters}
-          className="mt-4 text-cyan-600 font-semibold hover:text-cyan-700"
+          className="mt-4 text-cyan-600 font-semibold hover:text-cyan-700 dark:text-cyan-400"
         >
           Clear all filters
         </button>
@@ -44,7 +44,7 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
       {listings.map((listing) => (
         <div
           key={listing.id}
-          className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden cursor-pointer flex flex-col"
+          className="group bg-white dark:bg-gray-900 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 overflow-hidden cursor-pointer flex flex-col"
           onClick={() => onListingClick(listing)}
         >
           {/* Image */}
@@ -53,6 +53,7 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
               src={listing.image}
               alt={listing.type}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/placeholder-image.svg'; }}
             />
             
             {/* Save Button */}
@@ -61,13 +62,13 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
                 e.stopPropagation();
                 toggleSave(listing.id);
               }}
-              className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+              className="absolute top-3 right-3 p-2 bg-white dark:bg-gray-800/90 backdrop-blur-sm rounded-full hover:bg-white dark:bg-gray-900 transition-colors"
             >
               <Heart
                 className={`w-4 h-4 ${
                   savedListings.includes(listing.id)
                     ? 'fill-red-500 text-red-500'
-                    : 'text-gray-600'
+                    : 'text-gray-600 dark:text-gray-400'
                 }`}
               />
             </button>
@@ -88,9 +89,9 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
           <div className="p-4 flex flex-col flex-1">
             {/* Hotel Info */}
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1 min-w-0">{listing.hotel}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight line-clamp-1 min-w-0">{listing.hotel}</h3>
               {listing.verified && (
-                <span className="text-xs bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 flex-shrink-0">
+                <span className="text-xs bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 flex-shrink-0">
                   <CheckCircle className="w-3 h-3" /> Verified
                 </span>
               )}
@@ -109,20 +110,20 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
                     }`}
                   />
                 ))}
-                <span className="text-xs text-gray-500 ml-1">{listing.hotelRating}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">{listing.hotelRating}</span>
               </div>
               <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                listing.quality === 'Grade A' ? 'bg-cyan-100 text-cyan-700' :
-                listing.quality === 'Grade B' ? 'bg-blue-100 text-blue-700' :
-                'bg-gray-100 text-gray-700'
+                listing.quality === 'Grade A' ? 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400' :
+                listing.quality === 'Grade B' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' :
+                'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
               }`}>{listing.quality}</span>
             </div>
 
             {/* Waste Type */}
-            <p className="text-xs font-medium text-gray-700 mb-1.5">{listing.type}</p>
+            <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">{listing.type}</p>
 
             {/* Location & Distance */}
-            <div className="flex items-center text-xs text-gray-500 mb-2">
+            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
               <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
               <span className="truncate">{listing.location} • {listing.distance} km</span>
             </div>
@@ -130,11 +131,11 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
             {/* Volume & Current Bid */}
             <div className="flex justify-between items-center mb-3">
               <div>
-                <p className="text-xs text-gray-400">Volume</p>
-                <p className="text-sm font-semibold text-gray-900">{listing.volume} {listing.unit}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">Volume</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{listing.volume} {listing.unit}</p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-gray-400">Current Bid</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">Current Bid</p>
                 <p className="text-sm font-bold text-cyan-600">RWF {listing.currentBid.toLocaleString()}</p>
               </div>
             </div>
@@ -155,10 +156,10 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
                   e.stopPropagation();
                   onListingClick(listing);
                 }}
-                className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors flex-shrink-0"
+                className="p-2 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900 transition-colors flex-shrink-0"
                 title="View details"
               >
-                <Eye className="w-4 h-4 text-gray-600" />
+                <Eye className="w-4 h-4 text-gray-600 dark:text-gray-400" />
               </button>
             </div>
           </div>

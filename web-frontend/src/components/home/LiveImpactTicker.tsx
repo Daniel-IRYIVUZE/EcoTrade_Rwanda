@@ -22,8 +22,8 @@ const LiveImpactTicker = () => {
   }, []);
 
   return (
-    <section className="bg-gradient-to-r from-cyan-600 to-teal-600 py-6 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-cyan-600 py-6 text-white">
+      <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center space-x-4">
             <Activity className="w-6 h-6 animate-pulse" />
@@ -31,7 +31,7 @@ const LiveImpactTicker = () => {
           </div>
 
           <div className="flex-1 min-w-[300px]">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
+            <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-lg px-6 py-3">
               <div className="flex items-center space-x-4 animate-fade-in">
                 {activities[currentIndex].type === 'hotel' && <Package className="w-5 h-5 flex-shrink-0" />}
                 {activities[currentIndex].type === 'recycler' && <Droplet className="w-5 h-5 flex-shrink-0" />}

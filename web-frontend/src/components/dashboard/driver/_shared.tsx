@@ -54,8 +54,8 @@ export const monthlyEarnings = {
 
 export const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
-    completed: 'bg-green-100 text-green-800', in_progress: 'bg-blue-100 text-blue-800',
-    pending: 'bg-yellow-100 text-yellow-800', scheduled: 'bg-cyan-100 text-cyan-800',
+    completed: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200', in_progress: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200',
+    pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', scheduled: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-300',
   };
-  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}>{status.replace(/_/g, ' ')}</span>;
+  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{status.replace(/_/g, ' ')}</span>;
 };

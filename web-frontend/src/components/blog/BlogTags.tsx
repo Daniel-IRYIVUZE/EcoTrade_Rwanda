@@ -25,15 +25,15 @@ interface BlogTagsProps {
 
 const BlogTags = ({ onTagClick }: BlogTagsProps) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Popular Tags</h3>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Popular Tags</h3>
       
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
           <button
             key={index}
             onClick={() => onTagClick(tag)}
-            className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-cyan-100 hover:text-cyan-700 transition-colors"
+            className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-cyan-100 hover:text-cyan-700 dark:text-cyan-400 transition-colors"
           >
             #{tag}
           </button>
@@ -41,7 +41,7 @@ const BlogTags = ({ onTagClick }: BlogTagsProps) => {
       </div>
 
       {/* Tag Cloud Visualization */}
-      <div className="mt-6 pt-4 border-t border-gray-100">
+      <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
         <div className="flex flex-wrap gap-1 justify-center opacity-50">
           <span className="text-xs">UCO</span>
           <Recycle className="w-5 h-5" />

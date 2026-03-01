@@ -3,25 +3,25 @@ import { BookOpen } from 'lucide-react';
 
 const BlogHero = () => {
   return (
-    <section className="relative bg-gradient-to-r from-cyan-900 to-teal-800 text-white overflow-hidden">
+    <section className="relative bg-cyan-900 text-white overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-overlay filter blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-white dark:bg-gray-900 rounded-full mix-blend-overlay filter blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-300 rounded-full mix-blend-overlay filter blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div className="relative max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         <div className="text-center max-w-4xl mx-auto">
           {/* Blog Label */}
-          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+          <div className="inline-flex items-center bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <BookOpen className="w-4 h-4 mr-2" />
             <span className="text-sm font-medium">EcoTrade Blog</span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl lg:text-6xl font-bold mb-6">
+          <h1 className="text-4xl text-white lg:text-6xl font-bold mb-6">
             Insights on{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300">
+            <span className="text-yellow-300">
               Circular Economy
             </span>
           </h1>

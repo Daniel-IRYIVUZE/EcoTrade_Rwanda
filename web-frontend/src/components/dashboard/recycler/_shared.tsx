@@ -34,10 +34,10 @@ export const collectionsByType = {
 
 export const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
-    active: 'bg-green-100 text-green-800', completed: 'bg-green-100 text-green-800', won: 'bg-green-100 text-green-800',
-    winning: 'bg-cyan-100 text-cyan-800', pending: 'bg-yellow-100 text-yellow-800', scheduled: 'bg-blue-100 text-blue-800',
-    collecting: 'bg-blue-100 text-blue-800', outbid: 'bg-orange-100 text-orange-800', lost: 'bg-red-100 text-red-800',
-    maintenance: 'bg-yellow-100 text-yellow-800', inactive: 'bg-gray-100 text-gray-800',
+    active: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200', completed: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200', won: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200',
+    winning: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-300', pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', scheduled: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200',
+    collecting: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200', outbid: 'bg-orange-100 dark:bg-orange-300/30 text-orange-300 dark:text-orange-300', lost: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200',
+    maintenance: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300', inactive: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200',
   };
-  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}>{status.replace(/_/g, ' ')}</span>;
+  return <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{status.replace(/_/g, ' ')}</span>;
 };

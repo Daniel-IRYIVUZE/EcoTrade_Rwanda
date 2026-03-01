@@ -33,13 +33,13 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center z-10">
-          <h2 className="text-xl font-bold text-gray-900">Listing Details</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 flex justify-between items-center z-10">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Listing Details</h2>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -53,19 +53,20 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                   src={listing.photos[currentImageIndex]}
                   alt={listing.type}
                   className="w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/placeholder-image.svg'; }}
                 />
                 
                 {listing.photos.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-lg hover:bg-white"
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800/90 p-2 rounded-full shadow-lg hover:bg-white dark:bg-gray-900"
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-lg hover:bg-white"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800/90 p-2 rounded-full shadow-lg hover:bg-white dark:bg-gray-900"
                     >
                       <ChevronRight className="w-5 h-5" />
                     </button>
@@ -84,7 +85,7 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                         currentImageIndex === index ? 'border-cyan-600' : 'border-transparent'
                       }`}
                     >
-                      <img src={photo} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                      <img src={photo} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/placeholder-image.svg'; }} />
                     </button>
                   ))}
                 </div>
@@ -94,15 +95,15 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
             {/* Right Column - Details */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-gray-900">{listing.type}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{listing.type}</h3>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => setSaved(!saved)}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors"
                   >
                     <Heart className={`w-5 h-5 ${saved ? 'fill-red-500 text-red-500' : ''}`} />
                   </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <button className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors">
                     <Share2 className="w-5 h-5" />
                   </button>
                 </div>
@@ -110,7 +111,7 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
 
               {/* Hotel Info */}
               <div className="mb-6">
-                <p className="text-lg font-semibold text-gray-800">{listing.hotel}</p>
+                <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">{listing.hotel}</p>
                 <div className="flex items-center mt-1">
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
@@ -124,46 +125,46 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500 ml-2">{listing.hotelRating} • {listing.location}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">{listing.hotelRating} • {listing.location}</span>
                 </div>
               </div>
 
               {/* Key Details */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-50 p-3 rounded-xl">
-                  <p className="text-xs text-gray-500">Volume</p>
-                  <p className="font-bold text-gray-900">{listing.volume} {listing.unit}</p>
+                <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Volume</p>
+                  <p className="font-bold text-gray-900 dark:text-white">{listing.volume} {listing.unit}</p>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-xl">
-                  <p className="text-xs text-gray-500">Quality</p>
-                  <p className="font-bold text-gray-900">{listing.quality}</p>
+                <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Quality</p>
+                  <p className="font-bold text-gray-900 dark:text-white">{listing.quality}</p>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-xl">
-                  <p className="text-xs text-gray-500">Distance</p>
-                  <p className="font-bold text-gray-900">{listing.distance} km</p>
+                <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Distance</p>
+                  <p className="font-bold text-gray-900 dark:text-white">{listing.distance} km</p>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-xl">
-                  <p className="text-xs text-gray-500">Time Left</p>
-                  <p className="font-bold text-red-600">{listing.timeLeft}</p>
+                <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-xl">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Time Left</p>
+                  <p className="font-bold text-red-600 dark:text-red-400">{listing.timeLeft}</p>
                 </div>
               </div>
 
               {/* Description */}
               <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Description</h4>
-                <p className="text-gray-600">{listing.description}</p>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Description</h4>
+                <p className="text-gray-600 dark:text-gray-400">{listing.description}</p>
               </div>
 
               {/* Current Bids */}
               {listing.bids && listing.bids.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-3">Current Bids ({listing.bidCount})</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Current Bids ({listing.bidCount})</h4>
                   <div className="space-y-3">
                     {listing.bids.map((bid: any, index: number) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+                      <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-3 rounded-xl">
                         <div>
-                          <p className="font-semibold text-gray-900">{bid.recycler}</p>
-                          <p className="text-xs text-gray-500">{bid.time}</p>
+                          <p className="font-semibold text-gray-900 dark:text-white">{bid.recycler}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{bid.time}</p>
                         </div>
                         <p className="font-bold text-cyan-600">RWF {bid.amount.toLocaleString()}</p>
                       </div>
@@ -182,7 +183,7 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                 </button>
                 <a
                   href={`mailto:info@${listing.hotel.toLowerCase().replace(/\s+/g, '')}.com?subject=Waste%20Collection%20Inquiry&body=I%20am%20interested%20in%20your%20${encodeURIComponent(listing.type)}%20listing.`}
-                  className="flex-1 border border-cyan-600 text-cyan-600 py-3 rounded-xl font-semibold hover:bg-cyan-50 transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 border border-cyan-600 text-cyan-600 dark:text-cyan-400 py-3 rounded-xl font-semibold hover:bg-cyan-50 dark:bg-cyan-900/20 transition-colors flex items-center justify-center gap-2"
                 >
                   <Mail className="w-4 h-4" />
                   Contact Hotel

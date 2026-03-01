@@ -51,30 +51,30 @@ const activities = [
 
 const LiveBidActivity = () => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6">
       <div className="flex items-center mb-6">
         <TrendingUp className="w-5 h-5 text-cyan-600 mr-2" />
-        <h3 className="font-bold text-gray-900">Live Bid Activity</h3>
+        <h3 className="font-bold text-gray-900 dark:text-white">Live Bid Activity</h3>
       </div>
 
       <div className="space-y-4">
         {activities.map((activity) => (
-          <div key={activity.id} className="relative pl-6 pb-4 border-l-2 border-cyan-200 last:pb-0">
+          <div key={activity.id} className="relative pl-6 pb-4 border-l-2 border-cyan-200 dark:border-cyan-800 last:pb-0">
             {/* Timeline Dot */}
             <div className="absolute left-[-5px] top-0 w-2 h-2 bg-cyan-600 rounded-full"></div>
 
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-semibold text-gray-900">{activity.recycler}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{activity.recycler}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {activity.action === 'bid' ? 'Placed bid on' : activity.action === 'won' ? 'Won auction for' : 'Outbid on'}{' '}
-                  <span className="font-medium text-gray-700">{activity.listing}</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-300">{activity.listing}</span>
                 </p>
-                <p className="text-xs text-gray-400 mt-1">{activity.hotel}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{activity.hotel}</p>
               </div>
               <div className="text-right">
                 <p className="text-sm font-bold text-cyan-600">RWF {activity.amount.toLocaleString()}</p>
-                <p className="text-xs text-gray-400 flex items-center justify-end mt-1">
+                <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center justify-end mt-1">
                   <Clock className="w-3 h-3 mr-1" />
                   {activity.time}
                 </p>
@@ -83,9 +83,9 @@ const LiveBidActivity = () => {
 
             {/* Action Badge */}
             <div className={`absolute -left-3 top-4 w-6 h-6 rounded-full flex items-center justify-center ${
-              activity.action === 'bid' ? 'bg-blue-100 text-blue-600' :
-              activity.action === 'won' ? 'bg-cyan-100 text-cyan-600' :
-              'bg-red-100 text-red-600'
+              activity.action === 'bid' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' :
+              activity.action === 'won' ? 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400' :
+              'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
             }`}>
               {activity.action === 'bid' ? (
                 <Gavel className="w-3 h-3" />
@@ -100,22 +100,22 @@ const LiveBidActivity = () => {
       </div>
 
       {/* Top Bidders */}
-      <div className="mt-6 pt-6 border-t border-gray-100">
-        <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+      <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
           <Award className="w-4 h-4 text-yellow-500 mr-1" />
           Top Bidders Today
         </h4>
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-700">1. GreenEnergy</span>
+            <span className="text-gray-700 dark:text-gray-300">1. GreenEnergy</span>
             <span className="font-semibold">12 bids</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-700">2. EcoPlast</span>
+            <span className="text-gray-700 dark:text-gray-300">2. EcoPlast</span>
             <span className="font-semibold">9 bids</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-700">3. BioDiesel Rwanda</span>
+            <span className="text-gray-700 dark:text-gray-300">3. BioDiesel Rwanda</span>
             <span className="font-semibold">7 bids</span>
           </div>
         </div>

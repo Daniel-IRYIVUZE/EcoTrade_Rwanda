@@ -68,22 +68,22 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
     {
       title: 'Data Collection',
       content: 'We collect information you provide directly, including business details, contact information, waste transaction data, and location information for route optimization.',
-      icon: <Mail className="text-slate-400" size={18} />
+      icon: <Mail className="text-slate-400 dark:text-slate-500" size={18} />
     },
     {
       title: 'Data Usage',
       content: 'Your data is used to facilitate waste transactions, optimize logistics, generate sustainability reports, and improve our services.',
-      icon: <Eye className="text-slate-400" size={18} />
+      icon: <Eye className="text-slate-400 dark:text-slate-500" size={18} />
     },
     {
       title: 'Data Sharing',
       content: 'We share necessary transaction details between buyers and sellers. We do not sell your personal data to third parties.',
-      icon: <Users className="text-slate-400" size={18} />
+      icon: <Users className="text-slate-400 dark:text-slate-500" size={18} />
     },
     {
       title: 'Data Security',
       content: 'We implement industry-standard security measures including encryption, access controls, and regular security audits to protect your data.',
-      icon: <Shield className="text-slate-400" size={18} />
+      icon: <Shield className="text-slate-400 dark:text-slate-500" size={18} />
     }
   ];
 
@@ -95,32 +95,32 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-gradient-to-r from-cyan-50 to-white border-b border-slate-200 p-6">
+        <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-slate-900">Terms & Privacy Policy</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Terms & Privacy Policy</h2>
             <button
               onClick={onDecline}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-slate-100 dark:bg-gray-700 rounded-lg transition-colors"
             >
-              <X size={24} className="text-slate-600" />
+              <X size={24} className="text-slate-600 dark:text-slate-300" />
             </button>
           </div>
-          <p className="text-sm text-slate-600">Please review our terms before joining EcoTrade</p>
+          <p className="text-sm text-slate-600 dark:text-slate-300">Please review our terms before joining EcoTrade</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 px-6 pt-6 border-b border-slate-200">
+        <div className="flex gap-2 px-6 pt-6 border-b border-slate-200 dark:border-gray-700">
           {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveTab(section.id as 'terms' | 'privacy' | 'data')}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                 activeTab === section.id
-                  ? 'bg-cyan-100 text-cyan-700 border-b-2 border-cyan-600'
-                  : 'text-slate-600 hover:bg-slate-50'
+                  ? 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 border-b-2 border-cyan-600'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:bg-gray-800'
               }`}
             >
               {section.title}
@@ -138,10 +138,10 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="pb-6 border-b border-slate-100 last:border-b-0 last:pb-0"
+                  className="pb-6 border-b border-slate-100 dark:border-gray-700 last:border-b-0 last:pb-0"
                 >
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{term.title}</h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">{term.content}</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{term.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{term.content}</p>
                 </motion.div>
               ))}
             </div>
@@ -155,13 +155,13 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-slate-50 p-4 rounded-lg border border-slate-200"
+                  className="bg-slate-50 dark:bg-gray-800 p-4 rounded-lg border border-slate-200 dark:border-gray-700"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     {item.icon}
-                    <h3 className="font-bold text-slate-900 text-sm">{item.title}</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm">{item.title}</h3>
                   </div>
-                  <p className="text-slate-600 text-xs leading-relaxed">{item.content}</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">{item.content}</p>
                 </motion.div>
               ))}
             </div>
@@ -169,28 +169,28 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
 
           {activeTab === 'data' && (
             <div className="space-y-4">
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="font-bold text-slate-900 mb-2">Compliance</h3>
-                <p className="text-slate-600 text-sm">EcoTrade complies with Rwanda's Data Protection Law No. 058/2021 and implements appropriate technical and organizational measures.</p>
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">Compliance</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">EcoTrade complies with Rwanda's Data Protection Law No. 058/2021 and implements appropriate technical and organizational measures.</p>
               </div>
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="font-bold text-slate-900 mb-2">Geospatial Data</h3>
-                <p className="text-slate-600 text-sm">Location data is collected only for route optimization and is anonymized for analytics purposes.</p>
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">Geospatial Data</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Location data is collected only for route optimization and is anonymized for analytics purposes.</p>
               </div>
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="font-bold text-slate-900 mb-2">Data Breach Protocol</h3>
-                <p className="text-slate-600 text-sm">In the event of a data breach, we will notify affected users and relevant authorities within 72 hours as required by law.</p>
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">Data Breach Protocol</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">In the event of a data breach, we will notify affected users and relevant authorities within 72 hours as required by law.</p>
               </div>
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h3 className="font-bold text-slate-900 mb-2">Contact DPO</h3>
-                <p className="text-slate-600 text-sm">For data protection inquiries, contact our Data Protection Officer at dpo@EcoTrade.rw</p>
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <h3 className="font-bold text-slate-900 dark:text-white mb-2">Contact DPO</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">For data protection inquiries, contact our Data Protection Officer at dpo@EcoTrade.rw</p>
               </div>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-200 bg-slate-50">
+        <div className="p-6 border-t border-slate-200 dark:border-gray-700 bg-slate-50 dark:bg-gray-800">
           <div className="space-y-4">
             {/* Checkboxes */}
             <div className="space-y-3">
@@ -200,7 +200,7 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                   defaultChecked
                   className="mt-1 w-4 h-4 text-cyan-600 rounded"
                 />
-                <span className="text-sm text-slate-700">I have read and agree to the Terms of Service</span>
+                <span className="text-sm text-slate-700 dark:text-slate-200">I have read and agree to the Terms of Service</span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
@@ -208,7 +208,7 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                   defaultChecked
                   className="mt-1 w-4 h-4 text-cyan-600 rounded"
                 />
-                <span className="text-sm text-slate-700">I understand and agree to the Privacy Policy</span>
+                <span className="text-sm text-slate-700 dark:text-slate-200">I understand and agree to the Privacy Policy</span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
@@ -216,7 +216,7 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                   defaultChecked
                   className="mt-1 w-4 h-4 text-cyan-600 rounded"
                 />
-                <span className="text-sm text-slate-700">I acknowledge the data protection measures</span>
+                <span className="text-sm text-slate-700 dark:text-slate-200">I acknowledge the data protection measures</span>
               </label>
             </div>
 
@@ -226,7 +226,7 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onDecline}
-                className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-100 transition-colors"
+                className="flex-1 px-4 py-3 border border-slate-300 dark:border-gray-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium hover:bg-slate-100 dark:bg-gray-700 transition-colors"
               >
                 Decline
               </motion.button>
@@ -235,7 +235,7 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAccept}
                 disabled={loading || accepted}
-                className="flex-1 px-4 py-3 bg-gradient-to-r from-cyan-600 to-cyan-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-3 bg-cyan-600 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-70 flex items-center justify-center gap-2"
               >
                 {loading ? (
                   <>

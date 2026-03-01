@@ -377,7 +377,7 @@ const MarketplacePage = () => {
     (filters.timeRemaining ? 1 : 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
       <Navbar />
       
       <main className="pt-20 pb-12">
@@ -386,12 +386,12 @@ const MarketplacePage = () => {
         {/* Stats Section */}
         <MarketplaceStats listings={listings} />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           {/* Mobile Filter Button */}
           <button
             type="button"
             onClick={() => setIsFilterOpen(true)}
-            className="lg:hidden w-full mb-4 bg-white p-4 rounded-xl shadow-md flex items-center justify-between"
+            className="lg:hidden w-full mb-4 bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md flex items-center justify-between"
           >
             <span className="font-semibold flex items-center gap-2">
               Filters
@@ -418,15 +418,15 @@ const MarketplacePage = () => {
             <div className="flex-1">
               {/* Toolbar */}
               <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                <p className="text-gray-600 text-sm">
-                  Showing <span className="font-semibold text-gray-900">{filteredListings.length}</span> of {listings.length} listings
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Showing <span className="font-semibold text-gray-900 dark:text-white">{filteredListings.length}</span> of {listings.length} listings
                 </p>
                 <div className="flex items-center gap-3">
                   {activeFilterCount > 0 && (
                     <button
                       type="button"
                       onClick={handleClearFilters}
-                      className="text-sm text-cyan-600 hover:text-cyan-700 font-medium"
+                      className="text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 font-medium"
                     >
                       Clear filters ({activeFilterCount})
                     </button>
@@ -463,13 +463,13 @@ const MarketplacePage = () => {
         {isFilterOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
             <div className="absolute inset-0 bg-black/50" onClick={() => setIsFilterOpen(false)} />
-            <div className="absolute right-0 top-0 h-full w-80 max-w-full bg-white shadow-xl flex flex-col">
+            <div className="absolute right-0 top-0 h-full w-80 max-w-full bg-white dark:bg-gray-900 shadow-xl flex flex-col">
               <div className="p-4 border-b flex justify-between items-center flex-shrink-0">
                 <h3 className="font-bold text-lg">Filters</h3>
                 <button
                   type="button"
                   onClick={() => setIsFilterOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 dark:bg-gray-800 rounded-lg transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>

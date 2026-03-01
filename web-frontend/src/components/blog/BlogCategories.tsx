@@ -19,8 +19,8 @@ const categories = [
 
 const BlogCategories = ({ activeCategory, setActiveCategory }: BlogCategoriesProps) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Categories</h3>
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Categories</h3>
       
       <div className="space-y-2">
         {categories.map((category) => (
@@ -29,14 +29,14 @@ const BlogCategories = ({ activeCategory, setActiveCategory }: BlogCategoriesPro
             onClick={() => setActiveCategory(category.name)}
             className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
               activeCategory === category.name
-                ? 'bg-cyan-50 text-cyan-700'
-                : 'hover:bg-gray-50 text-gray-700'
+                ? 'bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400'
+                : 'hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900 text-gray-700 dark:text-gray-300'
             }`}
           >
             <span className="font-medium">{category.name}</span>
             <div className="flex items-center">
               <span className={`text-sm ${
-                activeCategory === category.name ? 'text-cyan-600' : 'text-gray-400'
+                activeCategory === category.name ? 'text-cyan-600' : 'text-gray-400 dark:text-gray-500'
               }`}>
                 ({category.count})
               </span>
