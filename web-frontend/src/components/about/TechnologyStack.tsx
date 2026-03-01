@@ -50,7 +50,7 @@ const technologies = [
       { name: 'Python', description: 'Business logic' },
       { name: 'JWT', description: 'Secure authentication' }
     ],
-    color: 'bg-orange-300'
+    color: 'bg-yellow-700'
   },
   {
     category: 'Cloud Services',

@@ -107,7 +107,7 @@ export default function AdminSettings() {
       </div>
 
       {settings.maintenanceMode && (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 text-yellow-800 dark:text-yellow-300 rounded-lg p-4 text-sm">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 text-yellow-700 dark:text-yellow-300 rounded-lg p-4 text-sm">
           ⚠️ <strong>Warning:</strong> Maintenance mode is enabled. Users will see a maintenance page when visiting the platform.
         </div>
       )}

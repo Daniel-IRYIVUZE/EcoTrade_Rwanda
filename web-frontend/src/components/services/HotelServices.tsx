@@ -79,7 +79,7 @@ const HotelServices = () => {
       icon: Clock,
       title: 'Real-time Tracking',
       description: 'Live updates on driver location and estimated arrival times.',
-      color: 'bg-orange-300',
+      color: 'bg-yellow-700',
       stats: 'Live tracking'
     }
   ];
@@ -128,8 +128,8 @@ const HotelServices = () => {
           <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2">85%</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Diversion Rate</div>
         </div>
-        <div className="bg-orange-50 dark:bg-orange-300/20 rounded-xl p-6 text-center">
-          <div className="text-3xl font-bold text-orange-300 dark:text-orange-300 mb-2">RWF 50k</div>
+        <div className="bg-orange-50 dark:bg-yellow-700/20 rounded-xl p-6 text-center">
+          <div className="text-3xl font-bold text-yellow-700 dark:text-yellow-700 mb-2">RWF 50k</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Avg Monthly Revenue</div>
         </div>
       </div>

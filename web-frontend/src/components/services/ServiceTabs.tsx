@@ -26,7 +26,7 @@ const ServiceTabs = ({ activeTab, setActiveTab }: ServiceTabsProps) => {
       id: 'drivers',
       label: 'Drivers',
       icon: Truck,
-      color: 'bg-orange-300',
+      color: 'bg-yellow-700',
       count: 47
     }
   ];

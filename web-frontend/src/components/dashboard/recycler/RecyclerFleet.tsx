@@ -44,10 +44,10 @@ export default function RecyclerFleet() {
             { key: 'vehicle', label: 'Vehicle', render: (v: string, r: typeof fleetData[0]) => <div><p className="text-sm">{v}</p><p className="text-xs text-gray-500 dark:text-gray-400">{r.plate}</p></div> },
             { key: 'capacity', label: 'Capacity' },
             { key: 'trips', label: 'Trips' },
-            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-600 dark:text-yellow-400 font-semibold">⭐ {v}</span> },
+            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-700 dark:text-yellow-700 font-semibold">⭐ {v}</span> },
             { key: 'currentRoute', label: 'Route', render: (v: string) => v !== '—' ? <span className="text-blue-600 dark:text-blue-400 font-medium">{v}</span> : <span className="text-gray-400 dark:text-gray-500">—</span> },
             { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
-            { key: 'id', label: 'Actions', render: () => <div className="flex gap-1"><button className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-900/20 rounded"><Eye size={15} /></button><button className="p-1.5 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:bg-yellow-900/20 rounded"><Edit size={15} /></button></div> },
+            { key: 'id', label: 'Actions', render: () => <div className="flex gap-1"><button className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-900/20 rounded"><Eye size={15} /></button><button className="p-1.5 text-yellow-700 dark:text-yellow-700 hover:bg-yellow-50 dark:bg-yellow-900/20 rounded"><Edit size={15} /></button></div> },
           ]}
           data={filtered}
           pageSize={6}

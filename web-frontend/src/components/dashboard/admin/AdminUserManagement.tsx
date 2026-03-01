@@ -81,7 +81,7 @@ export default function AdminUserManagement() {
 
   const roleColors: Record<string, string> = {
     admin: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300', business: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400',
-    recycler: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400', driver: 'bg-orange-100 dark:bg-orange-300/30 text-orange-300 dark:text-orange-300', individual: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+    recycler: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400', driver: 'bg-orange-100 dark:bg-yellow-700/30 text-yellow-700 dark:text-yellow-700', individual: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
   };
 
   return (

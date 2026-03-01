@@ -102,7 +102,7 @@ export default function UserMyImpact() {
               { key: 'weight', label: 'Weight', render: (v: number) => <span>{v} kg</span> },
               { key: 'points', label: 'Points', render: (v: number) => <span className="font-semibold text-green-600 dark:text-green-400">+{v}</span> },
               { key: 'location', label: 'Location' },
-              { key: 'verified', label: 'Status', render: (v: boolean) => v ? <span className="text-xs text-green-600 dark:text-green-400 font-medium">✓ Verified</span> : <span className="text-xs text-yellow-600 dark:text-yellow-400">Pending</span> },
+              { key: 'verified', label: 'Status', render: (v: boolean) => v ? <span className="text-xs text-green-600 dark:text-green-400 font-medium">✓ Verified</span> : <span className="text-xs text-yellow-700 dark:text-yellow-700">Pending</span> },
               { key: 'id', label: '', render: (v: string) => <button onClick={() => handleDelete(v)} className="p-1 text-red-400 hover:text-red-600 dark:text-red-400"><Trash2 size={13} /></button> },
             ]}
             data={events}
@@ -110,7 +110,7 @@ export default function UserMyImpact() {
           />
         )}
       </Widget>
-      <Widget title="Achievements" icon={<Trophy size={20} className="text-yellow-600 dark:text-yellow-400" />}>
+      <Widget title="Achievements" icon={<Trophy size={20} className="text-yellow-700 dark:text-yellow-700" />}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {[
             { name: 'First Recycler', desc: 'Completed first recycling drop-off', earned: events.length > 0 || unlocked(1), icon: '🎯' },

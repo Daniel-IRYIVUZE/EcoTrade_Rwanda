@@ -52,7 +52,7 @@ export default function BusinessTransactions() {
             { key: 'recycler', label: 'Recycler' },
             { key: 'type', label: 'Waste' },
             { key: 'amount', label: 'Amount', render: (v: string) => <span className="font-semibold">{v}</span> },
-            { key: 'commission', label: 'Commission', render: (v: string) => <span className="text-orange-300">{v}</span> },
+            { key: 'commission', label: 'Commission', render: (v: string) => <span className="text-yellow-700">{v}</span> },
             { key: 'net', label: 'Net', render: (v: string) => <span className="font-semibold text-green-600 dark:text-green-400">{v}</span> },
             { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
           ]}

@@ -99,7 +99,7 @@ const TimelineSection = ({ onReadMore }: TimelineSectionProps) => {
                 <div className="absolute left-8 lg:left-1/2 transform -translate-x-1/2 w-8 h-8 bg-white dark:bg-gray-900 rounded-full border-4 border-cyan-600 flex items-center justify-center z-10">
                   <div className={`w-3 h-3 rounded-full ${
                     milestone.status === 'completed' ? 'bg-cyan-600' :
-                    milestone.status === 'in-progress' ? 'bg-yellow-500 animate-pulse' :
+                    milestone.status === 'in-progress' ? 'bg-yellow-700 animate-pulse' :
                     'bg-gray-300'
                   }`}></div>
                 </div>
@@ -112,7 +112,7 @@ const TimelineSection = ({ onReadMore }: TimelineSectionProps) => {
                     <div className="flex items-center mb-3">
                       <milestone.icon className={`w-5 h-5 mr-2 ${
                         milestone.status === 'completed' ? 'text-cyan-600' :
-                        milestone.status === 'in-progress' ? 'text-yellow-600 dark:text-yellow-400' :
+                        milestone.status === 'in-progress' ? 'text-yellow-700 dark:text-yellow-700' :
                         'text-gray-400 dark:text-gray-500'
                       }`} />
                       <h3 className="text-lg font-bold text-gray-900 dark:text-white">{milestone.title}</h3>

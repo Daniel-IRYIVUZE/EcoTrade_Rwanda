@@ -91,7 +91,7 @@ export default function BusinessReports() {
         <DataTable
           columns={[
             { key: 'name', label: 'Report', render: (v: string) => <span className="font-medium">{v}</span> },
-            { key: 'type', label: 'Type', render: (v: string) => <span className={`px-2 py-1 rounded text-xs font-medium ${v === 'Green Certificate' ? 'bg-yellow-100 text-yellow-800' : v === 'Impact Report' ? 'bg-green-100 text-green-800 dark:text-green-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{v}</span> },
+            { key: 'type', label: 'Type', render: (v: string) => <span className={`px-2 py-1 rounded text-xs font-medium ${v === 'Green Certificate' ? 'bg-yellow-100 text-yellow-700' : v === 'Impact Report' ? 'bg-green-100 text-green-800 dark:text-green-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'}`}>{v}</span> },
             { key: 'date', label: 'Date' },
             { key: 'status', label: 'Status', render: () => <StatusBadge status="completed" /> },
             { key: 'id', label: 'Download', render: (v: number, r: typeof reports[0]) => (

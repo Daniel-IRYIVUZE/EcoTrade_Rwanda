@@ -28,7 +28,7 @@ export default function BusinessLocation() {
             ].map(r => (
               <div key={r.name} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
                 <div><p className="text-sm font-medium">{r.name}</p><p className="text-xs text-gray-500 dark:text-gray-400">📍 {r.distance}</p></div>
-                <span className="text-sm text-yellow-600 dark:text-yellow-400 font-semibold">⭐ {r.rating}</span>
+                <span className="text-sm text-yellow-700 dark:text-yellow-700 font-semibold">⭐ {r.rating}</span>
               </div>
             ))}
           </div>

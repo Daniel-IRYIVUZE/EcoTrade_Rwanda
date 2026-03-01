@@ -41,7 +41,7 @@ const RecyclerServices = () => {
       icon: BarChart3,
       title: 'Inventory Management',
       description: 'Track incoming materials, storage levels, and processing schedules.',
-      color: 'bg-orange-300',
+      color: 'bg-yellow-700',
       stats: 'Real-time tracking'
     },
     {

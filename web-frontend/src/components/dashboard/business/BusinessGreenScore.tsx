@@ -25,7 +25,7 @@ export default function BusinessGreenScore() {
           <Widget title="Score History" icon={<TrendingUp size={20} className="text-green-600 dark:text-green-400" />}><ChartComponent type="line" data={scoreHistory} height={230} /></Widget>
         </div>
       </div>
-      <Widget title="Score Breakdown" icon={<Trophy size={20} className="text-yellow-600 dark:text-yellow-400" />}>
+      <Widget title="Score Breakdown" icon={<Trophy size={20} className="text-yellow-700 dark:text-yellow-700" />}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { label: 'Waste Sorting Quality', score: 95, max: 25 },

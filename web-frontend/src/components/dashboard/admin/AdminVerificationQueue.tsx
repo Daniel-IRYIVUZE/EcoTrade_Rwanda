@@ -26,7 +26,7 @@ export default function AdminVerificationQueue() {
 
   const roleColors: Record<string, string> = {
     business: 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400', recycler: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
-    driver: 'bg-orange-100 dark:bg-orange-300/30 text-orange-300 dark:text-orange-300', individual: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300', admin: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+    driver: 'bg-orange-100 dark:bg-yellow-700/30 text-yellow-700 dark:text-yellow-700', individual: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300', admin: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
   };
 
   return (
@@ -59,7 +59,7 @@ export default function AdminVerificationQueue() {
                 <div className="flex justify-between"><span>Role:</span><span className={`px-1.5 py-0.5 rounded-full font-medium ${roleColors[u.role]}`}>{u.role}</span></div>
                 <div className="flex justify-between"><span>Phone:</span><span>{u.phone}</span></div>
                 <div className="flex justify-between"><span>Location:</span><span>{u.location}</span></div>
-                <div className="flex justify-between"><span>Status:</span><span className="text-yellow-600 dark:text-yellow-400 font-medium">{u.status}</span></div>
+                <div className="flex justify-between"><span>Status:</span><span className="text-yellow-700 dark:text-yellow-700 font-medium">{u.status}</span></div>
                 <div className="flex justify-between"><span>Submitted:</span><span>{new Date(u.joinDate).toLocaleDateString()}</span></div>
               </div>
               <div className="grid grid-cols-3 gap-2">

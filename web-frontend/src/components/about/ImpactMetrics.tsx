@@ -46,7 +46,7 @@ const metrics = [
     label: 'Hotels Engaged',
     value: 5,
     suffix: '',
-    color: 'bg-orange-300'
+    color: 'bg-yellow-700'
   },
   {
     icon: TrendingUp,

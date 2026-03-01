@@ -42,7 +42,7 @@ const advisors = [
     organization: 'ALU',
     expertise: 'Software architecture and innovation',
     icon: Globe,
-    color: 'bg-orange-300'
+    color: 'bg-yellow-700'
   }
 ];
 

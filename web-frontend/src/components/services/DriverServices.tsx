@@ -21,7 +21,7 @@ const DriverServices = () => {
       icon: MapPin,
       title: 'Smart Route Assignment',
       description: 'Optimized daily routes with turn-by-turn navigation, even offline.',
-      color: 'bg-orange-300',
+      color: 'bg-yellow-700',
       stats: '40% less travel'
     },
     {
@@ -95,7 +95,7 @@ const DriverServices = () => {
       {/* Header */}
       <div className="text-center mb-12">
         <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          For <span className="text-orange-300">Drivers</span>
+          For <span className="text-yellow-700">Drivers</span>
         </h2>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
           Earn steady income with flexible hours and optimized routes
@@ -103,7 +103,7 @@ const DriverServices = () => {
       </div>
 
       {/* Earnings Calculator Preview */}
-      <div className="bg-orange-300 rounded-3xl p-8 text-white mb-12">
+      <div className="bg-yellow-700 rounded-3xl p-8 text-white mb-12">
         <h3 className="text-2xl font-bold mb-6">Potential Daily Earnings</h3>
         <div className="grid md:grid-cols-5 gap-4 mb-6">
           {earnings.map((item, index) => (
@@ -146,21 +146,21 @@ const DriverServices = () => {
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Driver Requirements</h3>
         <div className="grid md:grid-cols-3 gap-6">
           <div className="flex items-start space-x-3">
-            <Shield className="w-5 h-5 text-orange-300 flex-shrink-0 mt-1" />
+            <Shield className="w-5 h-5 text-yellow-700 flex-shrink-0 mt-1" />
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white">Valid Driver's License</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">Category appropriate for vehicle</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <Shield className="w-5 h-5 text-orange-300 flex-shrink-0 mt-1" />
+            <Shield className="w-5 h-5 text-yellow-700 flex-shrink-0 mt-1" />
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white">Insurance</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">Valid vehicle insurance</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
-            <Shield className="w-5 h-5 text-orange-300 flex-shrink-0 mt-1" />
+            <Shield className="w-5 h-5 text-yellow-700 flex-shrink-0 mt-1" />
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white">Smartphone</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">Android or iOS device</p>
@@ -171,7 +171,7 @@ const DriverServices = () => {
 
       {/* CTA */}
       <div className="text-center">
-        <button onClick={() => navigate('/login')} className="bg-orange-300 text-white px-8 py-4 rounded-xl font-semibold hover:bg-orange-300 transition-colors inline-flex items-center group">
+        <button onClick={() => navigate('/login')} className="bg-yellow-700 text-white px-8 py-4 rounded-xl font-semibold hover:bg-yellow-700 transition-colors inline-flex items-center group">
           Start Driving with EcoTrade
           <Truck className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </button>

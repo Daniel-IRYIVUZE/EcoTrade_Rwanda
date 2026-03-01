@@ -29,7 +29,7 @@ export default function UserMarketplace() {
             <div className="p-4">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{item.seller}</p>
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2">{item.item}</h3>
-              <div className="flex items-center gap-1 mt-2"><Star size={12} className="text-yellow-500 fill-yellow-500" /><span className="text-xs text-gray-600 dark:text-gray-400">{item.rating}</span><span className="text-xs text-gray-400 dark:text-gray-500 ml-1">{item.category}</span></div>
+              <div className="flex items-center gap-1 mt-2"><Star size={12} className="text-yellow-700 fill-yellow-700" /><span className="text-xs text-gray-600 dark:text-gray-400">{item.rating}</span><span className="text-xs text-gray-400 dark:text-gray-500 ml-1">{item.category}</span></div>
               <div className="flex items-center justify-between mt-3">
                 <span className="text-lg font-bold text-cyan-600">{item.price}</span>
                 {item.inStock ? <button className="px-3 py-1 text-xs bg-cyan-600 text-white rounded hover:bg-cyan-700 font-medium">Add to Cart</button> : <span className="text-xs text-red-500 font-medium">Out of Stock</span>}

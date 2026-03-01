@@ -87,7 +87,7 @@ const SuccessStories = () => {
                 <div className="absolute top-4 left-4 bg-white dark:bg-gray-800/90 backdrop-blur-sm px-4 py-2 rounded-full">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-4 h-4 fill-yellow-700 text-yellow-700" />
                     ))}
                     <span className="ml-2 text-sm font-medium">5.0</span>
                   </div>

@@ -20,7 +20,7 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
 
   const getTimeColor = (timeLeft: string) => {
     if (timeLeft.includes('1h') || timeLeft.includes('45m')) return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20';
-    if (timeLeft.includes('2h')) return 'text-orange-300 bg-orange-50';
+    if (timeLeft.includes('2h')) return 'text-yellow-700 bg-orange-50';
     return 'text-cyan-600 bg-cyan-50 dark:bg-cyan-900/20';
   };
 
@@ -105,7 +105,7 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
                     key={i}
                     className={`w-3 h-3 ${
                       i < Math.floor(listing.hotelRating)
-                        ? 'fill-yellow-400 text-yellow-400'
+                        ? 'fill-yellow-700 text-yellow-700'
                         : 'text-gray-300'
                     }`}
                   />

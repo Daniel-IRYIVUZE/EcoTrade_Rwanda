@@ -72,7 +72,7 @@ const Navbar = () => {
       admin: 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300',
       business: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300',
       recycler: 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300',
-      driver: 'bg-orange-100 text-orange-300 dark:bg-orange-300/50 dark:text-orange-300',
+      driver: 'bg-orange-100 text-yellow-700 dark:bg-yellow-700/50 dark:text-yellow-700',
       individual: 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
     };
     return colors[userRole] || 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
@@ -140,7 +140,7 @@ const Navbar = () => {
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 hover:bg-amber-50 dark:hover:bg-gray-700 transition-all duration-300 text-gray-600 dark:text-yellow-400 hover:text-amber-500"
+              className="relative inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 hover:bg-amber-50 dark:hover:bg-gray-700 transition-all duration-300 text-gray-600 dark:text-yellow-700 hover:text-amber-500"
             >
               {isDark ? (
                 <Sun size={18} />
@@ -204,7 +204,7 @@ const Navbar = () => {
             <button
               onClick={toggleTheme}
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="p-2 rounded-lg text-gray-600 dark:text-yellow-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg text-gray-600 dark:text-yellow-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>

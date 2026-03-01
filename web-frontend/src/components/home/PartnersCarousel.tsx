@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 
 const partners = [
-  { name: 'REMA', initials: 'REMA', color: 'bg-emerald-600' },
+  { name: 'REMA', initials: 'REMA', color: 'bg-cyan-600' },
   { name: 'GGGI', initials: 'GGGI', color: 'bg-cyan-600' },
   { name: 'COPED', initials: 'COPED', color: 'bg-blue-600' },
   { name: 'ALU', initials: 'ALU', color: 'bg-purple-600' },

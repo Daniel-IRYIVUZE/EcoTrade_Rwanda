@@ -17,7 +17,7 @@ export default function DriverVehicle() {
     { item: 'Air Filter', due: '2024-07-25', status: 'Action Required', daysLeft: 20 },
   ];
   const statusColor: Record<string, string> = {
-    'OK': 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20', 'Due Soon': 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20', 'Action Required': 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20',
+    'OK': 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20', 'Due Soon': 'text-yellow-700 dark:text-yellow-700 bg-yellow-50 dark:bg-yellow-900/20', 'Action Required': 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20',
   };
 
   return (

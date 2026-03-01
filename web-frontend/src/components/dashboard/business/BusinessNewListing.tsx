@@ -122,8 +122,8 @@ export default function BusinessNewListing() {
               {form.specialInstructions && <div><p className="text-xs text-gray-500 dark:text-gray-400">Special Instructions</p><p className="text-sm text-gray-700 dark:text-gray-300">{form.specialInstructions}</p></div>}
             </div>
             <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg flex items-start gap-2">
-              <AlertTriangle size={16} className="text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-yellow-800 dark:text-yellow-300">Once submitted, your listing will be visible to all verified recyclers on the platform. You can manage bids from your listings page.</p>
+              <AlertTriangle size={16} className="text-yellow-700 dark:text-yellow-700 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-yellow-700 dark:text-yellow-300">Once submitted, your listing will be visible to all verified recyclers on the platform. You can manage bids from your listings page.</p>
             </div>
           </div>
         )}

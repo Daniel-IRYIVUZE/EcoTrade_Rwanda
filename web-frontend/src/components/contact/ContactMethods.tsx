@@ -35,7 +35,7 @@ const methods = [
     description: 'Book a call with our team',
     availability: 'Next available: Tomorrow',
     action: 'Book Now',
-    color: 'bg-orange-300',
+    color: 'bg-yellow-700',
     actionType: 'schedule'
   }
 ];

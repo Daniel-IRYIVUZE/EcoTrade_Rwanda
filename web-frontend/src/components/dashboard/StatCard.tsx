@@ -17,9 +17,9 @@ const StatCard = ({ title, value, icon, subtitle, change, progress, color = 'gra
     cyan: 'text-cyan-600',
     blue: 'text-blue-600 dark:text-blue-400',
     red: 'text-red-600 dark:text-red-400',
-    yellow: 'text-yellow-600 dark:text-yellow-400',
+    yellow: 'text-yellow-700 dark:text-yellow-700',
     purple: 'text-purple-600 dark:text-purple-400',
-    orange: 'text-orange-300',
+    orange: 'text-yellow-700',
     gray: 'text-gray-600 dark:text-gray-400',
   };
 
@@ -29,7 +29,7 @@ const StatCard = ({ title, value, icon, subtitle, change, progress, color = 'gra
     red: 'bg-red-100 dark:bg-red-900/30',
     yellow: 'bg-yellow-100 dark:bg-yellow-900/30',
     purple: 'bg-purple-100 dark:bg-purple-900/30',
-    orange: 'bg-orange-100 dark:bg-orange-300/30',
+    orange: 'bg-orange-100 dark:bg-yellow-700/30',
     gray: 'bg-gray-100 dark:bg-gray-700',
   };
 

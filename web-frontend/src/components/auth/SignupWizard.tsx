@@ -508,7 +508,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
                       <div
                         className={`h-full transition-all duration-300 ${
                           passwordStrength <= 25 ? 'bg-red-500' :
-                          passwordStrength <= 50 ? 'bg-yellow-500' :
+                          passwordStrength <= 50 ? 'bg-yellow-700' :
                           passwordStrength <= 75 ? 'bg-blue-500' : 'bg-green-500'
                         }`}
                         style={{ width: `${passwordStrength}%` }}

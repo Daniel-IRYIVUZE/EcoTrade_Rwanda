@@ -23,7 +23,7 @@ export default function RecyclerInventory() {
             { key: 'capacity', label: 'Max Capacity' },
             { key: 'utilization', label: 'Utilization', render: (v: number) => (
               <div className="flex items-center gap-2">
-                <div className="w-20 h-2 bg-gray-200 rounded-full"><div className={`h-full rounded-full ${v > 75 ? 'bg-red-500' : v > 50 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${v}%` }} /></div>
+                <div className="w-20 h-2 bg-gray-200 rounded-full"><div className={`h-full rounded-full ${v > 75 ? 'bg-red-500' : v > 50 ? 'bg-yellow-700' : 'bg-green-500'}`} style={{ width: `${v}%` }} /></div>
                 <span className="text-sm">{v}%</span>
               </div>
             )},

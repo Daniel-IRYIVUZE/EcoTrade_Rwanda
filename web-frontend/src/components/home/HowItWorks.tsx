@@ -18,7 +18,7 @@ const steps = [
     icon: Truck,
     title: 'Driver Collects',
     description: 'Optimized routes generated for maximum efficiency',
-    color: 'bg-orange-300'
+    color: 'bg-yellow-700'
   },
   {
     icon: Wallet,

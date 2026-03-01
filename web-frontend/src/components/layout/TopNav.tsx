@@ -51,7 +51,7 @@ const TopNav = ({ user }: TopNavProps) => {
             onClick={toggleTheme}
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 hover:bg-amber-50 dark:hover:bg-gray-700 text-gray-600 dark:text-yellow-400 hover:text-amber-500 transition-all duration-300 flex-shrink-0"
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 hover:bg-amber-50 dark:hover:bg-gray-700 text-gray-600 dark:text-yellow-700 hover:text-amber-500 transition-all duration-300 flex-shrink-0"
           >
             {isDark ? <Sun size={16} /> : <Moon size={16} />}
           </button>

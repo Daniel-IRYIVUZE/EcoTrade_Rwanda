@@ -102,7 +102,7 @@ const LiveBidActivity = () => {
       {/* Top Bidders */}
       <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
         <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-          <Award className="w-4 h-4 text-yellow-500 mr-1" />
+          <Award className="w-4 h-4 text-yellow-700 mr-1" />
           Top Bidders Today
         </h4>
         <div className="space-y-2">

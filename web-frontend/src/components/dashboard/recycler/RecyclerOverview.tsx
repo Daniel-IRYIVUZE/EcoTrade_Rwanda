@@ -66,14 +66,14 @@ export default function RecyclerOverview() {
           </div>
         </Widget>
       </div>
-      <Widget title="Inventory Alerts" icon={<Warehouse size={20} className="text-yellow-600 dark:text-yellow-400" />}>
+      <Widget title="Inventory Alerts" icon={<Warehouse size={20} className="text-yellow-700 dark:text-yellow-700" />}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {inventoryData.map(item => (
             <div key={item.id} className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <p className="text-sm font-medium">{item.type}</p>
               <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">{item.currentStock}</p>
               <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div className={`h-full rounded-full ${item.utilization > 75 ? 'bg-red-500' : item.utilization > 50 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${item.utilization}%` }} />
+                <div className={`h-full rounded-full ${item.utilization > 75 ? 'bg-red-500' : item.utilization > 50 ? 'bg-yellow-700' : 'bg-green-500'}`} style={{ width: `${item.utilization}%` }} />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.utilization}% of capacity</p>
             </div>

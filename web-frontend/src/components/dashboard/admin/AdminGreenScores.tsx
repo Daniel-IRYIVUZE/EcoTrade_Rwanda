@@ -22,8 +22,8 @@ export default function AdminGreenScores() {
     setEditing(null); setFlash(true); setTimeout(() => setFlash(false), 2000); load();
   };
 
-  const medalColor = (idx: number) => idx === 0 ? 'text-yellow-500' : idx === 1 ? 'text-gray-400 dark:text-gray-500' : idx === 2 ? 'text-orange-300' : 'text-gray-300';
-  const scoreColor = (s: number) => s >= 80 ? 'bg-green-500' : s >= 60 ? 'bg-teal-500' : s >= 40 ? 'bg-yellow-500' : 'bg-gray-400';
+  const medalColor = (idx: number) => idx === 0 ? 'text-yellow-700' : idx === 1 ? 'text-gray-400 dark:text-gray-500' : idx === 2 ? 'text-yellow-700' : 'text-gray-300';
+  const scoreColor = (s: number) => s >= 80 ? 'bg-green-500' : s >= 60 ? 'bg-teal-500' : s >= 40 ? 'bg-yellow-700' : 'bg-gray-400';
 
   return (
     <div className="space-y-4">

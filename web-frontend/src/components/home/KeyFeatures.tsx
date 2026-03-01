@@ -30,7 +30,7 @@ const features = [
     icon: Zap,
     title: 'Instant Payments',
     description: 'Mobile money transfer on collection confirmation',
-    color: 'text-yellow-600 dark:text-yellow-400',
+    color: 'text-yellow-700 dark:text-yellow-700',
     bgColor: 'bg-yellow-50 dark:bg-yellow-900/20'
   },
   {
@@ -72,8 +72,8 @@ const features = [
     icon: Smartphone,
     title: 'Multi-Platform',
     description: 'Web dashboard and mobile apps for all users',
-    color: 'text-orange-300 dark:text-orange-300',
-    bgColor: 'bg-orange-50 dark:bg-orange-300/20'
+    color: 'text-yellow-700 dark:text-yellow-700',
+    bgColor: 'bg-orange-50 dark:bg-yellow-700/20'
   }
 ];
 

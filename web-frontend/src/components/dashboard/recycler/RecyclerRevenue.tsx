@@ -51,7 +51,7 @@ export default function RecyclerRevenue() {
             { key: 'date', label: 'Date', render: (v: string) => new Date(v).toLocaleDateString() },
             { key: 'from', label: 'Hotel' }, { key: 'wasteType', label: 'Type' },
             { key: 'amount', label: 'Amount', render: (v: number) => <span className="font-semibold">RWF {v.toLocaleString()}</span> },
-            { key: 'fee', label: 'Fee', render: (v: number) => <span className="text-orange-300">RWF {v.toLocaleString()}</span> },
+            { key: 'fee', label: 'Fee', render: (v: number) => <span className="text-yellow-700">RWF {v.toLocaleString()}</span> },
             { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
           ]}
           data={transactions}

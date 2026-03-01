@@ -8,7 +8,7 @@ const REPORT_TYPES = [
   { id: 'listings', label: 'Listings Report', icon: <FileText size={18}/>, color: 'bg-cyan-50 dark:bg-cyan-900/20 border-cyan-200 dark:border-cyan-800 text-cyan-700 dark:text-cyan-400' },
   { id: 'transactions', label: 'Financial Report', icon: <DollarSign size={18}/>, color: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700' },
   { id: 'environmental', label: 'Environmental Impact', icon: <Leaf size={18}/>, color: 'bg-teal-50 dark:bg-teal-900/20 border-teal-200 text-teal-700 dark:text-teal-400' },
-  { id: 'collections', label: 'Collections Report', icon: <BarChart2 size={18}/>, color: 'bg-orange-50 dark:bg-orange-300/20 border-orange-300 dark:border-orange-300 text-orange-300 dark:text-orange-300' },
+  { id: 'collections', label: 'Collections Report', icon: <BarChart2 size={18}/>, color: 'bg-orange-50 dark:bg-yellow-700/20 border-yellow-700 dark:border-yellow-700 text-yellow-700 dark:text-yellow-700' },
 ];
 
 export default function AdminReports() {

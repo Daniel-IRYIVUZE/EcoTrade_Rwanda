@@ -182,7 +182,7 @@ const TestimonialsSection = () => {
                       key={i}
                       className={`w-5 h-5 ${
                         i < currentTestimonial.rating
-                          ? 'fill-yellow-400 text-yellow-400'
+                          ? 'fill-yellow-700 text-yellow-700'
                           : 'text-gray-300'
                       }`}
                     />
