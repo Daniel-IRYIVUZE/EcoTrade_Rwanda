@@ -1,61 +1,100 @@
+// pages/dashboard/admin/OverviewSection.tsx
 import { Users, Package, DollarSign, Activity, AlertTriangle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getAll } from '../../../utils/dataStore';
+import type { PlatformUser, WasteListing, Transaction } from '../../../utils/dataStore';
 
 const AdminOverviewSection = () => {
-  const [stats] = useState({
-    totalRevenue: 650000,
-    activeUsers: 10,
-    listingsToday: 3,
-    pendingDisputes: 1,
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    activeUsers: 0,
+    listingsToday: 0,
+    pendingDisputes: 0,
     systemHealth: 99.2
   });
 
+  useEffect(() => {
+    const users = getAll<PlatformUser>('users');
+    const listings = getAll<WasteListing>('listings');
+    const transactions = getAll<Transaction>('transactions');
+    
+    const today = new Date().toDateString();
+    const todayListings = listings.filter(l => 
+      new Date(l.createdAt).toDateString() === today
+    ).length;
+
+    const completedTransactions = transactions.filter(t => t.status === 'completed');
+    const totalRevenue = completedTransactions.reduce((sum, t) => sum + t.amount, 0);
+    const disputes = transactions.filter(t => t.status === 'disputed').length;
+
+    setStats({
+      totalRevenue,
+      activeUsers: users.filter(u => u.status === 'active').length,
+      listingsToday: todayListings,
+      pendingDisputes: disputes,
+      systemHealth: 99.2
+    });
+  }, []);
+
+  const statCards = [
+    {
+      label: 'Total Revenue',
+      value: `Rwf ${(stats.totalRevenue / 1000000).toFixed(1)}M`,
+      icon: <DollarSign size={20} className="text-cyan-600" />,
+      subtext: 'Platform total',
+      color: 'border-l-cyan-500'
+    },
+    {
+      label: 'Active Users',
+      value: stats.activeUsers,
+      icon: <Users size={20} className="text-cyan-600" />,
+      subtext: 'Registered members',
+      color: 'border-l-blue-500'
+    },
+    {
+      label: "Today's Listings",
+      value: stats.listingsToday,
+      icon: <Package size={20} className="text-amber-600 dark:text-amber-400" />,
+      subtext: 'New listings today',
+      color: 'border-l-amber-500'
+    },
+    {
+      label: 'Pending Disputes',
+      value: stats.pendingDisputes,
+      icon: <AlertTriangle size={20} className="text-red-600 dark:text-red-400" />,
+      subtext: 'Need attention',
+      color: 'border-l-red-500'
+    },
+    {
+      label: 'System Health',
+      value: `${stats.systemHealth}%`,
+      icon: <Activity size={20} className="text-cyan-600" />,
+      subtext: 'All systems operational',
+      color: 'border-l-green-500'
+    }
+  ];
+
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
-      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Total Revenue</span>
-          <DollarSign size={20} className="text-cyan-600" />
+      {statCards.map((stat, index) => (
+        <div 
+          key={index}
+          className={`bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border-l-4 ${stat.color} border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow`}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">
+              {stat.label}
+            </span>
+            {stat.icon}
+          </div>
+          <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+            {stat.value}
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {stat.subtext}
+          </p>
         </div>
-        <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Rwf {(stats.totalRevenue / 1000000).toFixed(1)}M</div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Platform total</p>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Active Users</span>
-          <Users size={20} className="text-cyan-600" />
-        </div>
-        <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{stats.activeUsers}</div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Registered members</p>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Today's Listings</span>
-          <Package size={20} className="text-amber-600 dark:text-amber-400" />
-        </div>
-        <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{stats.listingsToday}</div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">New listings today</p>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">Pending Disputes</span>
-          <AlertTriangle size={20} className="text-red-600 dark:text-red-400" />
-        </div>
-        <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{stats.pendingDisputes}</div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need attention</p>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">System Health</span>
-          <Activity size={20} className="text-cyan-600" />
-        </div>
-        <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{stats.systemHealth}%</div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">All systems operational</p>
-      </div>
+      ))}
     </section>
   );
 };

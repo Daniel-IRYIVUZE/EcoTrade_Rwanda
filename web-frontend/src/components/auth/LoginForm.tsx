@@ -1,6 +1,6 @@
 // components/auth/LoginForm.tsx
 import { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ArrowRight} from 'lucide-react';
 
 interface LoginFormProps {
   onToggleMode: () => void;
@@ -51,9 +51,6 @@ const LoginForm = ({ onToggleMode, onForgotPassword, onLogin, demoCredentials }:
 
       {/* ── Header ── */}
       <div className="mb-3 sm:mb-4">
-        <div className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500 mb-2 sm:mb-3 shadow-md shadow-cyan-500/20">
-          <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-        </div>
         <h2 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white leading-tight">
           Welcome back
         </h2>

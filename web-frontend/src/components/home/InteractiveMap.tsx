@@ -85,7 +85,7 @@ const InteractiveMap = () => {
               <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
                 <path
                   d="M 300,150 L 500,250 L 400,350"
-                  stroke="#10b981"
+                  stroke="#00aac4"
                   strokeWidth="3"
                   strokeDasharray="5,5"
                   fill="none"

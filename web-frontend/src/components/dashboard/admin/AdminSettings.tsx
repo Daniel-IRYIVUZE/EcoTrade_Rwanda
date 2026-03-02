@@ -1,3 +1,4 @@
+// pages/dashboard/admin/Settings.tsx
 import { useState } from 'react';
 import { Save, Settings, Bell, Shield, CreditCard, Globe } from 'lucide-react';
 
@@ -37,27 +38,61 @@ const defaults: PlatformSettings = {
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState<PlatformSettings>(() => {
-    try { return { ...defaults, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { return defaults; }
+    try { 
+      return { ...defaults, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; 
+    } catch { 
+      return defaults; 
+    }
   });
   const [saved, setSaved] = useState(false);
 
   const save = () => {
     localStorage.setItem(KEY, JSON.stringify(settings));
-    setSaved(true); setTimeout(() => setSaved(false), 2000);
+    setSaved(true); 
+    setTimeout(() => setSaved(false), 2000);
   };
 
-  const Field = ({ label, id, type = 'text', value, onChange }: { label: string; id: string; type?: string; value: any; onChange: (v: any) => void }) => (
+  const Field = ({ label, id, type = 'text', value, onChange }: { 
+    label: string; 
+    id: string; 
+    type?: string; 
+    value: any; 
+    onChange: (v: any) => void 
+  }) => (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
-      <input id={id} type={type} value={value} onChange={e => onChange(type === 'number' ? Number(e.target.value) : e.target.value)} className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"/>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        {label}
+      </label>
+      <input 
+        id={id} 
+        type={type} 
+        value={value} 
+        onChange={e => onChange(type === 'number' ? Number(e.target.value) : e.target.value)} 
+        className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+      />
     </div>
   );
 
-  const Toggle = ({ label, desc, checked, onChange }: { label: string; desc: string; checked: boolean; onChange: (v: boolean) => void }) => (
-    <div className="flex items-start justify-between py-3 border-b last:border-0">
-      <div><p className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</p><p className="text-xs text-gray-400 dark:text-gray-500">{desc}</p></div>
-      <button onClick={() => onChange(!checked)} className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ml-4 ${checked ? 'bg-cyan-600' : 'bg-gray-200 dark:bg-gray-600'}`}>
-        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white dark:bg-gray-800 rounded-full shadow transition-transform ${checked ? 'translate-x-5' : ''}`}/>
+  const Toggle = ({ label, desc, checked, onChange }: { 
+    label: string; 
+    desc: string; 
+    checked: boolean; 
+    onChange: (v: boolean) => void 
+  }) => (
+    <div className="flex items-start justify-between py-3 border-b border-gray-200 dark:border-gray-700 last:border-0">
+      <div>
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500">{desc}</p>
+      </div>
+      <button 
+        onClick={() => onChange(!checked)} 
+        className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ml-4 ${
+          checked ? 'bg-cyan-600' : 'bg-gray-200 dark:bg-gray-600'
+        }`}
+      >
+        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white dark:bg-gray-800 rounded-full shadow transition-transform ${
+          checked ? 'translate-x-5' : ''
+        }`} />
       </button>
     </div>
   );
@@ -65,55 +100,151 @@ export default function AdminSettings() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2"><Settings size={20} className="text-cyan-600"/>Platform Settings</h2>
-        {saved && <span className="text-green-600 dark:text-green-400 text-sm font-medium">✓ Settings saved!</span>}
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+          <Settings size={20} className="text-cyan-600" />
+          Platform Settings
+        </h2>
+        {saved && (
+          <span className="text-green-600 dark:text-green-400 text-sm font-medium">
+            ✓ Settings saved!
+          </span>
+        )}
       </div>
 
-      <div className="bg-white dark:bg-gray-800 border rounded-xl p-5 space-y-4">
-        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"><Globe size={16}/>General</h3>
+      {/* General Settings */}
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-4">
+        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+          <Globe size={16} />
+          General
+        </h3>
         <div className="grid grid-cols-2 gap-4">
-          <Field label="Platform Name" id="name" value={settings.platformName} onChange={v => setSettings({...settings, platformName: v})}/>
-          <Field label="Country" id="country" value={settings.country} onChange={v => setSettings({...settings, country: v})}/>
-          <Field label="Support Email" id="email" value={settings.supportEmail} onChange={v => setSettings({...settings, supportEmail: v})}/>
-          <Field label="Support Phone" id="phone" value={settings.supportPhone} onChange={v => setSettings({...settings, supportPhone: v})}/>
+          <Field 
+            label="Platform Name" 
+            id="name" 
+            value={settings.platformName} 
+            onChange={v => setSettings({...settings, platformName: v})}
+          />
+          <Field 
+            label="Country" 
+            id="country" 
+            value={settings.country} 
+            onChange={v => setSettings({...settings, country: v})}
+          />
+          <Field 
+            label="Support Email" 
+            id="email" 
+            value={settings.supportEmail} 
+            onChange={v => setSettings({...settings, supportEmail: v})}
+          />
+          <Field 
+            label="Support Phone" 
+            id="phone" 
+            value={settings.supportPhone} 
+            onChange={v => setSettings({...settings, supportPhone: v})}
+          />
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 border rounded-xl p-5 space-y-4">
-        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"><CreditCard size={16}/>Financial</h3>
+      {/* Financial Settings */}
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-4">
+        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+          <CreditCard size={16} />
+          Financial
+        </h3>
         <div className="grid grid-cols-2 gap-4">
-          <Field label="Platform Fee (%)" id="fee" type="number" value={settings.platformFeePercent} onChange={v => setSettings({...settings, platformFeePercent: v})}/>
-          <Field label="Minimum Bid (RWF)" id="minbid" type="number" value={settings.minBidAmount} onChange={v => setSettings({...settings, minBidAmount: v})}/>
-          <Field label="Listing Expiry (days)" id="expiry" type="number" value={settings.listingExpiryDays} onChange={v => setSettings({...settings, listingExpiryDays: v})}/>
-          <Field label="Currency" id="currency" value={settings.currency} onChange={v => setSettings({...settings, currency: v})}/>
+          <Field 
+            label="Platform Fee (%)" 
+            id="fee" 
+            type="number" 
+            value={settings.platformFeePercent} 
+            onChange={v => setSettings({...settings, platformFeePercent: v})}
+          />
+          <Field 
+            label="Minimum Bid (RWF)" 
+            id="minbid" 
+            type="number" 
+            value={settings.minBidAmount} 
+            onChange={v => setSettings({...settings, minBidAmount: v})}
+          />
+          <Field 
+            label="Listing Expiry (days)" 
+            id="expiry" 
+            type="number" 
+            value={settings.listingExpiryDays} 
+            onChange={v => setSettings({...settings, listingExpiryDays: v})}
+          />
+          <Field 
+            label="Currency" 
+            id="currency" 
+            value={settings.currency} 
+            onChange={v => setSettings({...settings, currency: v})}
+          />
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 border rounded-xl p-5">
-        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3"><Bell size={16}/>Notifications & Features</h3>
+      {/* Notifications */}
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
+          <Bell size={16} />
+          Notifications & Features
+        </h3>
         <div>
-          <Toggle label="Email Notifications" desc="Send email alerts to users" checked={settings.emailNotifications} onChange={v => setSettings({...settings, emailNotifications: v})}/>
-          <Toggle label="SMS Notifications" desc="Send SMS alerts for bids and collections" checked={settings.smsNotifications} onChange={v => setSettings({...settings, smsNotifications: v})}/>
+          <Toggle 
+            label="Email Notifications" 
+            desc="Send email alerts to users" 
+            checked={settings.emailNotifications} 
+            onChange={v => setSettings({...settings, emailNotifications: v})}
+          />
+          <Toggle 
+            label="SMS Notifications" 
+            desc="Send SMS alerts for bids and collections" 
+            checked={settings.smsNotifications} 
+            onChange={v => setSettings({...settings, smsNotifications: v})}
+          />
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 border rounded-xl p-5">
-        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3"><Shield size={16}/>Security & Compliance</h3>
+      {/* Security */}
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+        <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
+          <Shield size={16} />
+          Security & Compliance
+        </h3>
         <div>
-          <Toggle label="Require ID Verification" desc="Require identity docs before account activation" checked={settings.requireIDVerification} onChange={v => setSettings({...settings, requireIDVerification: v})}/>
-          <Toggle label="Auto-Approve Listings" desc="Automatically approve new waste listings" checked={settings.autoApproveListings} onChange={v => setSettings({...settings, autoApproveListings: v})}/>
-          <Toggle label="Maintenance Mode" desc="Take the platform offline for maintenance" checked={settings.maintenanceMode} onChange={v => setSettings({...settings, maintenanceMode: v})}/>
+          <Toggle 
+            label="Require ID Verification" 
+            desc="Require identity docs before account activation" 
+            checked={settings.requireIDVerification} 
+            onChange={v => setSettings({...settings, requireIDVerification: v})}
+          />
+          <Toggle 
+            label="Auto-Approve Listings" 
+            desc="Automatically approve new waste listings" 
+            checked={settings.autoApproveListings} 
+            onChange={v => setSettings({...settings, autoApproveListings: v})}
+          />
+          <Toggle 
+            label="Maintenance Mode" 
+            desc="Take the platform offline for maintenance" 
+            checked={settings.maintenanceMode} 
+            onChange={v => setSettings({...settings, maintenanceMode: v})}
+          />
         </div>
       </div>
 
+      {/* Maintenance Warning */}
       {settings.maintenanceMode && (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 text-yellow-700 dark:text-yellow-300 rounded-lg p-4 text-sm">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 rounded-lg p-4 text-sm">
           ⚠️ <strong>Warning:</strong> Maintenance mode is enabled. Users will see a maintenance page when visiting the platform.
         </div>
       )}
 
-      <button onClick={save} className="flex items-center gap-2 bg-cyan-600 text-white px-6 py-3 rounded-xl hover:bg-cyan-700 font-medium">
-        <Save size={16}/> Save Settings
+      {/* Save Button */}
+      <button 
+        onClick={save} 
+        className="flex items-center gap-2 bg-cyan-600 text-white px-6 py-3 rounded-xl hover:bg-cyan-700 font-medium transition-colors"
+      >
+        <Save size={16} /> Save Settings
       </button>
     </div>
   );
