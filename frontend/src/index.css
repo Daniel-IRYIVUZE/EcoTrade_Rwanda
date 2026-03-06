@@ -1,12 +1,180 @@
 @import "tailwindcss";
 @variant dark (&:is(.dark *));
 
+/* ============================================================
+   ECOTRADE RWANDA — DESIGN SYSTEM TOKENS
+   Primary: Cyan  |  Secondary: Dark Cyan #065F46
+   Accent: Eco Yellow #F59E0B  |  BG: Light Gray #F9FAFB
+   ============================================================ */
+
+/* ── Keyframes: Toast / Slide-in ── */
 @keyframes slide-in {
   from { transform: translateX(110%); opacity: 0; }
   to   { transform: translateX(0);    opacity: 1; }
 }
 .animate-slide-in {
   animation: slide-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Keyframes: Fade Up (cards, sections entering viewport) ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.animate-fade-up-delay-1 { animation: fade-up 0.45s 0.1s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-fade-up-delay-2 { animation: fade-up 0.45s 0.2s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-fade-up-delay-3 { animation: fade-up 0.45s 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-fade-up-delay-4 { animation: fade-up 0.45s 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── Keyframes: Scale Pop (modal appears, success confirmation) ── */
+@keyframes scale-pop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  70%  { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.animate-scale-pop {
+  animation: scale-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Keyframes: Shimmer Loading Skeleton ── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+  background-size: 200% 100%;
+}
+
+/* ── Keyframes: Pulse Dot (live indicator) ── */
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.5); opacity: 0.6; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+/* ── Keyframes: Ticker Scroll (live bid activity) ── */
+@keyframes ticker-scroll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.animate-ticker {
+  animation: ticker-scroll 18s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* ── Keyframes: Count-up Highlight ── */
+@keyframes count-highlight {
+  0%   { color: #06b6d4; transform: scale(1.08); }
+  100% { color: inherit;  transform: scale(1); }
+}
+.animate-count-highlight {
+  animation: count-highlight 0.6s ease-out forwards;
+}
+
+/* ── Keyframes: Map Marker Bounce ── */
+@keyframes marker-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40%       { transform: translateY(-12px) scale(1.1); }
+  60%       { transform: translateY(-6px) scale(1.05); }
+}
+.animate-marker-bounce {
+  animation: marker-bounce 1s ease-in-out 3;
+}
+
+/* ── Keyframes: Progress Fill ── */
+@keyframes progress-fill {
+  from { width: 0%; }
+  to   { width: var(--progress-width, 100%); }
+}
+.animate-progress-fill {
+  animation: progress-fill 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Keyframes: Slide Down (dropdown / notification panel) ── */
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-down {
+  animation: slide-down 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Keyframes: Ring Stroke (circular progress) ── */
+@keyframes ring-fill {
+  from { stroke-dashoffset: var(--ring-circumference, 283); }
+  to   { stroke-dashoffset: var(--ring-offset, 0); }
+}
+.animate-ring-fill {
+  animation: ring-fill 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Keyframes: Eco Leaf Float ── */
+@keyframes leaf-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33%       { transform: translateY(-8px) rotate(5deg); }
+  66%       { transform: translateY(-4px) rotate(-3deg); }
+}
+.animate-leaf-float {
+  animation: leaf-float 3s ease-in-out infinite;
+}
+
+/* ── Keyframes: Glow Pulse (live / active elements) ── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(6,182,212,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(6,182,212,0); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ── Keyframes: Bid Flash (new bid received) ── */
+@keyframes bid-flash {
+  0%   { background-color: rgba(6,182,212,0.2); }
+  100% { background-color: transparent; }
+}
+.animate-bid-flash {
+  animation: bid-flash 1.5s ease-out forwards;
+}
+
+/* ── Keyframes: Status Indicator Blink ── */
+@keyframes status-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.animate-status-blink {
+  animation: status-blink 1.5s ease-in-out infinite;
+}
+
+/* ── Keyframes: Number Roll ── */
+@keyframes number-roll {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.animate-number-roll {
+  animation: number-roll 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Keyframes: Rotate In (icon on load) ── */
+@keyframes rotate-in {
+  from { transform: rotate(-90deg) scale(0.5); opacity: 0; }
+  to   { transform: rotate(0deg)   scale(1);   opacity: 1; }
+}
+.animate-rotate-in {
+  animation: rotate-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* ============================================================
@@ -130,27 +298,141 @@
 
 @layer utilities {
   /* Sections */
-  .section-light {
-    @apply bg-white dark:bg-gray-950;
-  }
+  .section-light { @apply bg-white dark:bg-gray-950; }
+  .section-alt   { @apply bg-gray-50 dark:bg-gray-900; }
 
-  .section-alt {
-    @apply bg-gray-50 dark:bg-gray-900;
-  }
-
-  /* Cards */
+  /* Cards — base SaaS card */
   .card {
     @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm;
   }
+  /* Elevated card */
+  .card-elevated {
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+  /* Interactive card (clickable) */
+  .card-interactive {
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm
+           hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer;
+  }
 
   /* Muted text */
-  .text-muted {
-    @apply text-gray-500 dark:text-gray-400;
-  }
+  .text-muted { @apply text-gray-500 dark:text-gray-400; }
 
   /* Dividers */
-  .divider {
-    @apply border-gray-200 dark:border-gray-700;
+  .divider { @apply border-gray-200 dark:border-gray-700; }
+
+  /* Eco color utilities */
+  .eco-primary   { @apply text-cyan-600 dark:text-cyan-400; }
+  .eco-secondary { @apply text-cyan-800 dark:text-cyan-300; }
+  .eco-accent    { @apply text-amber-500; }
+  .eco-bg        { @apply bg-cyan-600; }
+  .eco-bg-light  { @apply bg-cyan-50 dark:bg-cyan-900/20; }
+
+  /* Status pill tokens */
+  .badge-open       { @apply bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300; }
+  .badge-pending    { @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300; }
+  .badge-active     { @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300; }
+  .badge-completed  { @apply bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300; }
+  .badge-suspended  { @apply bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300; }
+  .badge-en-route   { @apply bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300; }
+
+  /* SaaS table row */
+  .table-row-interactive {
+    @apply hover:bg-cyan-50 dark:hover:bg-cyan-900/10 transition-colors duration-100 cursor-pointer;
   }
+
+  /* Button variants */
+  .btn-primary {
+    @apply px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800
+           text-white text-sm font-semibold rounded-lg shadow-sm
+           transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2;
+  }
+  .btn-secondary {
+    @apply px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600
+           text-gray-700 dark:text-gray-200 text-sm font-semibold rounded-lg shadow-sm
+           hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150
+           focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2;
+  }
+  .btn-danger {
+    @apply px-4 py-2.5 bg-red-600 hover:bg-red-700 active:bg-red-800
+           text-white text-sm font-semibold rounded-lg shadow-sm
+           transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+  .btn-success {
+    @apply px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800
+           text-white text-sm font-semibold rounded-lg shadow-sm
+           transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+  }
+  .btn-ghost {
+    @apply px-4 py-2 text-gray-600 dark:text-gray-300 text-sm font-medium rounded-lg
+           hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-150;
+  }
+  .btn-icon {
+    @apply w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700
+           bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300
+           hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150;
+  }
+
+  /* Input field consistent styling */
+  .input-field {
+    @apply w-full px-3 py-2.5 text-sm bg-white dark:bg-gray-800
+           border border-gray-300 dark:border-gray-600
+           text-gray-900 dark:text-gray-100 placeholder-gray-400
+           rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500
+           focus:border-transparent transition-all duration-150;
+  }
+  .select-field {
+    @apply w-full px-3 py-2.5 text-sm bg-white dark:bg-gray-800
+           border border-gray-300 dark:border-gray-600
+           text-gray-900 dark:text-gray-100
+           rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500
+           focus:border-transparent transition-all duration-150 cursor-pointer;
+  }
+
+  /* Dashboard section header */
+  .section-title {
+    @apply text-xl font-bold text-gray-900 dark:text-white;
+  }
+  .section-subtitle {
+    @apply text-sm text-gray-500 dark:text-gray-400 mt-0.5;
+  }
+
+  /* Live indicator dot */
+  .live-dot {
+    @apply w-2 h-2 bg-emerald-500 rounded-full;
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
+
+  /* Sidebar nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+           text-gray-600 dark:text-gray-400
+           hover:bg-cyan-50 dark:hover:bg-cyan-900/20
+           hover:text-cyan-700 dark:hover:text-cyan-300
+           transition-all duration-150;
+  }
+  .nav-item-active {
+    @apply bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 font-semibold;
+  }
+
+  /* Map overlay card */
+  .map-overlay-card {
+    @apply absolute bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+           rounded-xl shadow-md p-3 z-10 text-sm;
+  }
+
+  /* Metric highlight */
+  .eco-metric {
+    @apply text-3xl font-bold tabular-nums text-gray-900 dark:text-white;
+  }
+  .eco-metric-lg {
+    @apply text-5xl font-extrabold tabular-nums text-gray-900 dark:text-white;
+  }
+
+  /* Scrollbar for light mode */
+  .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; }
 }
 

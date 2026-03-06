@@ -1,123 +1,62 @@
 // components/marketplace/LiveBidActivity.tsx
-import { TrendingUp, Award, Clock, Gavel, Trophy, TrendingDown } from 'lucide-react';
+import { TrendingUp, Award } from 'lucide-react';
+import BidTicker, { type TickerItem } from '../ui/BidTicker';
 
-const activities = [
-  {
-    id: 1,
-    recycler: 'GreenEnergy',
-    action: 'bid',
-    amount: 15500,
-    listing: '50kg UCO',
-    hotel: 'Mille Collines',
-    time: '2 min ago'
-  },
-  {
-    id: 2,
-    recycler: 'EcoPlast',
-    action: 'won',
-    amount: 12000,
-    listing: '200kg Cardboard',
-    hotel: 'Serena Hotel',
-    time: '5 min ago'
-  },
-  {
-    id: 3,
-    recycler: 'BioDiesel Rwanda',
-    action: 'bid',
-    amount: 14800,
-    listing: '75kg UCO',
-    hotel: 'Kigali Marriott',
-    time: '7 min ago'
-  },
-  {
-    id: 4,
-    recycler: 'Glass Recycling Ltd',
-    action: 'bid',
-    amount: 8500,
-    listing: '120kg Glass',
-    hotel: 'Marriott',
-    time: '12 min ago'
-  },
-  {
-    id: 5,
-    recycler: 'EcoTrade Logistics',
-    action: 'outbid',
-    amount: 14300,
-    listing: '50kg UCO',
-    hotel: 'Mille Collines',
-    time: '15 min ago'
-  }
+const defaultItems: TickerItem[] = [
+  { id: '1', recycler: 'GreenEnergy',       wasteType: 'UCO',           amount: 15500, time: '2 min ago' },
+  { id: '2', recycler: 'EcoPlast',          wasteType: 'Cardboard',     amount: 12000, time: '5 min ago' },
+  { id: '3', recycler: 'BioDiesel Rwanda',  wasteType: 'UCO',           amount: 14800, time: '7 min ago' },
+  { id: '4', recycler: 'Glass Recycling',   wasteType: 'Glass',         amount: 8500,  time: '12 min ago' },
+  { id: '5', recycler: 'EcoTrade Logistics',wasteType: 'Mixed Waste',   amount: 14300, time: '15 min ago' },
 ];
 
-const LiveBidActivity = () => {
+const topBidders = [
+  { name: 'GreenEnergy Recyclers', bids: 12, amount: 'RWF 15,500' },
+  { name: 'EcoPlast Ltd',          bids: 9,  amount: 'RWF 12,000' },
+  { name: 'BioDiesel Rwanda',      bids: 7,  amount: 'RWF 14,800' },
+];
+
+interface LiveBidActivityProps {
+  items?: TickerItem[];
+}
+
+const LiveBidActivity = ({ items = defaultItems }: LiveBidActivityProps) => {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6">
-      <div className="flex items-center mb-6">
-        <TrendingUp className="w-5 h-5 text-cyan-600 mr-2" />
-        <h3 className="font-bold text-gray-900 dark:text-white">Live Bid Activity</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 space-y-5">
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <TrendingUp size={18} className="text-cyan-600" />
+        <h3 className="font-bold text-gray-900 dark:text-white text-sm">Live Bid Activity</h3>
+        <span className="ml-auto flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+          LIVE
+        </span>
       </div>
 
-      <div className="space-y-4">
-        {activities.map((activity) => (
-          <div key={activity.id} className="relative pl-6 pb-4 border-l-2 border-cyan-200 dark:border-cyan-800 last:pb-0">
-            {/* Timeline Dot */}
-            <div className="absolute left-[-5px] top-0 w-2 h-2 bg-cyan-600 rounded-full"></div>
-
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">{activity.recycler}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {activity.action === 'bid' ? 'Placed bid on' : activity.action === 'won' ? 'Won auction for' : 'Outbid on'}{' '}
-                  <span className="font-medium text-gray-700 dark:text-gray-300">{activity.listing}</span>
-                </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">{activity.hotel}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm font-bold text-cyan-600">RWF {activity.amount.toLocaleString()}</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center justify-end mt-1">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {activity.time}
-                </p>
-              </div>
-            </div>
-
-            {/* Action Badge */}
-            <div className={`absolute -left-3 top-4 w-6 h-6 rounded-full flex items-center justify-center ${
-              activity.action === 'bid' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' :
-              activity.action === 'won' ? 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400' :
-              'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-            }`}>
-              {activity.action === 'bid' ? (
-                <Gavel className="w-3 h-3" />
-              ) : activity.action === 'won' ? (
-                <Trophy className="w-3 h-3" />
-              ) : (
-                <TrendingDown className="w-3 h-3" />
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Bid Ticker */}
+      <BidTicker items={items} maxItems={6} />
 
       {/* Top Bidders */}
-      <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-          <Award className="w-4 h-4 text-yellow-700 mr-1" />
+      <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
+        <h4 className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-1.5">
+          <Award size={13} className="text-yellow-500" />
           Top Bidders Today
         </h4>
         <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-700 dark:text-gray-300">1. GreenEnergy</span>
-            <span className="font-semibold">12 bids</span>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-700 dark:text-gray-300">2. EcoPlast</span>
-            <span className="font-semibold">9 bids</span>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-700 dark:text-gray-300">3. BioDiesel Rwanda</span>
-            <span className="font-semibold">7 bids</span>
-          </div>
+          {topBidders.map((b, i) => (
+            <div key={b.name} className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-yellow-100 text-yellow-700' : i === 1 ? 'bg-gray-100 text-gray-600' : 'bg-orange-100 text-orange-700'}`}>
+                  {i + 1}
+                </span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">{b.name}</span>
+              </div>
+              <div className="text-right">
+                <p className="text-xs font-semibold text-cyan-600 dark:text-cyan-400">{b.amount}</p>
+                <p className="text-xs text-gray-400">{b.bids} bids</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

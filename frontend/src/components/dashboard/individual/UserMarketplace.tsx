@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { Search, Package, Star } from 'lucide-react';
+import { Search, Package, Star, ShoppingCart, X, CheckCircle } from 'lucide-react';
 import { marketplaceListings } from './_shared';
 
 export default function UserMarketplace() {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [cart, setCart] = useState<string[]>([]);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const addToCart = (id: string, name: string) => {
+    setCart(prev => [...prev, id]);
+    setToast(`"${name}" added to cart!`);
+    setTimeout(() => setToast(null), 2500);
+  };
   const filtered = marketplaceListings.filter(l => {
     const matchSearch = l.item.toLowerCase().includes(search.toLowerCase()) || l.seller.toLowerCase().includes(search.toLowerCase());
     const matchCategory = categoryFilter === 'all' || l.category === categoryFilter;
@@ -14,9 +22,23 @@ export default function UserMarketplace() {
 
   return (
     <div className="space-y-6">
+      {/* Toast */}
+      {toast && (
+        <div className="flex items-center justify-between gap-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 px-4 py-2.5 rounded-xl text-sm">
+          <span className="flex items-center gap-2"><CheckCircle size={15}/> {toast}</span>
+          <button onClick={() => setToast(null)}><X size={14}/></button>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Eco Marketplace</h1>
+        <div className="flex items-center gap-3">
           <span className="text-sm bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full font-medium">{marketplaceListings.filter(l => l.inStock).length} items available</span>
+          {cart.length > 0 && (
+            <div className="flex items-center gap-1.5 bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 px-3 py-1 rounded-full text-sm font-medium">
+              <ShoppingCart size={14}/> {cart.length}
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" /><input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..." className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-transparent" /></div>
@@ -32,7 +54,9 @@ export default function UserMarketplace() {
               <div className="flex items-center gap-1 mt-2"><Star size={12} className="text-yellow-700 fill-yellow-700" /><span className="text-xs text-gray-600 dark:text-gray-400">{item.rating}</span><span className="text-xs text-gray-400 dark:text-gray-500 ml-1">{item.category}</span></div>
               <div className="flex items-center justify-between mt-3">
                 <span className="text-lg font-bold text-cyan-600">{item.price}</span>
-                {item.inStock ? <button className="px-3 py-1 text-xs bg-cyan-600 text-white rounded hover:bg-cyan-700 font-medium">Add to Cart</button> : <span className="text-xs text-red-500 font-medium">Out of Stock</span>}
+                {item.inStock
+                  ? <button onClick={() => addToCart(item.id, item.item)} className="flex items-center gap-1 px-3 py-1 text-xs bg-cyan-600 text-white rounded hover:bg-cyan-700 font-medium transition-colors"><ShoppingCart size={11}/> Add to Cart</button>
+                  : <span className="text-xs text-red-500 font-medium">Out of Stock</span>}
               </div>
             </div>
           </div>
