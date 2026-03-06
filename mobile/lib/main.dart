@@ -1,59 +1,51 @@
-import 'package:ecotrade_mobile/providers/app_providers.dart';
-import 'package:ecotrade_mobile/services/api/api_client.dart';
-import 'package:ecotrade_mobile/services/offline/offline_service.dart';
-import 'package:ecotrade_mobile/utils/app_routes.dart';
-import 'package:ecotrade_mobile/views/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'core/theme/app_theme.dart';
+import 'core/router/app_router.dart';
+import 'core/services/notification_service.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Hive for offline storage
   await Hive.initFlutter();
-  await OfflineService.init();
-  ApiClient().initialize();
 
-  FlutterNativeSplash.remove();
-  
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
+  // Initialize local notifications
+  await NotificationService.instance.init();
+
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Status bar style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
     ),
   );
+
+  runApp(const ProviderScope(child: EcotradeApp()));
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class EcotradeApp extends ConsumerWidget {
+  const EcotradeApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    
-    return MaterialApp(
+    final router = ref.watch(appRouterProvider);
+
+    return MaterialApp.router(
       title: 'Ecotrade',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0F4C3A),
-          primary: const Color(0xFF0F4C3A),
-          secondary: const Color(0xFF10B981),
-        ),
-        textTheme: GoogleFonts.interTextTheme(),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData.dark().copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0F4C3A),
-          brightness: Brightness.dark,
-        ),
-      ),
-      themeMode: themeMode,
-      routes: AppRoutes.routes,
-      home: const SplashScreen(),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.light,
+      routerConfig: router,
     );
   }
 }

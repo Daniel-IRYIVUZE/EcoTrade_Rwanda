@@ -1,6 +1,6 @@
 {
-    "name": "ecotrade_mobile",
-    "short_name": "ecotrade_mobile",
+    "name": "ecotrade",
+    "short_name": "ecotrade",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

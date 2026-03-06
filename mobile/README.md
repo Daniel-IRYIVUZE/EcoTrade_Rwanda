@@ -1,4 +1,4 @@
-# ecotrade_mobile
+# ecotrade
 
 A new Flutter project.
 
