@@ -18,7 +18,7 @@ export default function RecyclerAvailableWaste() {
   useEffect(() => { load(); window.addEventListener('ecotrade_data_change', load); return () => window.removeEventListener('ecotrade_data_change', load); }, [load]);
 
   const filtered = listings.filter(l => {
-    const matchSearch = l.hotelName.toLowerCase().includes(search.toLowerCase()) || l.id.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (l.hotelName || l.businessName || '').toLowerCase().includes(search.toLowerCase()) || l.id.toLowerCase().includes(search.toLowerCase());
     const matchType = typeFilter === 'all' || l.wasteType === typeFilter;
     return matchSearch && matchType;
   });
@@ -50,7 +50,7 @@ export default function RecyclerAvailableWaste() {
     id: l.id, hotel: l.hotelName, type: l.wasteType,
     quantity: `${l.volume} ${l.unit}`,
     askPrice: `RWF ${l.minBid.toLocaleString()}`,
-    distance: l.location || 'Kigali', bids: l.bids.length,
+    distance: l.location || 'Kigali', bids: Array.isArray(l.bids) ? l.bids.length : 0,
     pickupDate: new Date(l.expiresAt).toLocaleDateString(), _raw: l,
   }));
 

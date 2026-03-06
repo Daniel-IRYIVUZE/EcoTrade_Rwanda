@@ -3,7 +3,7 @@ import { MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
 
 const ContactHero = () => {
   return (
-    <section className="relative bg-cyan-900 text-white overflow-hidden">
+    <section className="relative text-white overflow-hidden" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #065f46 30%, #0e7490 70%, #0369a1 100%)' }}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-white dark:bg-gray-900 rounded-full mix-blend-overlay filter blur-3xl"></div>
@@ -51,7 +51,7 @@ const ContactHero = () => {
 
       {/* Wave Decoration */}
       <div className="absolute bottom-0 left-0 right-0">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="fill-current text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="fill-current text-white dark:text-gray-950">
           <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
         </svg>
       </div>

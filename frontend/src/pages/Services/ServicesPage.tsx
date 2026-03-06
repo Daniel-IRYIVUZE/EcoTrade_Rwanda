@@ -4,7 +4,7 @@ import Navbar from '../../components/common/Navbar/Navbar';
 import Footer from '../../components/common/Footer/Footer';
 import ServicesHero from '../../components/services/ServicesHero';
 import ServiceTabs from '../../components/services/ServiceTabs';
-import HotelServices from '../../components/services/HotelServices';
+import BusinessServices from '../../components/services/BusinessServices';
 import RecyclerServices from '../../components/services/RecyclerServices';
 import DriverServices from '../../components/services/DriverServices';
 import PricingCalculator from '../../components/services/PricingCalculator';
@@ -14,7 +14,7 @@ import TestimonialsSection from '../../components/services/TestimonialsSection';
 import CTASection from '../../components/services/CTASection';
 
 const ServicesPage = () => {
-  const [activeTab, setActiveTab] = useState<'hotels' | 'recyclers' | 'drivers'>('hotels');
+  const [activeTab, setActiveTab] = useState<'businesses' | 'recyclers' | 'drivers'>('businesses');
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors duration-300">
@@ -30,7 +30,7 @@ const ServicesPage = () => {
 
         {/* Service Content based on active tab */}
         <div className="py-16">
-          {activeTab === 'hotels' && <HotelServices />}
+          {activeTab === 'businesses' && <BusinessServices />}
           {activeTab === 'recyclers' && <RecyclerServices />}
           {activeTab === 'drivers' && <DriverServices />}
         </div>

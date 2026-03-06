@@ -1,7 +1,7 @@
 // components/dashboard/business/BusinessTransactions.tsx
 import { useState, useEffect } from 'react';
 import { getAll, downloadCSV } from '../../../utils/dataStore';
-import type { Transaction } from '../../../utils/dataStore';
+import type { Transaction, PlatformUser } from '../../../utils/dataStore';
 import { DollarSign, TrendingUp, BarChart3, Download } from 'lucide-react';
 import StatCard from '../StatCard';
 import DataTable from '../DataTable';
@@ -10,12 +10,23 @@ import { StatusBadge } from './_shared';
 export default function BusinessTransactions() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [statusFilter, setStatusFilter] = useState('all');
-  const load = () => setTransactions(getAll<Transaction>('transactions'));
+  
+  const load = () => {
+    const users = getAll<PlatformUser>('users');
+    const hotel = users.find(u => u.role === 'business');
+    const hotelName = hotel?.name || 'Mille Collines Business';
+    
+    const allTransactions = getAll<Transaction>('transactions');
+    // Filter transactions where this business is the seller (from field)
+    const businessTransactions = allTransactions.filter(t => t.from === hotelName);
+    setTransactions(businessTransactions);
+  };
+  
   useEffect(() => { load(); window.addEventListener('ecotrade_data_change', load); return () => window.removeEventListener('ecotrade_data_change', load); }, []);
 
   const filtered = statusFilter === 'all' ? transactions : transactions.filter(t => t.status === statusFilter);
-  const totalEarned = transactions.reduce((s, t) => s + t.amount, 0);
-  const totalFees = transactions.reduce((s, t) => s + t.fee, 0);
+  const totalEarned = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.amount, 0);
+  const totalFees = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.fee, 0);
   const net = totalEarned - totalFees;
 
   const displayData = filtered.map(t => ({

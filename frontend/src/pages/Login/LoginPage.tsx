@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import LoginForm from '../../components/auth/LoginForm';
 import ForgotPasswordModal from '../../components/auth/ForgotPasswordModal';
 import TermsPrivacyModal from '../../components/auth/TermsPrivacyModal';
-import SignupWizard from '../../components/auth/SignupWizard';
+import SignupWizard from '../../components/auth/SignupWizardSimplified';
 
 const roleToDashboard: Record<string, string> = {
   admin: '/dashboard/admin',
@@ -26,10 +26,10 @@ const LoginPage = () => {
 
   const demoCredentials = [
     { role: 'Admin',      email: 'admin@ecotrade.rw',       password: 'admin123'    },
-    { role: 'Hotel',      email: 'hotel@millecollines.rw',  password: 'hotel123'    },
+    { role: 'Business',   email: 'hotel@millecollines.rw',  password: 'hotel123'    },
     { role: 'Recycler',   email: 'recycler@greenenergy.rw', password: 'recycler123' },
     { role: 'Driver',     email: 'driver@ecotrade.rw',      password: 'driver123'   },
-    { role: 'Individual', email: 'individual@ecotrade.rw',  password: 'user123'     },
+    { role: 'Individual', email: 'marieclaire@gmail.com',  password: 'user123'     },
   ];
 
   const handleLogin = async (email: string, password: string) => {

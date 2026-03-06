@@ -87,7 +87,7 @@ const ContactForm = ({
     const priority: SupportTicket['priority'] =
       formData.subject.toLowerCase().includes('urgent') ? 'urgent' :
       formData.subject.toLowerCase().includes('billing') ? 'high' :
-      formData.userType === 'Hotel/Restaurant' || formData.userType === 'Recycling Company' ? 'medium' : 'low';
+      formData.userType === 'Business/Restaurant' || formData.userType === 'Recycling Company' ? 'medium' : 'low';
 
     create<SupportTicket>('supportTickets', {
       id: generateId('TKT'),
@@ -122,7 +122,7 @@ const ContactForm = ({
   };
 
   const userTypes = [
-    'Hotel/Restaurant',
+    'Business/Restaurant',
     'Recycling Company',
     'Driver',
     'Partner',

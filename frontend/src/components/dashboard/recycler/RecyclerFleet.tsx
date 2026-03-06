@@ -1,12 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getAll } from '../../../utils/dataStore';
+import type { Collection, PlatformUser } from '../../../utils/dataStore';
 import { Truck, Search, Plus, Eye, Edit, CheckCircle, AlertTriangle, Activity } from 'lucide-react';
 import StatCard from '../StatCard';
 import DataTable from '../DataTable';
-import { fleetData, StatusBadge } from './_shared';
+import { StatusBadge } from './_shared';
 
 export default function RecyclerFleet() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [drivers, setDrivers] = useState<PlatformUser[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
+
+  useEffect(() => {
+    const load = () => {
+      setDrivers(getAll<PlatformUser>('users').filter(u => u.role === 'driver'));
+      setCollections(getAll<Collection>('collections'));
+    };
+    load();
+    window.addEventListener('ecotrade_data_change', load);
+    return () => window.removeEventListener('ecotrade_data_change', load);
+  }, []);
+
+  const fleetData = drivers.map(driver => {
+    const driverCollections = collections.filter(c => c.driverName === driver.name);
+    const completedTrips = driverCollections.filter(c => c.status === 'completed').length;
+    const activeRoute = driverCollections.find(c => c.status === 'en-route');
+    return {
+      id: driver.id,
+      driver: driver.name,
+      vehicle: driver.vehicleType || 'Truck',
+      plate: driver.vehiclePlate || 'KG-XXX-YYY',
+      capacity: '500 kg',
+      trips: completedTrips,
+      rating: driver.rating || 4.8,
+      currentRoute: activeRoute ? 'Active' : '—',
+      status: driver.status === 'active' ? 'active' : (driver.status === 'suspended' ? 'maintenance' : 'inactive'),
+    };
+  });
 
   const filtered = fleetData.filter(f => {
     const matchSearch = f.driver.toLowerCase().includes(search.toLowerCase()) || f.plate.toLowerCase().includes(search.toLowerCase());
@@ -44,9 +75,9 @@ export default function RecyclerFleet() {
             { key: 'vehicle', label: 'Vehicle', render: (v: string, r: typeof fleetData[0]) => <div><p className="text-sm">{v}</p><p className="text-xs text-gray-500 dark:text-gray-400">{r.plate}</p></div> },
             { key: 'capacity', label: 'Capacity' },
             { key: 'trips', label: 'Trips' },
-            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-700 dark:text-yellow-700 font-semibold">⭐ {v}</span> },
-            { key: 'currentRoute', label: 'Route', render: (v: string) => v !== '—' ? <span className="text-blue-600 dark:text-blue-400 font-medium">{v}</span> : <span className="text-gray-400 dark:text-gray-500">—</span> },
-            { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
+            { key: 'rating', label: 'Rating', render: (v: number) => <span className="text-yellow-700 dark:text-yellow-700 font-semibold">⭐ {v.toFixed(1)}</span> },
+            { key: 'currentRoute', label: 'Status', render: (v: string) => v !== '—' ? <span className="text-blue-600 dark:text-blue-400 font-medium">{v}</span> : <span className="text-gray-400 dark:text-gray-500">Idle</span> },
+            { key: 'status', label: 'Availability', render: (v: string) => <StatusBadge status={v} /> },
             { key: 'id', label: 'Actions', render: () => <div className="flex gap-1"><button className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-900/20 rounded"><Eye size={15} /></button><button className="p-1.5 text-yellow-700 dark:text-yellow-700 hover:bg-yellow-50 dark:bg-yellow-900/20 rounded"><Edit size={15} /></button></div> },
           ]}
           data={filtered}

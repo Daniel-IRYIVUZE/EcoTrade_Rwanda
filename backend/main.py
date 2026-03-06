@@ -16,7 +16,7 @@ from pathlib import Path
 from database import Base, engine
 import models  # ensure all models are registered before create_all
 from routers import auth
-from routers import users, listings, transactions, collections, support, messages, routes, recycling, audit
+from routers import users, listings, transactions, collections, support, messages, routes, recycling, audit, mobile_v1, payments, notifications, insights
 
 # ---------------------------------------------------------------------------
 # Create all tables on startup
@@ -73,6 +73,10 @@ app.include_router(messages.router)
 app.include_router(routes.router)
 app.include_router(recycling.router)
 app.include_router(audit.router)
+app.include_router(payments.router)
+app.include_router(notifications.router)
+app.include_router(insights.router)
+app.include_router(mobile_v1.router)
 
 
 # ---------------------------------------------------------------------------

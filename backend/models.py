@@ -86,6 +86,17 @@ class AuditAction(str, enum.Enum):
     update = "update"
     delete = "delete"
 
+class PaymentStatus(str, enum.Enum):
+    pending   = "pending"
+    completed = "completed"
+    failed    = "failed"
+
+class NotificationType(str, enum.Enum):
+    system = "system"
+    new_bid = "new_bid"
+    bid_accepted = "bid_accepted"
+    collection_update = "collection_update"
+
 
 # ============================================================
 # Users & sub-profiles
@@ -120,6 +131,8 @@ class User(Base):
     recycling_events = relationship("RecyclingEvent",  back_populates="user")
     driver_routes    = relationship("DriverRoute",     back_populates="driver")
     audit_logs       = relationship("AuditLog",        back_populates="admin_user_rel", foreign_keys="AuditLog.admin_user_id")
+    payments         = relationship("Payment",         back_populates="user", cascade="all, delete-orphan")
+    notifications    = relationship("Notification",    back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User id={self.id} email={self.email} role={self.role}>"
@@ -280,6 +293,7 @@ class Collection(Base):
 
     listing = relationship("WasteListing", foreign_keys=[listing_id])
     driver  = relationship("User",         foreign_keys=[driver_id])
+    payments = relationship("Payment",     back_populates="collection", cascade="all, delete-orphan")
 
 
 # ============================================================
@@ -431,3 +445,44 @@ class AuditLog(Base):
     created_at    = Column(DateTime,    default=datetime.utcnow)
 
     admin_user_rel = relationship("User", back_populates="audit_logs", foreign_keys=[admin_user_id])
+
+
+# ============================================================
+# Payments
+# ============================================================
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id             = Column(Integer, primary_key=True, index=True)
+    user_id        = Column(Integer, ForeignKey("users.id"),       nullable=False)
+    collection_id  = Column(Integer, ForeignKey("collections.id"), nullable=True)
+    amount         = Column(Float,   nullable=False)
+    currency       = Column(String(10),  default="RWF")
+    status         = Column(SAEnum(PaymentStatus), default=PaymentStatus.pending)
+    payment_method = Column(String(50),  default="mobile_money")
+    transaction_id = Column(String(100), nullable=True)
+    created_at     = Column(DateTime, default=datetime.utcnow)
+    completed_at   = Column(DateTime, nullable=True)
+
+    user       = relationship("User",       back_populates="payments",  foreign_keys=[user_id])
+    collection = relationship("Collection", back_populates="payments",  foreign_keys=[collection_id])
+
+
+# ============================================================
+# Notifications
+# ============================================================
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id         = Column(Integer, primary_key=True, index=True)
+    user_id    = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title      = Column(String(200), nullable=False)
+    body       = Column(Text, nullable=False)
+    type       = Column(SAEnum(NotificationType), default=NotificationType.system)
+    data       = Column(Text, nullable=True)
+    is_read    = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="notifications", foreign_keys=[user_id])

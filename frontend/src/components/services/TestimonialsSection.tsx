@@ -7,8 +7,8 @@ const testimonials = [
     id: 1,
     name: 'Jean Pierre',
     role: 'Operations Manager',
-    company: 'Mille Collines Hotel',
-    type: 'hotel',
+    company: 'Mille Collines Business',
+    type: 'business',
     content: 'EcoTrade transformed our waste management. We went from paying RWF 50,000 monthly to earning RWF 30,000. The platform is incredibly easy to use.',
     rating: 5,
     image: '/images/default-avatar.svg',
@@ -21,8 +21,8 @@ const testimonials = [
     id: 2,
     name: 'Agathe Uwase',
     role: 'Sustainability Director',
-    company: 'Marriott Kigali',
-    type: 'hotel',
+    company: 'Marriott Business',
+    type: 'business',
     content: 'The real-time tracking and instant payments have revolutionized how we handle our recycling program. Our Green Score improved by 40%.',
     rating: 5,
     image: '/images/default-avatar.svg',
@@ -35,8 +35,8 @@ const testimonials = [
     id: 3,
     name: 'Mucyo Kagame',
     role: 'General Manager',
-    company: 'Serena Hotel',
-    type: 'hotel',
+    company: 'Serena Business',
+    type: 'business',
     content: 'Our Green Score improved dramatically, and we now have verifiable data for our sustainability reports. Highly recommended.',
     rating: 5,
     image: '/images/default-avatar.svg',
@@ -103,7 +103,7 @@ const TestimonialsSection = () => {
             What Our <span className="text-cyan-600">Clients Say</span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Real stories from hotels, recyclers, and drivers using EcoTrade
+            Real stories from businesses, recyclers, and drivers using EcoTrade
           </p>
         </div>
 
@@ -124,16 +124,16 @@ const TestimonialsSection = () => {
           </button>
           <button
             onClick={() => {
-              setFilter('hotel');
+              setFilter('business');
               setCurrentIndex(0);
             }}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              filter === 'hotel'
+              filter === 'business'
                 ? 'bg-cyan-600 text-white'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
             }`}
           >
-            Hotels
+            Businesses
           </button>
           <button
             onClick={() => {

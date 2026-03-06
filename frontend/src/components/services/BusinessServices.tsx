@@ -1,4 +1,4 @@
-// components/services/HotelServices.tsx
+// components/services/BusinessServices.tsx
 import { 
   TrendingUp, 
   Calendar, 
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const HotelServices = () => {
+const BusinessServices = () => {
   const navigate = useNavigate();
 
   const features = [
@@ -107,7 +107,7 @@ const HotelServices = () => {
       {/* Header */}
       <div className="text-center mb-12">
         <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          For <span className="text-cyan-600">Hotels & Restaurants</span>
+          For <span className="text-cyan-600">Businesses & Restaurants</span>
         </h2>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
           Transform your waste management from a cost center into a revenue stream
@@ -163,7 +163,7 @@ const HotelServices = () => {
 
       {/* Benefits Section */}
       <div className="bg-cyan-600 rounded-3xl p-8 text-white mb-16">
-        <h3 className="text-2xl text-white font-bold mb-8 text-center">Why Hotels Choose EcoTrade</h3>
+        <h3 className="text-2xl text-white font-bold mb-8 text-center">Why Businesses Choose EcoTrade</h3>
         <div className="grid md:grid-cols-3 gap-8">
           {benefits.map((benefit, index) => (
             <div key={index} className="text-center">
@@ -189,4 +189,4 @@ const HotelServices = () => {
   );
 };
 
-export default HotelServices;
+export default BusinessServices;

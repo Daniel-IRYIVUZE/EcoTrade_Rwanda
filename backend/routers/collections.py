@@ -68,9 +68,42 @@ def update_collection_status(
         setattr(col, field, value)
     if payload.status == "completed" and not col.completed_at:
         col.completed_at = datetime.utcnow()
+        _ensure_payment_for_collection(col, db, current_user)
     db.commit()
     db.refresh(col)
     return col
+
+
+@router.put("/{col_id}/status", response_model=schemas.CollectionOut)
+def update_collection_status_compat(
+    col_id: int,
+    payload: schemas.CollectionStatusUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return update_collection_status(col_id=col_id, payload=payload, db=db, _=current_user)
+
+
+def _ensure_payment_for_collection(
+    col: models.Collection,
+    db: Session,
+    current_user: models.User,
+):
+    existing = db.query(models.Payment).filter(models.Payment.collection_id == col.id).first()
+    if existing:
+        return
+
+    payee_id = col.driver_id or current_user.id
+    payment = models.Payment(
+        user_id=payee_id,
+        collection_id=col.id,
+        amount=col.earnings,
+        currency="RWF",
+        status=models.PaymentStatus.completed,
+        payment_method="mobile_money",
+        completed_at=col.completed_at,
+    )
+    db.add(payment)
 
 
 @router.delete("/{col_id}", status_code=204)

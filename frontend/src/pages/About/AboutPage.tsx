@@ -35,23 +35,21 @@ const AboutPage = () => {
       <Navbar />
       <main>
         {/* Hero Section with Video Background */}
-        <section className="relative h-[60vh] min-h-[500px] bg-cyan-900 overflow-hidden">
+        <section className="relative h-[60vh] min-h-[500px] overflow-hidden pt-16" style={{ background: 'linear-gradient(135deg, #064e3b 0%, #065f46 30%, #0e7490 70%, #0369a1 100%)' }}>
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-black/50 z-10"></div>
+            <div className="absolute inset-0 bg-black/45 z-10" />
             <div
               className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: 'url(https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=1600)',
-              }}
-            ></div>
+              style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=1600)' }}
+            />
           </div>
-          <div className="relative z-20 h-full flex items-center  mt-5 justify-center text-center text-white px-4">
+          <div className="relative z-20 h-full flex items-center justify-center text-center text-white px-4">
             <div className="max-w-4xl">
-              <h1 className="text-5xl text-cyan-100 lg:text-7xl font-bold mb-6">
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
                 Closing the Loop on
-                <span className="text-cyan-300"> Commercial Waste</span>
+                <span className="text-emerald-300"> Commercial Waste</span>
               </h1>
-              <p className="text-xl lg:text-2xl text-cyan-50 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl lg:text-2xl text-cyan-100 max-w-3xl mx-auto leading-relaxed">
                 EcoTrade is revolutionizing waste management in Kigali by connecting hotels,
                 restaurants, and cafés with recyclers through innovative technology.
               </p>

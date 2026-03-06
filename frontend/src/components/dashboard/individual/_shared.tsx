@@ -1,7 +1,7 @@
 // Shared mock data and utilities for the individual/user dashboard
 export const userProfile = {
   name: 'Marie Uwimana',
-  email: 'individual@ecotrade.rw',
+  email: 'marieclaire@gmail.com',
   location: 'Kicukiro, Kigali',
   memberSince: '2024-05-20',
   greenScore: 74,

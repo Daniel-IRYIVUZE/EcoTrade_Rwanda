@@ -22,7 +22,7 @@ export default function BusinessReports() {
 
     setTimeout(() => {
       if (type === 'Waste Report') {
-        const rows = listings.map(l => `<tr><td>${l.id}</td><td>${l.wasteType}</td><td>${l.volume}</td><td>${l.unit}</td><td>${l.status}</td><td>${new Date(l.createdAt).toLocaleDateString()}</td><td>${l.bids.length}</td></tr>`).join('');
+        const rows = listings.map(l => `<tr><td>${l.id}</td><td>${l.wasteType}</td><td>${l.volume}</td><td>${l.unit}</td><td>${l.status}</td><td>${new Date(l.createdAt).toLocaleDateString()}</td><td>${Array.isArray(l.bids) ? l.bids.length : 0}</td></tr>`).join('');
         downloadPDF(`Monthly Waste Report — ${hotelName}`, `
           <div class="stat-grid">
             <div class="stat-card"><div class="stat-value">${listings.length}</div><div class="stat-label">Total Listings</div></div>

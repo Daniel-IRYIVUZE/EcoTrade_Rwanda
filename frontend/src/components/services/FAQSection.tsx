@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 
 const faqs = [
   {
-    question: 'How do I sign up for hotel services?',
-    answer: 'Click "Sign Up" and select "Hotel/Restaurant". You\'ll need your business registration and contact information. The process takes about 5 minutes.',
-    category: 'hotels'
+    question: 'How do I sign up for business services?',
+    answer: 'Click "Sign Up" and select "Business/Restaurant". You\'ll need your business registration and contact information. The process takes about 5 minutes.',
+    category: 'businesses'
   },
   {
     question: 'What are the fees for recyclers?',
@@ -22,7 +22,7 @@ const faqs = [
   {
     question: 'Is there a minimum volume requirement?',
     answer: 'Yes, minimum collection volumes are: UCO (20kg), Glass (50kg), Cardboard (30kg). This ensures efficient logistics.',
-    category: 'hotels'
+    category: 'businesses'
   },
   {
     question: 'How do payments work?',
@@ -80,14 +80,14 @@ const FAQSection = () => {
             All
           </button>
           <button
-            onClick={() => setFilter('hotels')}
+            onClick={() => setFilter('businesses')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              filter === 'hotels'
+              filter === 'businesses'
                 ? 'bg-cyan-600 text-white'
                 : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:bg-gray-800'
             }`}
           >
-            Hotels
+            Businesses
           </button>
           <button
             onClick={() => setFilter('recyclers')}

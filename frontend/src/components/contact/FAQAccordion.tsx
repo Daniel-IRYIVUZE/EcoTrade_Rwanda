@@ -4,8 +4,8 @@ import { ChevronDown, HelpCircle } from 'lucide-react';
 
 const faqs = [
   {
-    question: "How do I sign up as a hotel?",
-    answer: "Click on 'Sign Up' and select 'Hotel/Restaurant'. You'll need your business registration number, tax ID, and contact information. The process takes about 5 minutes."
+    question: "How do I sign up as a business?",
+    answer: "Click on 'Sign Up' and select 'Business/Restaurant'. You'll need your business registration number, tax ID, and contact information. The process takes about 5 minutes."
   },
   {
     question: "What are the platform fees?",

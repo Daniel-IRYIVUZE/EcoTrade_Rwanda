@@ -9,7 +9,9 @@ interface QuickBidModalProps {
 }
 
 const QuickBidModal = ({ listing, onClose, onPlaceBid }: QuickBidModalProps) => {
-  const [bidAmount, setBidAmount] = useState<number>(listing.currentBid + 1000);
+  // Safe access to currentBid with fallback
+  const currentBid = typeof listing.currentBid === 'number' ? listing.currentBid : 0;
+  const [bidAmount, setBidAmount] = useState<number>(currentBid + 1000);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bidPlaced, setBidPlaced] = useState(false);
   const [error, setError] = useState('');
@@ -22,15 +24,15 @@ const QuickBidModal = ({ listing, onClose, onPlaceBid }: QuickBidModalProps) => 
   }, [onClose]);
 
   const suggestedBids = [
-    listing.currentBid + 500,
-    listing.currentBid + 1000,
-    listing.currentBid + 2000,
-    listing.currentBid + 5000
+    currentBid + 500,
+    currentBid + 1000,
+    currentBid + 2000,
+    currentBid + 5000
   ];
 
   const handleSubmit = () => {
-    if (bidAmount <= listing.currentBid) {
-      setError(`Bid must be higher than current bid (RWF ${listing.currentBid.toLocaleString()})`);
+    if (bidAmount <= currentBid) {
+      setError(`Bid must be higher than current bid (RWF ${currentBid.toLocaleString()})`);
       return;
     }
 
@@ -64,11 +66,11 @@ const QuickBidModal = ({ listing, onClose, onPlaceBid }: QuickBidModalProps) => 
         <div className="p-6">
           {/* Listing Summary */}
           <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl mb-6">
-            <p className="font-semibold text-gray-900 dark:text-white">{listing.hotel}</p>
+            <p className="font-semibold text-gray-900 dark:text-white">{listing.business || listing.hotel}</p>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{listing.type} • {listing.volume}{listing.unit}</p>
             <div className="flex justify-between mt-2">
               <span className="text-sm text-gray-500 dark:text-gray-400">Current Bid</span>
-              <span className="font-bold text-cyan-600">RWF {listing.currentBid.toLocaleString()}</span>
+              <span className="font-bold text-cyan-600">RWF {currentBid.toLocaleString()}</span>
             </div>
           </div>
 
@@ -86,7 +88,7 @@ const QuickBidModal = ({ listing, onClose, onPlaceBid }: QuickBidModalProps) => 
                   setBidAmount(Number(e.target.value));
                   setError('');
                 }}
-                min={listing.currentBid + 100}
+                min={currentBid + 100}
                 step={100}
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
@@ -181,7 +183,7 @@ const QuickBidModal = ({ listing, onClose, onPlaceBid }: QuickBidModalProps) => 
               <CheckCircle className="w-5 h-5 flex-shrink-0 text-cyan-600" />
               <div>
                 <p className="font-semibold">Bid placed successfully!</p>
-                <p className="text-sm">RWF {bidAmount.toLocaleString()} on {listing.hotel}</p>
+                <p className="text-sm">RWF {bidAmount.toLocaleString()} on {listing.business || listing.hotel}</p>
               </div>
             </div>
           )}

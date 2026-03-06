@@ -40,7 +40,7 @@ export default function AdminListings() {
   const filtered = listings.filter(l =>
     (statusFilter === 'all' || l.status === statusFilter) &&
     (wasteFilter === 'all' || l.wasteType === wasteFilter) &&
-    (l.hotelName.toLowerCase().includes(search.toLowerCase()) || 
+    ((l.hotelName || l.businessName || '').toLowerCase().includes(search.toLowerCase()) || 
      l.wasteType.toLowerCase().includes(search.toLowerCase()))
   );
 
@@ -75,7 +75,7 @@ export default function AdminListings() {
       ['ID', 'Hotel', 'Waste Type', 'Volume', 'Unit', 'Min Bid', 'Status', 'Date'],
       filtered.map(l => [
         l.id, 
-        l.hotelName, 
+        l.hotelName || l.businessName || 'N/A', 
         l.wasteType, 
         String(l.volume), 
         l.unit, 
@@ -178,7 +178,7 @@ export default function AdminListings() {
                   </td>
                   <td className="px-4 py-3">
                     <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-full text-xs">
-                      {l.bids.length} bids
+                      {Array.isArray(l.bids) ? l.bids.length : 0} bids
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -263,7 +263,7 @@ export default function AdminListings() {
                   ['Volume', `${selected.volume} ${selected.unit}`],
                   ['Min Bid', `RWF ${selected.minBid.toLocaleString()}`],
                   ['Status', selected.status],
-                  ['Total Bids', selected.bids.length],
+                  ['Total Bids', Array.isArray(selected.bids) ? selected.bids.length : 0],
                   ['Created', new Date(selected.createdAt).toLocaleDateString()],
                   ['Expires', new Date(selected.expiresAt).toLocaleDateString()]
                 ].map(([k, v]) => (
@@ -281,7 +281,7 @@ export default function AdminListings() {
                 </div>
               )}
               
-              {selected.bids.length > 0 && (
+              {Array.isArray(selected.bids) && selected.bids.length > 0 && (
                 <div>
                   <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Bids</h4>
                   <div className="space-y-2 max-h-40 overflow-y-auto">

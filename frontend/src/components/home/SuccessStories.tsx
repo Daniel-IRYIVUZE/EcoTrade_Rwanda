@@ -60,6 +60,8 @@ const SuccessStories = () => {
 
   const story = stories[currentIndex];
 
+  if (!story) return null;
+
   return (
     <section className="py-20 bg-white dark:bg-gray-950 transition-colors duration-300">
       <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">

@@ -4,8 +4,8 @@ schemas.py — Pydantic v2 request / response models  (complete)
 from __future__ import annotations
 import json
 from datetime import datetime
-from typing import Optional, List, Any
-from pydantic import BaseModel, EmailStr, field_validator, model_validator
+from typing import Optional, List
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 
 # ---------------------------------------------------------------------------
@@ -16,36 +16,38 @@ class RegisterRequest(BaseModel):
     role: str  # "hotel" | "recycler" | "driver"
 
     # Common
-    full_name: str
+    full_name: str = Field(alias="fullName")
     email: EmailStr
     phone: Optional[str] = None
     password: str
-    confirm_password: str
+    confirm_password: str = Field(alias="confirmPassword")
 
     # Hotel
-    business_name: Optional[str] = None
-    registration_number: Optional[str] = None
-    tax_id: Optional[str] = None
-    contact_person: Optional[str] = None
+    business_name: Optional[str] = Field(default=None, alias="businessName")
+    registration_number: Optional[str] = Field(default=None, alias="registrationNumber")
+    tax_id: Optional[str] = Field(default=None, alias="taxId")
+    contact_person: Optional[str] = Field(default=None, alias="contactPerson")
     position: Optional[str] = None
 
     # Recycler
-    company_name: Optional[str] = None
-    license_number: Optional[str] = None
-    waste_types: Optional[List[str]] = None
-    facility_address: Optional[str] = None
-    processing_capacity: Optional[float] = None
+    company_name: Optional[str] = Field(default=None, alias="companyName")
+    license_number: Optional[str] = Field(default=None, alias="licenseNumber")
+    waste_types: Optional[List[str]] = Field(default=None, alias="wasteTypes")
+    facility_address: Optional[str] = Field(default=None, alias="facilityAddress")
+    processing_capacity: Optional[float] = Field(default=None, alias="processingCapacity")
 
     # Driver
-    national_id: Optional[str] = None
-    vehicle_type: Optional[str] = None
-    vehicle_plate: Optional[str] = None
+    national_id: Optional[str] = Field(default=None, alias="nationalId")
+    vehicle_type: Optional[str] = Field(default=None, alias="vehicleType")
+    vehicle_plate: Optional[str] = Field(default=None, alias="vehiclePlate")
 
     # Location (shared)
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    service_radius: Optional[float] = None
-    operating_hours: Optional[str] = None
+    service_radius: Optional[float] = Field(default=None, alias="serviceRadius")
+    operating_hours: Optional[str] = Field(default=None, alias="operatingHours")
+
+    model_config = {"populate_by_name": True}
 
     @field_validator("role")
     @classmethod
@@ -70,6 +72,11 @@ class RegisterRequest(BaseModel):
         if self.role == "recycler" and not self.company_name:
             raise ValueError("company_name is required for recycler accounts")
         return self
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
 
 
 # ---------------------------------------------------------------------------
@@ -559,3 +566,119 @@ class UserUpdateAdmin(BaseModel):
     location: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+
+
+class CollectionRatingCreate(BaseModel):
+    rating: float
+    comment: Optional[str] = None
+
+
+class LocationUpdate(BaseModel):
+    latitude: float
+    longitude: float
+    address: Optional[str] = None
+
+
+# ===========================================================
+# Drivers
+# ===========================================================
+
+class LocationOut(BaseModel):
+    latitude: float
+    longitude: float
+    address: Optional[str] = None
+
+
+class DriverOut(BaseModel):
+    id: str
+    user_id: str
+    full_name: str
+    phone: str
+    email: str
+    photo_url: Optional[str] = None
+    license_plate: str
+    vehicle_type: str
+    is_available: bool
+    rating: float
+    total_collections: int
+    total_earnings: float
+    current_location: Optional[LocationOut] = None
+    recycler_id: Optional[str] = None
+    is_verified: bool
+
+
+class DriverLocationOut(BaseModel):
+    driver_id: str
+    current_location: Optional[LocationOut] = None
+
+
+# ===========================================================
+# Payments
+# ===========================================================
+
+class PaymentCreate(BaseModel):
+    user_id: int
+    collection_id: Optional[int] = None
+    amount: float
+    currency: str = "RWF"
+    payment_method: str = "mobile_money"
+    transaction_id: Optional[str] = None
+
+
+class PaymentUpdate(BaseModel):
+    status: Optional[str] = None
+    transaction_id: Optional[str] = None
+
+
+class PaymentOut(BaseModel):
+    id: int
+    user_id: int
+    collection_id: Optional[int] = None
+    amount: float
+    currency: str
+    status: str
+    payment_method: str
+    transaction_id: Optional[str] = None
+    created_at: datetime
+    completed_at: Optional[datetime] = None
+
+    model_config = {"from_attributes": True}
+
+
+# ===========================================================
+# Notifications
+# ===========================================================
+
+class NotificationCreate(BaseModel):
+    user_id: int
+    title: str
+    body: str
+    type: str = "system"
+    data: Optional[dict] = None
+
+
+class NotificationUpdate(BaseModel):
+    is_read: Optional[bool] = None
+
+
+class NotificationOut(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    body: str
+    type: str
+    data: Optional[dict] = None
+    is_read: bool
+    created_at: datetime
+
+    @field_validator("data", mode="before")
+    @classmethod
+    def parse_data(cls, v):
+        if isinstance(v, str):
+            try:
+                return json.loads(v)
+            except Exception:
+                return None
+        return v
+
+    model_config = {"from_attributes": True}

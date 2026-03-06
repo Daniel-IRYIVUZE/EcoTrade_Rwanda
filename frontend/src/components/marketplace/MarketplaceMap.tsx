@@ -4,7 +4,8 @@ import 'leaflet/dist/leaflet.css';
 
 interface Listing {
   id: string | number;
-  hotel: string;
+  business?: string;
+  hotel?: string;
   type: string;
   volume: number;
   currentBid: number;
@@ -83,7 +84,7 @@ const MarketplaceMap = ({ listings, onListingClick, center }: MarketplaceMapProp
           .addTo(map)
           .bindPopup(`
             <div style="font-family:sans-serif;min-width:180px;padding:4px">
-              <p style="font-weight:700;font-size:14px;color:#0891b2;margin:0 0 4px">${listing.hotel}</p>
+              <p style="font-weight:700;font-size:14px;color:#0891b2;margin:0 0 4px">${listing.business || listing.hotel || 'Business'}</p>
               <p style="font-size:13px;color:#374151;margin:0 0 2px">
                 <strong>${listing.type}</strong> · ${listing.volume} kg · Grade ${listing.quality || 'A'}
               </p>

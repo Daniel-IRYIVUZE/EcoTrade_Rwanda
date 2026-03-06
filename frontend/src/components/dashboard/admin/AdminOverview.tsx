@@ -37,7 +37,7 @@ export default function AdminOverview() {
   const pendingUsers = users.filter(u => u.status === 'pending');
   const totalRevenue = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.fee, 0);
   const totalWaste = collections.filter(c => c.status === 'completed').reduce((s, c) => s + c.volume, 0);
-  const co2Saved = (totalWaste * 0.716).toFixed(1);
+  const co2Saved = (totalWaste * 1.3 / 1000).toFixed(1); // kg waste * 1.3 / 1000 = metric tons CO2
   const openListings = listings.filter(l => l.status === 'open');
 
   const last7 = Array.from({ length: 7 }, (_, i) => {

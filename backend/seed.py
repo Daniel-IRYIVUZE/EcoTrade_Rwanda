@@ -186,7 +186,7 @@ def seed():
         # ── Individual user ───────────────────────────────────────────────────
         individual1, created = get_or_create_user(
             db,
-            email="individual@ecotrade.rw",
+            email="marieclaire@gmail.com",
             full_name="Marie Claire Uwase",
             phone="+250788666666",
             hashed_password=hash_password("user123"),
@@ -353,7 +353,7 @@ def seed():
         print("   Hotel:      hotel@millecollines.rw / hotel123")
         print("   Recycler:   recycler@greenenergy.rw / recycler123")
         print("   Driver:     driver@ecotrade.rw / driver123")
-        print("   Individual: individual@ecotrade.rw / user123")
+        print("   Individual: marieclaire@gmail.com / user123")
         print("\n   Run the API: uvicorn main:app --reload --port 8000")
 
     except Exception as e:

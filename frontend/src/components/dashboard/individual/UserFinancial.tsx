@@ -1,18 +1,67 @@
+import { useState, useEffect } from 'react';
+import { getAll } from '../../../utils/dataStore';
+import type { Transaction } from '../../../utils/dataStore';
 import { DollarSign, Star, TrendingUp } from 'lucide-react';
 import StatCard from '../StatCard';
 import Widget from '../Widget';
 import DataTable from '../DataTable';
 import ChartComponent from '../ChartComponent';
-import { userOrders, userProfile, spendingTrend, StatusBadge } from './_shared';
+import { StatusBadge } from './_shared';
 
 export default function UserFinancial() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    const load = () => {
+      setTransactions(getAll<Transaction>('transactions'));
+    };
+    load();
+    window.addEventListener('ecotrade_data_change', load);
+    return () => window.removeEventListener('ecotrade_data_change', load);
+  }, []);
+
+  const totalSpent = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.amount, 0);
+  const ecoPoints = transactions.length * 10;
+  const pointsValue = ecoPoints * 10;
+  const savingsFromEco = Math.round(totalSpent * 0.05); // 5% discount on spending
+
+  const spendingHistory = transactions.map(t => ({
+    id: t.id,
+    date: t.date || new Date().toISOString().split('T')[0],
+    items: `${t.wasteType} from ${t.from}`,
+    amount: `RWF ${t.amount.toLocaleString()}`,
+    status: t.status || 'pending',
+    _status: t.status
+  }));
+
+  const spendingByMonth: Record<string, number> = {};
+  transactions.forEach(t => {
+    const month = t.date?.slice(0, 7) || new Date().toISOString().slice(0, 7);
+    spendingByMonth[month] = (spendingByMonth[month] || 0) + t.amount;
+  });
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const currentMonth = new Date().getMonth();
+  const spendingTrend = {
+    labels: months.slice(0, currentMonth + 1),
+    datasets: [{
+      data: months.slice(0, currentMonth + 1).map((_, i) => {
+        const dateStr = new Date();
+        dateStr.setMonth(i);
+        const key = dateStr.toISOString().slice(0, 7);
+        return spendingByMonth[key] || 0;
+      }),
+      backgroundColor: '#0891b2'
+    }]
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Financial Overview</h1>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard title="Total Spent" value={`RWF ${(userProfile.totalSpent / 1000).toFixed(0)}K`} icon={<DollarSign size={22} />} color="cyan" />
-        <StatCard title="Eco Points Value" value="RWF 3,010" icon={<Star size={22} />} color="purple" subtitle="301 points × RWF 10" />
-        <StatCard title="Savings from Eco" value="RWF 15,500" icon={<TrendingUp size={22} />} color="blue" subtitle="Discounts earned" />
+        <StatCard title="Total Spent" value={`RWF ${(totalSpent / 1000).toFixed(0)}K`} icon={<DollarSign size={22} />} color="cyan" />
+        <StatCard title="Eco Points Value" value={`RWF ${(pointsValue / 1000).toFixed(0)}K`} icon={<Star size={22} />} color="purple" subtitle={`${ecoPoints} points × RWF 10`} />
+        <StatCard title="Savings from Eco" value={`RWF ${(savingsFromEco / 1000).toFixed(0)}K`} icon={<TrendingUp size={22} />} color="blue" subtitle="Discounts earned" />
       </div>
       <Widget title="Monthly Spending" icon={<TrendingUp size={20} className="text-cyan-600" />}>
         <ChartComponent type="bar" data={spendingTrend} height={280} />
@@ -20,15 +69,16 @@ export default function UserFinancial() {
       <Widget title="Transaction History" icon={<DollarSign size={20} className="text-green-600 dark:text-green-400" />}>
         <DataTable
           columns={[
-            { key: 'id', label: 'Order' },
+            { key: 'id', label: 'ID', render: (v: string) => <span className="font-mono text-xs text-cyan-600">{v}</span> },
             { key: 'date', label: 'Date' },
             { key: 'items', label: 'Item' },
-            { key: 'amount', label: 'Amount', render: (v: string) => <span className="font-semibold">{v}</span> },
-            { key: 'status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
+            { key: 'amount', label: 'Amount', render: (v: string) => <span className="font-semibold text-green-600">{v}</span> },
+            { key: '_status', label: 'Status', render: (v: string) => <StatusBadge status={v} /> },
           ]}
-          data={userOrders}
+          data={spendingHistory}
           pageSize={6}
         />
+        {spendingHistory.length === 0 && <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-8">No transactions yet.</p>}
       </Widget>
     </div>
   );

@@ -90,7 +90,7 @@ const RecyclerServices = () => {
     {
       metric: '156',
       label: 'Supply Sources',
-      description: 'Hotels and restaurants'
+      description: 'Businesses and restaurants'
     },
     {
       metric: '1247T',

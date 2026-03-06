@@ -41,7 +41,7 @@ export default function BusinessListings() {
 
   const handleExport = () => {
     downloadCSV('my_listings', ['ID','Type','Volume','Unit','Min Bid','Status','Bids','Posted'],
-      filtered.map(l => [l.id, l.wasteType, String(l.volume), l.unit, String(l.minBid), l.status, String(l.bids.length), new Date(l.createdAt).toLocaleDateString()]));
+      filtered.map(l => [l.id, l.wasteType, String(l.volume), l.unit, String(l.minBid), l.status, String(Array.isArray(l.bids) ? l.bids.length : 0), new Date(l.createdAt).toLocaleDateString()]));
   };
 
   return (

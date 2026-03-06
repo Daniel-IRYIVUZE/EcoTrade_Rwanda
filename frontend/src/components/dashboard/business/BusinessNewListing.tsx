@@ -24,6 +24,8 @@ export default function BusinessNewListing() {
     const expiry = new Date(form.pickupDate); expiry.setDate(expiry.getDate() + 30);
     create<WasteListing>('listings', {
       id: generateId('WL'),
+      businessId: hotel.id,
+      businessName: hotel.name,
       hotelId: hotel.id,
       hotelName: hotel.name,
       wasteType: form.wasteType as any,

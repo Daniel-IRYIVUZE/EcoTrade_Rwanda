@@ -88,7 +88,7 @@ export default function AdminReports() {
           downloadCSV('listings_report', 
             ['ID', 'Hotel', 'Waste Type', 'Volume', 'Unit', 'Min Bid', 'Status', 'Date'],
             listings.map(l => [
-              l.id, l.hotelName, l.wasteType, String(l.volume), 
+              l.id, l.hotelName || l.businessName || 'N/A', l.wasteType, String(l.volume), 
               l.unit, String(l.minBid), l.status, 
               new Date(l.createdAt).toLocaleDateString()
             ])
@@ -108,7 +108,7 @@ export default function AdminReports() {
           downloadCSV('environmental_report', 
             ['ID', 'Hotel', 'Driver', 'Waste Type', 'Volume (kg/L)', 'Date'],
             collections.map(c => [
-              c.id, c.hotelName, c.driverName, c.wasteType, 
+              c.id, c.hotelName || c.businessName || 'N/A', c.driverName, c.wasteType, 
               String(c.volume), new Date(c.scheduledDate).toLocaleDateString()
             ])
           );
@@ -117,7 +117,7 @@ export default function AdminReports() {
           downloadCSV('collections_report', 
             ['ID', 'Hotel', 'Recycler', 'Driver', 'Volume', 'Status', 'Date'],
             collections.map(c => [
-              c.id, c.hotelName, c.recyclerName, c.driverName, 
+              c.id, c.hotelName || c.businessName || 'N/A', c.recyclerName, c.driverName, 
               String(c.volume), c.status, 
               new Date(c.scheduledDate).toLocaleDateString()
             ])

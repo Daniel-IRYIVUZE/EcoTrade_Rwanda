@@ -13,7 +13,7 @@ export default function RecyclerOverview() {
   const load = useCallback(() => {
     const bids = getAll<WasteListing>('listings').flatMap(l =>
       l.bids.filter(b => b.recyclerId === 'recycler-green-energy' && b.status === 'active')
-        .map(b => ({ ...b, hotel: l.hotelName, type: l.wasteType, quantity: `${l.volume} ${l.unit}`, myBid: `RWF ${b.amount.toLocaleString()}` }))
+        .map(b => ({ ...b, hotel: l.hotelName || l.businessName || 'N/A', type: l.wasteType, quantity: `${l.volume} ${l.unit}`, myBid: `RWF ${b.amount.toLocaleString()}` }))
     ).slice(0, 4);
     setLiveBids(bids);
   }, []);

@@ -65,3 +65,13 @@ def update_transaction_status(
     db.commit()
     db.refresh(txn)
     return txn
+
+
+@router.put("/{txn_id}", response_model=schemas.TransactionOut)
+def update_transaction_status_compat(
+    txn_id: int,
+    payload: schemas.TransactionUpdate,
+    db: Session = Depends(get_db),
+    _: models.User = Depends(require_admin),
+):
+    return update_transaction_status(txn_id=txn_id, payload=payload, db=db, _=_)

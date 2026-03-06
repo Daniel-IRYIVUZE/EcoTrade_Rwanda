@@ -86,7 +86,7 @@ export default function UserOverview() {
             {liveListings.map(l => (
               <div key={l.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
                 <div><p className="text-sm font-medium">{l.wasteType} — {l.volume} {l.unit}</p><p className="text-xs text-gray-500 dark:text-gray-400">{l.hotelName} · {l.location}</p></div>
-                <div className="text-right"><p className="text-sm font-semibold text-cyan-600">RWF {l.minBid.toLocaleString()}</p><p className="text-xs text-gray-400 dark:text-gray-500">{l.bids.length} bids</p></div>
+                <div className="text-right"><p className="text-sm font-semibold text-cyan-600">RWF {l.minBid.toLocaleString()}</p><p className="text-xs text-gray-400 dark:text-gray-500">{Array.isArray(l.bids) ? l.bids.length : 0} bids</p></div>
               </div>
             ))}
           </div>

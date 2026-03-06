@@ -39,7 +39,7 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
   };
 
   const handleRatingChange = (rating: number) => {
-    setFilters({ ...filters, hotelRating: rating });
+    setFilters({ ...filters, businessRating: rating });
   };
 
   const handleSortChange = (sort: string) => {
@@ -53,7 +53,7 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
       distance: 10,
       minVolume: 0,
       maxVolume: 1000,
-      hotelRating: 0,
+      businessRating: 0,
       timeRemaining: '',
       sortBy: 'newest'
     });
@@ -166,16 +166,16 @@ const MarketplaceSidebar = ({ filters, setFilters, listings, isMobile, onClose }
         </div>
       </div>
 
-      {/* Hotel Rating */}
+      {/* Business Rating */}
       <div className="mb-8">
-        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Hotel Rating</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Business Rating</h4>
         <div className="flex items-center space-x-2">
           {[4, 3, 2, 1].map((rating) => (
             <button
               key={rating}
               onClick={() => handleRatingChange(rating)}
               className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                filters.hotelRating === rating
+                filters.businessRating === rating
                   ? 'bg-cyan-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200'
               }`}

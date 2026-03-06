@@ -2,6 +2,7 @@
 routers/listings.py — Waste listing CRUD + bidding
 """
 from datetime import datetime, timedelta
+import math
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
@@ -12,6 +13,16 @@ import schemas
 router = APIRouter(prefix="/api/listings", tags=["listings"])
 
 _DURATION_MAP = {"24h": 1, "48h": 2, "72h": 3, "7d": 7}
+
+
+def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    r = 6371.0
+    phi1 = math.radians(lat1)
+    phi2 = math.radians(lat2)
+    dphi = math.radians(lat2 - lat1)
+    dlambda = math.radians(lon2 - lon1)
+    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
+    return 2 * r * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
 @router.post("/", response_model=schemas.WasteListingOut, status_code=201)
@@ -45,6 +56,7 @@ def list_listings(
     limit: int = 50,
     status: str | None = None,
     waste_type: str | None = None,
+    hotel_id: int | None = None,
     db: Session = Depends(get_db),
     _: models.User = Depends(get_current_user),
 ):
@@ -53,7 +65,34 @@ def list_listings(
         q = q.filter(models.WasteListing.status == status)
     if waste_type:
         q = q.filter(models.WasteListing.waste_type == waste_type)
+    if hotel_id:
+        q = q.filter(models.WasteListing.hotel_id == hotel_id)
     return q.order_by(models.WasteListing.created_at.desc()).offset(skip).limit(limit).all()
+
+
+@router.get("/nearby", response_model=list[schemas.WasteListingOut])
+def list_nearby_listings(
+    lat: float,
+    lng: float,
+    radius: float = 5.0,
+    db: Session = Depends(get_db),
+    _: models.User = Depends(get_current_user),
+):
+    listings = (
+        db.query(models.WasteListing, models.User)
+        .join(models.User, models.WasteListing.hotel_id == models.User.id)
+        .filter(models.WasteListing.status == models.ListingStatus.open)
+        .all()
+    )
+
+    nearby = []
+    for listing, hotel in listings:
+        if hotel.latitude is None or hotel.longitude is None:
+            continue
+        distance = _haversine_km(lat, lng, hotel.latitude, hotel.longitude)
+        if distance <= radius:
+            nearby.append(listing)
+    return nearby
 
 
 @router.get("/{listing_id}", response_model=schemas.WasteListingOut)

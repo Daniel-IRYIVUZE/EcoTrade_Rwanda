@@ -28,6 +28,26 @@ def send_message(
     return msg
 
 
+@router.get("/", response_model=list[schemas.MessageOut])
+def list_messages(
+    skip: int = 0,
+    limit: int = 50,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return (
+        db.query(models.Message)
+        .filter(
+            (models.Message.to_user_id == current_user.id)
+            | (models.Message.from_user_id == current_user.id)
+        )
+        .order_by(models.Message.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
 @router.get("/inbox", response_model=list[schemas.MessageOut])
 def get_inbox(
     skip: int = 0,
@@ -119,3 +139,12 @@ def mark_read(
     db.commit()
     db.refresh(msg)
     return msg
+
+
+@router.post("/{msg_id}/read", response_model=schemas.MessageOut)
+def mark_read_compat(
+    msg_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return mark_read(msg_id=msg_id, db=db, current_user=current_user)

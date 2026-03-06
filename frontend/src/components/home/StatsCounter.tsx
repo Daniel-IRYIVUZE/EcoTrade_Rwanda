@@ -1,24 +1,49 @@
 // components/home/StatsCounter.tsx
 import { useEffect, useState } from 'react';
 import { Building2, Factory, Users, TrendingUp } from 'lucide-react';
+import { getAll } from '../../utils/dataStore';
+import type { PlatformUser, WasteListing } from '../../utils/dataStore';
 
-const stats = [
-  { icon: Building2, label: 'Active Hotels', value: 5, suffix: '' },
-  { icon: Factory, label: 'Registered Recyclers', value: 2, suffix: '' },
-  { icon: Users, label: 'Active Drivers', value: 3, suffix: '' },
-  { icon: TrendingUp, label: 'Monthly Volume', value: 1.2, suffix: ' tons' },
-];
 
 const StatsCounter = () => {
-  const [counts, setCounts] = useState(stats.map(() => 0));
+  const [stats, setStats] = useState([
+    { icon: Building2, label: 'Active Hotels', value: 0, suffix: '' },
+    { icon: Factory, label: 'Registered Recyclers', value: 0, suffix: '' },
+    { icon: Users, label: 'Active Drivers', value: 0, suffix: '' },
+    { icon: TrendingUp, label: 'Tons Diverted', value: 0, suffix: '' },
+  ]);
+  const [counts, setCounts] = useState([0, 0, 0, 0]);
+
+  useEffect(() => {
+    const loadStats = () => {
+      const users = getAll<PlatformUser>('users');
+      const listings = getAll<WasteListing>('listings');
+      
+      const hotels = users.filter(u => u.role === 'business' && u.status === 'active').length;
+      const recyclers = users.filter(u => u.role === 'recycler').length;
+      const drivers = users.filter(u => u.role === 'driver' && u.status === 'active').length;
+      const tonnes = (listings.reduce((s, l) => s + l.volume, 0) / 1000).toFixed(1);
+      
+      setStats([
+        { icon: Building2, label: 'Active Hotels', value: hotels, suffix: '' },
+        { icon: Factory, label: 'Registered Recyclers', value: recyclers, suffix: '' },
+        { icon: Users, label: 'Active Drivers', value: drivers, suffix: '' },
+        { icon: TrendingUp, label: 'Tons Diverted', value: parseFloat(tonnes as string), suffix: ' t' },
+      ]);
+    };
+    loadStats();
+    window.addEventListener('ecotrade_data_change', loadStats);
+    return () => window.removeEventListener('ecotrade_data_change', loadStats);
+  }, []);
 
   useEffect(() => {
     const intervals = stats.map((stat, index) => {
       return setInterval(() => {
         setCounts(prev => {
           const newCounts = [...prev];
+          const increment = typeof stat.value === 'number' ? Math.ceil(stat.value / 50) : 0.1;
           if (newCounts[index] < stat.value) {
-            newCounts[index] = Math.min(newCounts[index] + Math.ceil(stat.value / 50), stat.value);
+            newCounts[index] = Math.min(newCounts[index] + increment, stat.value);
           }
           return newCounts;
         });
@@ -26,7 +51,7 @@ const StatsCounter = () => {
     });
 
     return () => intervals.forEach(clearInterval);
-  }, []);
+  }, [stats]);
 
   return (
     <section className="py-12 bg-white dark:bg-gray-950 border-y border-gray-100 dark:border-gray-800 transition-colors duration-300">

@@ -1,60 +1,57 @@
 // components/home/MarketplacePreview.tsx
-import {  MapPin, Eye, ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { MapPin, Eye, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getAll } from '../../utils/dataStore';
+import type { WasteListing } from '../../utils/dataStore';
 
-const listings = [
-  {
-    id: 1,
-    hotel: 'Mille Collines Hotel',
-    type: 'Used Cooking Oil',
-    volume: '200 L',
-    location: 'Nyarugenge',
-    distance: '2.3 km',
-    timeLeft: '18h 00m',
-    image: 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=400',
-    bidCount: 0,
-    currentBid: 'RWF 15,000'
-  },
-  {
-    id: 2,
-    hotel: 'Serena Hotel Kigali',
-    type: 'Glass Bottles',
-    volume: '150 kg',
-    location: 'Kiyovu',
-    distance: '3.1 km',
-    timeLeft: '9h 00m',
-    image: 'https://images.unsplash.com/photo-1611289016315-450b1a3c7b7f?w=400',
-    bidCount: 0,
-    currentBid: 'RWF 8,000'
-  },
-  {
-    id: 3,
-    hotel: 'Marriott Hotel Kigali',
-    type: 'Paper/Cardboard',
-    volume: '300 kg',
-    location: 'Kimihurura',
-    distance: '4.7 km',
-    timeLeft: '12h 00m',
-    image: 'https://images.unsplash.com/photo-1581516169900-b13c8d4fb6b3?w=400',
-    bidCount: 0,
-    currentBid: 'RWF 12,000'
-  },
-  {
-    id: 4,
-    hotel: 'Mille Collines Hotel',
-    type: 'Glass Bottles',
-    volume: '80 kg',
-    location: 'Nyarugenge',
-    distance: '2.3 km',
-    timeLeft: 'Assigned',
-    image: 'https://images.unsplash.com/photo-1611289016315-450b1a3c7b7f?w=400',
-    bidCount: 1,
-    currentBid: 'RWF 9,500'
-  }
-];
 
 const MarketplacePreview = () => {
   const navigate = useNavigate();
+  const [listings, setListings] = useState<any[]>([]);
+
+  useEffect(() => {
+    const load = () => {
+      const dbListings = getAll<WasteListing>('listings').filter(l => l.status === 'open').slice(0, 4);
+      const imageMap: Record<string, string> = {
+        'UCO': 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=400',
+        'Glass': 'https://images.unsplash.com/photo-1527965498000-2d5b54c4e28c?w=400',
+        'Paper/Cardboard': 'https://images.unsplash.com/photo-1607582278229-2f688c009b02?w=400',
+        'Mixed': 'https://images.unsplash.com/photo-1527090526205-beaac8dc3a62?w=400',
+      };
+      
+      setListings(dbListings.map(l => {
+        const bids = Array.isArray(l.bids) ? l.bids : [];
+        const topBid = [...bids].sort((a, b) => b.amount - a.amount)[0];
+        const expiresAt = new Date(l.expiresAt).getTime();
+        const minutesLeft = Number.isFinite(expiresAt) ? Math.max(0, Math.floor((expiresAt - Date.now()) / 60000)) : 0;
+        const timeLeft = minutesLeft > 0 ? `${Math.floor(minutesLeft/60)}h ${minutesLeft%60}m` : 'Expired';
+        return {
+          id: l.id,
+          hotel: l.businessName || l.hotelName || 'Unknown Hotel',
+          type: l.wasteType,
+          volume: `${l.volume ?? 0} ${l.unit ?? 'kg'}`,
+          location: l.location || 'Kigali',
+          distance: '2.3 km',
+          timeLeft,
+          image: imageMap[l.wasteType as string] || imageMap['Mixed'],
+          bidCount: bids.length,
+          currentBid: `RWF ${(topBid?.amount || l.minBid || 0).toLocaleString()}`,
+          _id: l.id,
+        };
+      }));
+    };
+    load();
+    window.addEventListener('ecotrade_data_change', load);
+    return () => window.removeEventListener('ecotrade_data_change', load);
+  }, []);
+
+  // Get stats from real data
+  const allListings = getAll<WasteListing>('listings');
+  const totalActive = allListings.filter(l => l.status === 'open').length;
+  const totalVolume = (allListings.reduce((s, l) => s + (l.volume || 0), 0) / 1000).toFixed(1);
+  const activeRecyclers = new Set(allListings.flatMap(l => (Array.isArray(l.bids) ? l.bids : []).map(b => b.recyclerName))).size;
+  const avgPrice = Math.round(allListings.reduce((s, l) => s + (l.minBid || 0), 0) / Math.max(allListings.length, 1));
 
   return (
     <section className="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
@@ -80,9 +77,9 @@ const MarketplacePreview = () => {
 
         {/* Listings Grid */}
         <div className="grid lg:grid-cols-4 gap-6">
-          {listings.map((listing) => (
+          {listings.length > 0 ? listings.map((listing) => (
             <div
-              key={listing.id}
+              key={listing._id}
               className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group"
             >
               {/* Image */}
@@ -106,7 +103,7 @@ const MarketplacePreview = () => {
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-gray-900 dark:text-white truncate">{listing.hotel}</h3>
                   <span className="text-xs bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 px-2 py-1 rounded-full">
-                    Verified
+                    Open
                   </span>
                 </div>
 
@@ -114,7 +111,7 @@ const MarketplacePreview = () => {
 
                 <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
                   <MapPin className="w-3 h-3 mr-1" />
-                  {listing.location} • {listing.distance}
+                  {listing.location}
                 </div>
 
                 <div className="flex justify-between items-center mb-4">
@@ -123,14 +120,14 @@ const MarketplacePreview = () => {
                     <p className="font-semibold text-gray-900 dark:text-white">{listing.volume}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Current Bid</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Min Bid</p>
                     <p className="font-bold text-cyan-600">{listing.currentBid}</p>
                   </div>
                 </div>
 
                 <div className="flex space-x-2">
                   <button onClick={() => navigate('/marketplace')} className="flex-1 bg-cyan-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-cyan-700 transition-colors">
-                    Place Bid
+                    Bid Now
                   </button>
                   <button onClick={() => navigate('/marketplace')} className="p-2 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <Eye className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -138,7 +135,11 @@ const MarketplacePreview = () => {
                 </div>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500 dark:text-gray-400">No active listings available</p>
+            </div>
+          )}
         </div>
 
         {/* Mobile View All Link */}
@@ -152,23 +153,23 @@ const MarketplacePreview = () => {
           </Link>
         </div>
 
-        {/* Quick Stats */}
+        {/* Quick Stats - Real Data */}
         <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-cyan-600">47</div>
+            <div className="text-2xl font-bold text-cyan-600">{totalActive}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Active Listings</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-cyan-600">3.2</div>
+            <div className="text-2xl font-bold text-cyan-600">{totalVolume}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Tons Available</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-cyan-600">12</div>
+            <div className="text-2xl font-bold text-cyan-600">{activeRecyclers}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Active Recyclers</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-cyan-600">350</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Avg. UCO Price/kg</div>
+            <div className="text-2xl font-bold text-cyan-600">{(avgPrice / 1000).toFixed(0)}K</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Avg. Min Bid</div>
           </div>
         </div>
       </div>

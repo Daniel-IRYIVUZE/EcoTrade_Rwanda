@@ -10,6 +10,7 @@ import AdminVerificationQueue from '../../components/dashboard/admin/AdminVerifi
 import AdminSettings from '../../components/dashboard/admin/AdminSettings';
 import AdminReports from '../../components/dashboard/admin/AdminReports';
 import AdminGreenScores from '../../components/dashboard/admin/AdminGreenScores';
+import AdminRouteMonitor from '../../components/dashboard/admin/AdminRouteMonitor';
 
 export default function AdminDashboard() {
   return (
@@ -21,6 +22,7 @@ export default function AdminDashboard() {
       <Route path="recyclers" element={<AdminUserManagement />} />
       <Route path="drivers" element={<AdminUserManagement />} />
       <Route path="listings" element={<AdminListings />} />
+      <Route path="route-monitor" element={<AdminRouteMonitor />} />
       <Route path="transactions" element={<AdminTransactions />} />
       <Route path="analytics" element={<AdminAnalytics />} />
       <Route path="audit-logs" element={<AdminAuditLogs />} />

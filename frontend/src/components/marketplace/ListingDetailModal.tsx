@@ -11,6 +11,11 @@ interface ListingDetailModalProps {
 const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [saved, setSaved] = useState(false);
+  
+  // Safe photo access with fallback
+  const photos = Array.isArray(listing.photos) && listing.photos.length > 0 
+    ? listing.photos 
+    : [listing.image || '/images/placeholder-image.svg'];
 
   // Close on Escape key
   useEffect(() => {
@@ -20,11 +25,11 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
   }, [onClose]);
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % listing.photos.length);
+    setCurrentImageIndex((prev) => (prev + 1) % photos.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + listing.photos.length) % listing.photos.length);
+    setCurrentImageIndex((prev) => (prev - 1 + photos.length) % photos.length);
   };
 
   return (
@@ -50,13 +55,13 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
             <div>
               <div className="relative h-56 sm:h-80 rounded-xl overflow-hidden mb-4">
                 <img
-                  src={listing.photos[currentImageIndex]}
+                  src={photos[currentImageIndex]}
                   alt={listing.type}
                   className="w-full h-full object-cover"
                   onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/images/placeholder-image.svg'; }}
                 />
                 
-                {listing.photos.length > 1 && (
+                {photos.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
@@ -75,9 +80,9 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
               </div>
 
               {/* Thumbnails */}
-              {listing.photos.length > 1 && (
+              {photos.length > 1 && (
                 <div className="flex space-x-2 overflow-x-auto pb-2">
-                  {listing.photos.map((photo: string, index: number) => (
+                  {photos.map((photo: string, index: number) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
@@ -109,23 +114,23 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                 </div>
               </div>
 
-              {/* Hotel Info */}
+              {/* Business Info */}
               <div className="mb-6">
-                <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">{listing.hotel}</p>
+                <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">{listing.business || listing.hotel}</p>
                 <div className="flex items-center mt-1">
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
                         className={`w-4 h-4 ${
-                          i < Math.floor(listing.hotelRating)
+                          i < Math.floor(listing.businessRating || listing.hotelRating || 0)
                             ? 'fill-yellow-700 text-yellow-700'
                             : 'text-gray-300'
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">{listing.hotelRating} • {listing.location}</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">{(listing.businessRating || listing.hotelRating || 0).toFixed(1)} • {listing.location}</span>
                 </div>
               </div>
 
@@ -156,9 +161,9 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
               </div>
 
               {/* Current Bids */}
-              {listing.bids && listing.bids.length > 0 && (
+              {Array.isArray(listing.bids) && listing.bids.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Current Bids ({listing.bidCount})</h4>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Current Bids ({listing.bidCount || listing.bids.length})</h4>
                   <div className="space-y-3">
                     {listing.bids.map((bid: any, index: number) => (
                       <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-3 rounded-xl">
@@ -182,11 +187,11 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                   Place Bid
                 </button>
                 <a
-                  href={`mailto:info@${listing.hotel.toLowerCase().replace(/\s+/g, '')}.com?subject=Waste%20Collection%20Inquiry&body=I%20am%20interested%20in%20your%20${encodeURIComponent(listing.type)}%20listing.`}
+                  href={`mailto:info@${(listing.business || listing.hotel || 'business').toLowerCase().replace(/\s+/g, '')}.com?subject=Waste%20Collection%20Inquiry&body=I%20am%20interested%20in%20your%20${encodeURIComponent(listing.type)}%20listing.`}
                   className="flex-1 border border-cyan-600 text-cyan-600 dark:text-cyan-400 py-3 rounded-xl font-semibold hover:bg-cyan-50 dark:bg-cyan-900/20 transition-colors flex items-center justify-center gap-2"
                 >
                   <Mail className="w-4 h-4" />
-                  Contact Hotel
+                  Contact Business
                 </a>
               </div>
             </div>

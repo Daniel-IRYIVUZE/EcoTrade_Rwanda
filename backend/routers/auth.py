@@ -10,12 +10,14 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from database import get_db
 from models import DriverProfile, HotelProfile, RecyclerProfile, User, UserRole, UserStatus
-from schemas import RegisterResponse, UserOut, Token
+from schemas import RegisterResponse, UserOut, Token, LoginRequest
 from utils.security import hash_password, verify_password, create_access_token
+from utils.deps import get_current_user
 
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
@@ -196,11 +198,8 @@ async def register(
 # POST /api/auth/login
 # ---------------------------------------------------------------------------
 
-from pydantic import BaseModel
-
-class LoginRequest(BaseModel):
+class ForgotPasswordRequest(BaseModel):
     email: str
-    password: str
 
 
 @router.post(
@@ -238,3 +237,32 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     )
 
     return Token(access_token=token, token_type="bearer", user=UserOut.model_validate(user))
+
+
+@router.post("/logout", summary="Logout (client-side token discard)")
+def logout():
+    return {"message": "Logged out"}
+
+
+@router.post("/forgot-password", summary="Request a password reset email")
+def forgot_password(payload: ForgotPasswordRequest):
+    return {"message": "If the account exists, a reset email will be sent."}
+
+
+@router.post("/verify-email", summary="Mark current user as verified")
+def verify_email(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    current_user.is_verified = True
+    db.commit()
+    db.refresh(current_user)
+    return {"message": "Email verified", "user": UserOut.model_validate(current_user)}
+
+
+@router.post("/refresh", summary="Issue a new access token")
+def refresh_token(current_user: User = Depends(get_current_user)):
+    token = create_access_token(
+        data={"sub": str(current_user.id), "role": current_user.role.value, "email": current_user.email}
+    )
+    return {"access_token": token, "token_type": "bearer"}

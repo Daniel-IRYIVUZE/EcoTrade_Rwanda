@@ -34,7 +34,7 @@ const MarketplacePage = () => {
     distance: 10,
     minVolume: 0,
     maxVolume: 1000,
-    hotelRating: 0,
+    businessRating: 0,
     timeRemaining: '',
     sortBy: 'newest'
   });
@@ -52,25 +52,27 @@ const MarketplacePage = () => {
   const loadFromDataStore = useCallback(() => {
     const stored = getAll<WasteListing>('listings').filter(l => l.status === 'open');
     setDsListings(stored.map(l => {
-      const topBid = [...l.bids].sort((a, b) => b.amount - a.amount)[0];
-      const minutesLeft = Math.max(0, Math.floor((new Date(l.expiresAt).getTime() - Date.now()) / 60000));
+      const bids = Array.isArray(l.bids) ? l.bids : [];
+      const topBid = [...bids].sort((a, b) => b.amount - a.amount)[0];
+      const expiresAt = new Date(l.expiresAt).getTime();
+      const minutesLeft = Number.isFinite(expiresAt) ? Math.max(0, Math.floor((expiresAt - Date.now()) / 60000)) : 0;
       const timeLeft = minutesLeft > 0 ? `${Math.floor(minutesLeft/60)}h ${minutesLeft%60}m` : 'Open';
       return {
         id: l.id, _dsId: l.id,
-        hotel: l.hotelName, hotelRating: 4.5, verified: true,
+        business: l.businessName, businessRating: 4.5, verified: true,
         type: l.wasteType, category: l.wasteType,
         volume: l.volume, unit: l.unit,
         location: l.location || 'Kigali',
         coordinates: { lat: -1.9441, lng: 30.0619 },
         distance: 3.0, timeLeft, timeLeftMinutes: minutesLeft,
         image: (l.photos && l.photos[0]) || imageMap[l.wasteType as string] || imageMap['Mixed'],
-        bidCount: l.bids.length,
+        bidCount: bids.length,
         currentBid: topBid?.amount || l.minBid,
         estimatedValue: Math.round(l.minBid * 1.2),
         quality: `Grade ${l.quality}`,
         description: l.specialInstructions || `${l.wasteType} \u2014 ${l.volume} ${l.unit}`,
         photos: l.photos?.length ? l.photos : [imageMap[l.wasteType as string] || imageMap['Mixed']],
-        bids: l.bids.map(b => ({ recycler: b.recyclerName, amount: b.amount, time: new Date(b.createdAt).toLocaleDateString() })),
+        bids: bids.map(b => ({ recycler: b.recyclerName, amount: b.amount, time: new Date(b.createdAt).toLocaleDateString() })),
       };
     }));
   }, []);
@@ -84,8 +86,8 @@ const MarketplacePage = () => {
   const listings = useMemo(() => [
     {
       id: 1,
-      hotel: 'Mille Collines Hotel',
-      hotelRating: 4.8,
+      business: 'Mille Collines Business',
+      businessRating: 4.8,
       verified: true,
       type: 'Used Cooking Oil',
       category: 'UCO',
@@ -111,8 +113,8 @@ const MarketplacePage = () => {
     },
     {
       id: 2,
-      hotel: 'Marriott Kigali',
-      hotelRating: 4.9,
+      business: 'Marriott Business',
+      businessRating: 4.9,
       verified: true,
       type: 'Glass Bottles',
       category: 'Glass',
@@ -137,8 +139,8 @@ const MarketplacePage = () => {
     },
     {
       id: 3,
-      hotel: 'Serena Hotel',
-      hotelRating: 4.7,
+      business: 'Serena Business',
+      businessRating: 4.7,
       verified: true,
       type: 'Cardboard',
       category: 'Paper',
@@ -163,8 +165,8 @@ const MarketplacePage = () => {
     },
     {
       id: 4,
-      hotel: 'Radisson Blu',
-      hotelRating: 4.8,
+      business: 'Radisson Blu Business',
+      businessRating: 4.8,
       verified: true,
       type: 'Mixed Recyclables',
       category: 'Mixed',
@@ -188,8 +190,8 @@ const MarketplacePage = () => {
     },
     {
       id: 5,
-      hotel: 'Kigali Marriott',
-      hotelRating: 4.6,
+      business: 'Kigali Marriott Business',
+      businessRating: 4.6,
       verified: true,
       type: 'Used Cooking Oil',
       category: 'UCO',
@@ -214,8 +216,8 @@ const MarketplacePage = () => {
     },
     {
       id: 6,
-      hotel: 'Park Inn',
-      hotelRating: 4.5,
+      business: 'Park Inn',
+      businessRating: 4.5,
       verified: false,
       type: 'Glass Bottles',
       category: 'Glass',
@@ -247,7 +249,7 @@ const MarketplacePage = () => {
       filtered = filtered.filter(
         (l) =>
           l.type.toLowerCase().includes(q) ||
-          l.hotel.toLowerCase().includes(q) ||
+          l.business.toLowerCase().includes(q) ||
           l.location.toLowerCase().includes(q) ||
           l.category.toLowerCase().includes(q)
       );
@@ -278,10 +280,10 @@ const MarketplacePage = () => {
       listing.volume <= filters.maxVolume
     );
 
-    // Filter by hotel rating
-    if (filters.hotelRating > 0) {
+    // Filter by business rating
+    if (filters.businessRating > 0) {
       filtered = filtered.filter(listing => 
-        listing.hotelRating >= filters.hotelRating
+        listing.businessRating >= filters.businessRating
       );
     }
 
@@ -352,7 +354,7 @@ const MarketplacePage = () => {
         dsUpdate<WasteListing>('listings', stored.id, { bids: [...stored.bids, newBid] });
       }
     }
-    showToast(`Bid of RWF ${amount.toLocaleString()} placed on ${selectedListingForBid?.hotel}!`);
+    showToast(`Bid of RWF ${amount.toLocaleString()} placed on ${selectedListingForBid?.business}!`);
     setSelectedListingForBid(null);
   };
 
@@ -364,7 +366,7 @@ const MarketplacePage = () => {
       distance: 20,
       minVolume: 0,
       maxVolume: 1000,
-      hotelRating: 0,
+      businessRating: 0,
       timeRemaining: '',
       sortBy: 'newest',
     });
@@ -373,7 +375,7 @@ const MarketplacePage = () => {
   const activeFilterCount =
     filters.wasteTypes.length +
     (filters.location ? 1 : 0) +
-    (filters.hotelRating > 0 ? 1 : 0) +
+    (filters.businessRating > 0 ? 1 : 0) +
     (filters.timeRemaining ? 1 : 0);
 
   return (

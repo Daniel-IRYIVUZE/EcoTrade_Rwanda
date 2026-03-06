@@ -72,7 +72,7 @@ const DEMO_USERS = [
   { id: '2', name: 'Mille Collines Hotel', email: 'hotel@millecollines.rw',  password: 'hotel123',    role: 'business' as UserRole,   verified: true  },
   { id: '3', name: 'GreenEnergy Recyclers',email: 'recycler@greenenergy.rw', password: 'recycler123', role: 'recycler' as UserRole,   verified: true  },
   { id: '4', name: 'Jean Pierre',          email: 'driver@ecotrade.rw',      password: 'driver123',   role: 'driver' as UserRole,     verified: true  },
-  { id: '5', name: 'Marie Claire',         email: 'individual@ecotrade.rw',  password: 'user123',     role: 'individual' as UserRole, verified: true  },
+  { id: '5', name: 'Marie Claire',         email: 'marieclaire@gmail.com',  password: 'user123',     role: 'individual' as UserRole, verified: true  },
 ];
 
 // ─── Provider ─────────────────────────────────────────────────────────────────

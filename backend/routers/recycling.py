@@ -28,11 +28,21 @@ def create_event(
     return event
 
 
+@router.post("/", response_model=schemas.RecyclingEventOut, status_code=201)
+def create_event_compat(
+    payload: schemas.RecyclingEventCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return create_event(payload=payload, db=db, current_user=current_user)
+
+
 @router.get("/events", response_model=list[schemas.RecyclingEventOut])
 def list_events(
     skip: int = 0,
     limit: int = 50,
     user_id: int | None = None,
+    verified: bool | None = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -41,7 +51,28 @@ def list_events(
         q = q.filter(models.RecyclingEvent.user_id == current_user.id)
     elif user_id:
         q = q.filter(models.RecyclingEvent.user_id == user_id)
+    if verified is not None:
+        q = q.filter(models.RecyclingEvent.verified == verified)
     return q.order_by(models.RecyclingEvent.created_at.desc()).offset(skip).limit(limit).all()
+
+
+@router.get("/", response_model=list[schemas.RecyclingEventOut])
+def list_events_compat(
+    skip: int = 0,
+    limit: int = 50,
+    user_id: int | None = None,
+    verified: bool | None = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return list_events(
+        skip=skip,
+        limit=limit,
+        user_id=user_id,
+        verified=verified,
+        db=db,
+        current_user=current_user,
+    )
 
 
 @router.get("/events/{event_id}", response_model=schemas.RecyclingEventOut)
@@ -69,6 +100,15 @@ def verify_event(
     db.commit()
     db.refresh(event)
     return event
+
+
+@router.post("/{event_id}/verify", response_model=schemas.RecyclingEventOut)
+def verify_event_compat(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(require_admin),
+):
+    return verify_event(event_id=event_id, db=db, _=current_user)
 
 
 @router.delete("/events/{event_id}", status_code=204)

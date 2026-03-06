@@ -43,18 +43,21 @@ export default function BusinessOverview() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Widget title="Active Listings" icon={<Package size={20} className="text-cyan-600" />} action={<button onClick={()=>navigate('listings')} className="text-sm text-cyan-600 hover:underline">View All</button>}>
         <div className="space-y-3">
-          {liveListings.filter(l => l.status === 'open').slice(0, 4).map(listing => (
+          {liveListings.filter(l => l.status === 'open').slice(0, 4).map(listing => {
+            const bids = Array.isArray(listing.bids) ? listing.bids : [];
+            const topBid = [...bids].sort((a,b)=>b.amount-a.amount)[0];
+            return (
             <div key={listing.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div>
                 <p className="text-sm font-medium">{listing.wasteType} — {listing.volume} {listing.unit}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{listing.bids.length} bids · Top: {listing.bids.sort((a,b)=>b.amount-a.amount)[0]?.amount.toLocaleString() || '—'}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{bids.length} bids · Top: {topBid?.amount.toLocaleString() || '—'}</p>
               </div>
               <div className="text-right">
                 <p className="text-sm font-semibold text-cyan-600">RWF {listing.minBid.toLocaleString()}</p>
                 <StatusBadge status={listing.status} />
               </div>
             </div>
-          ))}
+          );})}
           {liveListings.filter(l => l.status === 'open').length === 0 && <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">No active listings yet</p>}
         </div>
       </Widget>

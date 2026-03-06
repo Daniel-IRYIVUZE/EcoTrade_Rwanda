@@ -2,15 +2,15 @@
 import { Building2, Factory, Truck } from 'lucide-react';
 
 interface ServiceTabsProps {
-  activeTab: 'hotels' | 'recyclers' | 'drivers';
-  setActiveTab: (tab: 'hotels' | 'recyclers' | 'drivers') => void;
+  activeTab: 'businesses' | 'recyclers' | 'drivers';
+  setActiveTab: (tab: 'businesses' | 'recyclers' | 'drivers') => void;
 }
 
 const ServiceTabs = ({ activeTab, setActiveTab }: ServiceTabsProps) => {
   const tabs = [
     {
-      id: 'hotels',
-      label: 'Hotels & Restaurants',
+      id: 'businesses',
+      label: 'Businesses & Restaurants',
       icon: Building2,
       color: 'bg-cyan-600',
       count: 156
@@ -37,7 +37,7 @@ const ServiceTabs = ({ activeTab, setActiveTab }: ServiceTabsProps) => {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as 'hotels' | 'recyclers' | 'drivers')}
+            onClick={() => setActiveTab(tab.id as 'businesses' | 'recyclers' | 'drivers')}
             className={`relative p-6 rounded-xl transition-all duration-300 group ${
               activeTab === tab.id
                 ? `${tab.color} text-white shadow-lg transform scale-105`

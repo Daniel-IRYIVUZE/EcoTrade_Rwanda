@@ -167,23 +167,7 @@ const LoginForm = ({ onToggleMode, onForgotPassword, onLogin, demoCredentials }:
         </button>
       </form>
 
-      {/* ── Divider ── */}
-      <div className="flex items-center gap-3 my-3">
-        <hr className="flex-1 border-gray-200 dark:border-gray-700" />
-        <span className="text-xs text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap">or continue with</span>
-        <hr className="flex-1 border-gray-200 dark:border-gray-700" />
-      </div>
 
-      {/* ── Google ── */}
-      <button className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all text-sm font-medium text-gray-700 dark:text-gray-300">
-        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-          <path fill="#EA4335" d="M23.745 12.27c0-.79-.078-1.54-.228-2.26H12v4.26h6.47c-.29 1.48-1.14 2.84-2.42 3.74v3h3.92c2.3-2.1 3.63-5.2 3.63-8.74z"/>
-          <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.92-3c-1.08.72-2.46 1.13-4.01 1.13-3.02 0-5.57-2.03-6.48-4.78H2.18v3.09C3.99 21.1 7.7 24 12 24z"/>
-          <path fill="#4285F4" d="M5.52 15.44c-.25-.72-.38-1.49-.38-2.44s.13-1.72.35-2.44V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.49-.27z"/>
-          <path fill="#FBBC05" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.92 2.3 15.25 1 12 1 7.7 1 3.99 3.9 2.18 7.93l3.34 2.6c.91-2.75 3.46-4.78 6.48-4.78z"/>
-        </svg>
-        Continue with Google
-      </button>
 
       {/* ── Demo quick-fill role cards ── */}
       <div className="mt-3">

@@ -24,7 +24,7 @@ export default function RecyclerActiveCollections() {
 
   const handleExport = () => downloadCSV('collections',
     ['ID', 'Hotel', 'Recycler', 'Driver', 'Type', 'Volume', 'Status', 'Date', 'Earnings'],
-    filtered.map(c => [c.id, c.hotelName, c.recyclerName, c.driverName, c.wasteType, String(c.volume), c.status, c.scheduledDate, String(c.earnings)]));
+    filtered.map(c => [c.id, c.hotelName || c.businessName || 'N/A', c.recyclerName, c.driverName, c.wasteType, String(c.volume), c.status, c.scheduledDate, String(c.earnings)]));
 
   return (
     <div className="space-y-6">

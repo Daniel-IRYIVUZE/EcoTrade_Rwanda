@@ -17,7 +17,7 @@ export default function RecyclerReports() {
     setTimeout(() => {
       if (type === 'Collections') {
         downloadCSV(`collections_${month.replace(/ /g, '_')}`, ['ID', 'Hotel', 'Driver', 'Type', 'Volume', 'Status', 'Date', 'Earnings'],
-          collections.map(c => [c.id, c.hotelName, c.driverName, c.wasteType, String(c.volume), c.status, c.scheduledDate, String(c.earnings)]));
+          collections.map(c => [c.id, c.hotelName || c.businessName || 'N/A', c.driverName, c.wasteType, String(c.volume), c.status, c.scheduledDate, String(c.earnings)]));
       } else if (type === 'Revenue') {
         downloadCSV(`revenue_${month.replace(/ /g, '_')}`, ['ID', 'Date', 'Hotel', 'Type', 'Amount', 'Fee', 'Net', 'Status'],
           transactions.map(t => [t.id, new Date(t.date).toLocaleDateString(), t.from, t.wasteType, String(t.amount), String(t.fee), String(t.amount - t.fee), t.status]));

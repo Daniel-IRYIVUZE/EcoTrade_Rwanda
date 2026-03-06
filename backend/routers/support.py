@@ -28,11 +28,21 @@ def create_ticket(
     return ticket
 
 
+@router.post("/", response_model=schemas.SupportTicketOut, status_code=201)
+def create_ticket_compat(
+    payload: schemas.SupportTicketCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return create_ticket(payload=payload, db=db, current_user=current_user)
+
+
 @router.get("/tickets", response_model=list[schemas.SupportTicketOut])
 def list_tickets(
     skip: int = 0,
     limit: int = 50,
     status: str | None = None,
+    priority: str | None = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -41,7 +51,28 @@ def list_tickets(
         q = q.filter(models.SupportTicket.user_id == current_user.id)
     if status:
         q = q.filter(models.SupportTicket.status == status)
+    if priority:
+        q = q.filter(models.SupportTicket.priority == priority)
     return q.order_by(models.SupportTicket.created_at.desc()).offset(skip).limit(limit).all()
+
+
+@router.get("/", response_model=list[schemas.SupportTicketOut])
+def list_tickets_compat(
+    skip: int = 0,
+    limit: int = 50,
+    status: str | None = None,
+    priority: str | None = None,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return list_tickets(
+        skip=skip,
+        limit=limit,
+        status=status,
+        priority=priority,
+        db=db,
+        current_user=current_user,
+    )
 
 
 @router.get("/tickets/{ticket_id}", response_model=schemas.SupportTicketOut)
@@ -56,6 +87,15 @@ def get_ticket(
     if current_user.role != models.UserRole.admin and ticket.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
     return ticket
+
+
+@router.get("/{ticket_id}", response_model=schemas.SupportTicketOut)
+def get_ticket_compat(
+    ticket_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return get_ticket(ticket_id=ticket_id, db=db, current_user=current_user)
 
 
 @router.patch("/tickets/{ticket_id}", response_model=schemas.SupportTicketOut)
@@ -77,6 +117,16 @@ def update_ticket(
     return ticket
 
 
+@router.put("/{ticket_id}", response_model=schemas.SupportTicketOut)
+def update_ticket_compat(
+    ticket_id: int,
+    payload: schemas.SupportTicketUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return update_ticket(ticket_id=ticket_id, payload=payload, db=db, current_user=current_user)
+
+
 @router.post("/tickets/{ticket_id}/responses", response_model=schemas.TicketResponseOut, status_code=201)
 def add_response(
     ticket_id: int,
@@ -94,3 +144,13 @@ def add_response(
     db.commit()
     db.refresh(resp)
     return resp
+
+
+@router.post("/{ticket_id}/responses", response_model=schemas.TicketResponseOut, status_code=201)
+def add_response_compat(
+    ticket_id: int,
+    payload: schemas.TicketResponseCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return add_response(ticket_id=ticket_id, payload=payload, db=db, _=current_user)

@@ -87,9 +87,9 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
 
           {/* Content */}
           <div className="p-4 flex flex-col flex-1">
-            {/* Hotel Info */}
+            {/* Business Info */}
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight line-clamp-1 min-w-0">{listing.hotel}</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white text-sm leading-tight line-clamp-1 min-w-0">{listing.business}</h3>
               {listing.verified && (
                 <span className="text-xs bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-400 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 flex-shrink-0">
                   <CheckCircle className="w-3 h-3" /> Verified
@@ -104,13 +104,13 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
                   <Star
                     key={i}
                     className={`w-3 h-3 ${
-                      i < Math.floor(listing.hotelRating)
+                      i < Math.floor(listing.businessRating)
                         ? 'fill-yellow-700 text-yellow-700'
                         : 'text-gray-300'
                     }`}
                   />
                 ))}
-                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">{listing.hotelRating}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">{listing.businessRating}</span>
               </div>
               <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
                 listing.quality === 'Grade A' ? 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400' :

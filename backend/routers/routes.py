@@ -37,6 +37,7 @@ def list_routes(
     limit: int = 50,
     driver_id: int | None = None,
     status: str | None = None,
+    date: str | None = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
@@ -47,6 +48,8 @@ def list_routes(
         q = q.filter(models.DriverRoute.driver_id == driver_id)
     if status:
         q = q.filter(models.DriverRoute.status == status)
+    if date:
+        q = q.filter(models.DriverRoute.date == date)
     return q.order_by(models.DriverRoute.created_at.desc()).offset(skip).limit(limit).all()
 
 
@@ -83,6 +86,21 @@ def update_route(
     return route
 
 
+@router.put("/{route_id}", response_model=schemas.DriverRouteOut)
+def update_route_compat(
+    route_id: int,
+    payload: schemas.DriverRouteUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return update_route(
+        route_id=route_id,
+        payload=payload,
+        db=db,
+        current_user=current_user,
+    )
+
+
 @router.patch("/{route_id}/stops/{stop_id}/status", response_model=schemas.RouteStopOut)
 def update_stop_status(
     route_id: int,
@@ -105,6 +123,23 @@ def update_stop_status(
     db.commit()
     db.refresh(stop)
     return stop
+
+
+@router.put("/{route_id}/stops/{stop_id}", response_model=schemas.RouteStopOut)
+def update_stop_status_compat(
+    route_id: int,
+    stop_id: int,
+    payload: schemas.RouteStopStatusUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    return update_stop_status(
+        route_id=route_id,
+        stop_id=stop_id,
+        payload=payload,
+        db=db,
+        current_user=current_user,
+    )
 
 
 @router.delete("/{route_id}", status_code=204)

@@ -37,7 +37,7 @@ EcoTrade Rwanda is a digital B2B marketplace connecting waste generators (hotels
 | Business | business@ecotrade.rw | business123 | /dashboard/business |
 | Recycler | recycler@ecotrade.rw | recycler123 | /dashboard/recycler |
 | Driver | driver@ecotrade.rw | driver123 | /dashboard/driver |
-| Individual | individual@ecotrade.rw | user123 | /dashboard/individual |
+| Individual | marieclaire@gmail.com | user123 | /dashboard/individual |
 
 > OTP code (2FA): **123456**
 

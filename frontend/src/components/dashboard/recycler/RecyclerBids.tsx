@@ -16,9 +16,10 @@ export default function RecyclerBids() {
   const load = useCallback(() => setAllListings(getAll<WasteListing>('listings')), []);
   useEffect(() => { load(); window.addEventListener('ecotrade_data_change', load); return () => window.removeEventListener('ecotrade_data_change', load); }, [load]);
 
-  const myBids: (Bid & { listing: WasteListing })[] = allListings.flatMap(l =>
-    l.bids.filter(b => b.recyclerId === 'recycler-green-energy').map(b => ({ ...b, listing: l }))
-  );
+  const myBids: (Bid & { listing: WasteListing })[] = allListings.flatMap(l => {
+    const bids = Array.isArray(l.bids) ? l.bids : [];
+    return bids.filter(b => b.recyclerId === 'recycler-green-energy').map(b => ({ ...b, listing: l }));
+  });
   const filtered = statusFilter === 'all' ? myBids : myBids.filter(b => b.status === statusFilter);
 
   const handleIncreaseBid = () => {
@@ -27,20 +28,26 @@ export default function RecyclerBids() {
     if (isNaN(amount) || amount < showIncrease.minBid) return;
     const listing = allListings.find(l => l.id === showIncrease.listingId);
     if (!listing) return;
-    const updatedBids = listing.bids.map(b => b.id === showIncrease.bidId ? { ...b, amount, status: 'active' as const } : b);
+    const bids = Array.isArray(listing.bids) ? listing.bids : [];
+    const updatedBids = bids.map(b => b.id === showIncrease.bidId ? { ...b, amount, status: 'active' as const } : b);
     dsUpdate<WasteListing>('listings', listing.id, { bids: updatedBids });
     setFlash(`Bid increased to RWF ${amount.toLocaleString()}`);
     setTimeout(() => setFlash(null), 3000);
     setShowIncrease(null); setNewAmount('');
   };
 
-  const displayData = filtered.map(b => ({
-    id: b.id, hotel: b.listing.hotelName, type: b.listing.wasteType,
-    quantity: `${b.listing.volume} ${b.listing.unit}`,
-    myBid: `RWF ${b.amount.toLocaleString()}`,
-    topBid: (() => { const sorted = [...b.listing.bids].sort((a, x) => x.amount - a.amount); return sorted[0] ? `RWF ${sorted[0].amount.toLocaleString()}` : '—'; })(),
-    status: b.status, bidDate: new Date(b.createdAt).toLocaleDateString(), _bid: b,
-  }));
+  const displayData = filtered.map(b => {
+    const listingBids = Array.isArray(b.listing.bids) ? b.listing.bids : [];
+    const sorted = [...listingBids].sort((a, x) => x.amount - a.amount);
+    const topBid = sorted[0] ? `RWF ${sorted[0].amount.toLocaleString()}` : '—';
+    return {
+      id: b.id, hotel: b.listing.hotelName, type: b.listing.wasteType,
+      quantity: `${b.listing.volume} ${b.listing.unit}`,
+      myBid: `RWF ${b.amount.toLocaleString()}`,
+      topBid,
+      status: b.status, bidDate: new Date(b.createdAt).toLocaleDateString(), _bid: b,
+    };
+  });
 
   return (
     <div className="space-y-6">

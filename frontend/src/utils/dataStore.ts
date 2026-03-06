@@ -1,8 +1,10 @@
 
 export interface WasteListing {
   id: string;
-  hotelId: string;
-  hotelName: string;
+  businessId: string;
+  businessName: string;
+  hotelName?: string; // Alias for businessName (from API)
+  hotelId?: string; // Alias for businessId (from API)
   wasteType: 'UCO' | 'Glass' | 'Paper/Cardboard' | 'Mixed';
   volume: number;
   unit: 'kg' | 'liters';
@@ -80,7 +82,8 @@ export interface Transaction {
 export interface Collection {
   id: string;
   listingId: string;
-  hotelName: string;
+  businessName: string;
+  hotelName?: string; // Alias for businessName (from API)
   recyclerName: string;
   driverName: string;
   driverId: string;
@@ -96,6 +99,7 @@ export interface Collection {
   notes: string;
   location: string;
   earnings: number;
+  createdAt?: string;
 }
 
 export interface SupportTicket {
@@ -136,7 +140,7 @@ export interface DriverRoute {
 
 export interface RouteStop {
   id: string;
-  hotelName: string;
+  businessName: string;
   location: string;
   wasteType: string;
   volume: number;
@@ -330,54 +334,54 @@ export function seedDataIfEmpty() {
 
   // Seed Users
   const users: PlatformUser[] = [
-    { id: 'U001', name: 'Mille Collines Hotel', email: 'hotel@millecollines.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Nyarugenge, Kigali', joinDate: daysAgo(180), lastActive: hoursAgo(1), avatar: '', verified: true, greenScore: 78, monthlyWaste: 280, totalRevenue: 342000 },
-    { id: 'U002', name: 'Serena Hotel Kigali', email: 'waste@serena.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Kiyovu, Kigali', joinDate: daysAgo(150), lastActive: hoursAgo(3), avatar: '', verified: true, greenScore: 85, monthlyWaste: 350, totalRevenue: 456000 },
-    { id: 'U003', name: 'Marriott Hotel Kigali', email: 'ops@marriott.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Kimihurura, Kigali', joinDate: daysAgo(120), lastActive: hoursAgo(2), avatar: '', verified: true, greenScore: 72, monthlyWaste: 200, totalRevenue: 234000 },
-    { id: 'U004', name: 'Radisson Blu Kigali', email: 'green@radisson.rw', phone: '+250 780 162 164', role: 'business', status: 'pending', location: 'Nyarugenge, Kigali', joinDate: daysAgo(15), lastActive: daysAgo(1), avatar: '', verified: false, greenScore: 0, monthlyWaste: 0, totalRevenue: 0 },
+    { id: 'U001', name: 'Mille Collines Business', email: 'business@millecollines.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Nyarugenge, Kigali', joinDate: daysAgo(180), lastActive: hoursAgo(1), avatar: '', verified: true, greenScore: 78, monthlyWaste: 280, totalRevenue: 342000 },
+    { id: 'U002', name: 'Serena Business Kigali', email: 'waste@serena.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Kiyovu, Kigali', joinDate: daysAgo(150), lastActive: hoursAgo(3), avatar: '', verified: true, greenScore: 85, monthlyWaste: 350, totalRevenue: 456000 },
+    { id: 'U003', name: 'Marriott Business Kigali', email: 'ops@marriott.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Kimihurura, Kigali', joinDate: daysAgo(120), lastActive: hoursAgo(2), avatar: '', verified: true, greenScore: 72, monthlyWaste: 200, totalRevenue: 234000 },
+    { id: 'U004', name: 'Radisson Blu Business', email: 'green@radisson.rw', phone: '+250 780 162 164', role: 'business', status: 'pending', location: 'Nyarugenge, Kigali', joinDate: daysAgo(15), lastActive: daysAgo(1), avatar: '', verified: false, greenScore: 0, monthlyWaste: 0, totalRevenue: 0 },
     { id: 'U005', name: 'Park Inn by Radisson', email: 'eco@parkinn.rw', phone: '+250 780 162 164', role: 'business', status: 'active', location: 'Remera, Kigali', joinDate: daysAgo(90), lastActive: hoursAgo(5), avatar: '', verified: true, greenScore: 68, monthlyWaste: 180, totalRevenue: 198000 },
     { id: 'U006', name: 'GreenEnergy Recyclers', email: 'recycler@greenenergy.rw', phone: '+250 780 162 164', role: 'recycler', status: 'active', location: 'Kicukiro, Kigali', joinDate: daysAgo(200), lastActive: hoursAgo(1), avatar: '', verified: true, processingCapacity: 50, licenseNumber: 'REC-2024-001', wasteTypes: ['UCO', 'Glass'], rating: 4.8, totalRevenue: 1200000 },
     { id: 'U007', name: 'EcoProcess Rwanda', email: 'info@ecoprocess.rw', phone: '+250 780 162 164', role: 'recycler', status: 'active', location: 'Gasabo, Kigali', joinDate: daysAgo(160), lastActive: hoursAgo(4), avatar: '', verified: true, processingCapacity: 30, licenseNumber: 'REC-2024-002', wasteTypes: ['Paper/Cardboard', 'Mixed'], rating: 4.5, totalRevenue: 890000 },
     { id: 'U008', name: 'Jean Pierre Habimana', email: 'driver@ecotrade.rw', phone: '+250 780 162 164', role: 'driver', status: 'active', location: 'Nyarugenge, Kigali', joinDate: daysAgo(100), lastActive: hoursAgo(2), avatar: '', verified: true, vehicleType: 'Toyota Hilux', vehiclePlate: 'RAC 123 A', rating: 4.9, completedRoutes: 187 },
     { id: 'U009', name: 'Emmanuel Mugisha', email: 'emmanuel@ecotrade.rw', phone: '+250 780 162 164', role: 'driver', status: 'active', location: 'Kicukiro, Kigali', joinDate: daysAgo(80), lastActive: hoursAgo(6), avatar: '', verified: true, vehicleType: 'Isuzu NPR', vehiclePlate: 'RAD 456 B', rating: 4.6, completedRoutes: 143 },
     { id: 'U010', name: 'Ineza Uwimana', email: 'ineza@ecotrade.rw', phone: '+250 780 162 164', role: 'driver', status: 'pending', location: 'Gasabo, Kigali', joinDate: daysAgo(5), lastActive: daysAgo(1), avatar: '', verified: false, vehicleType: 'Mitsubishi Canter', vehiclePlate: 'RAE 789 C', rating: 0, completedRoutes: 0 },
-    { id: 'U011', name: 'Marie Claire Umutoni', email: 'individual@ecotrade.rw', phone: '+250 780 162 164', role: 'individual', status: 'active', location: 'Kimironko, Kigali', joinDate: daysAgo(60), lastActive: hoursAgo(8), avatar: '', verified: true },
+    { id: 'U011', name: 'Marie Claire Umutoni', email: 'marieclaire@gmail.com', phone: '+250 780 162 164', role: 'individual', status: 'active', location: 'Kimironko, Kigali', joinDate: daysAgo(60), lastActive: hoursAgo(8), avatar: '', verified: true },
     { id: 'U012', name: 'Admin User', email: 'admin@ecotrade.rw', phone: '+250 780 162 164', role: 'admin', status: 'active', location: 'Kigali, Rwanda', joinDate: daysAgo(365), lastActive: hoursAgo(0), avatar: '', verified: true },
   ];
 
   // Seed Listings
   const listings: WasteListing[] = [
-    { id: 'WL001', hotelId: 'U001', hotelName: 'Mille Collines Hotel', wasteType: 'UCO', volume: 200, unit: 'liters', quality: 'A', photos: [], minBid: 15000, reservePrice: 20000, auctionDuration: '24h', autoAcceptAbove: 25000, specialInstructions: 'Use service entrance at rear', contactPerson: 'Jean Bosco', status: 'open', createdAt: hoursAgo(6), expiresAt: new Date(now.getTime() + 18 * 3600000).toISOString(), bids: [], location: 'Nyarugenge, Kigali' },
-    { id: 'WL002', hotelId: 'U002', hotelName: 'Serena Hotel Kigali', wasteType: 'Glass', volume: 150, unit: 'kg', quality: 'A', photos: [], minBid: 8000, reservePrice: 12000, auctionDuration: '12h', autoAcceptAbove: 15000, specialInstructions: 'Sorted by color already', contactPerson: 'Marie Rose', status: 'open', createdAt: hoursAgo(3), expiresAt: new Date(now.getTime() + 9 * 3600000).toISOString(), bids: [], location: 'Kiyovu, Kigali' },
-    { id: 'WL003', hotelId: 'U003', hotelName: 'Marriott Hotel Kigali', wasteType: 'Paper/Cardboard', volume: 300, unit: 'kg', quality: 'B', photos: [], minBid: 12000, reservePrice: 18000, auctionDuration: '24h', autoAcceptAbove: 22000, specialInstructions: 'Loading dock access needed', contactPerson: 'Muhire Nkusi', status: 'open', createdAt: hoursAgo(12), expiresAt: new Date(now.getTime() + 12 * 3600000).toISOString(), bids: [], location: 'Kimihurura, Kigali' },
-    { id: 'WL004', hotelId: 'U001', hotelName: 'Mille Collines Hotel', wasteType: 'Glass', volume: 80, unit: 'kg', quality: 'B', photos: [], minBid: 5000, reservePrice: 8000, auctionDuration: '6h', autoAcceptAbove: 10000, specialInstructions: '', contactPerson: 'Jean Bosco', status: 'assigned', createdAt: daysAgo(2), expiresAt: daysAgo(1), bids: [{ id: 'B001', listingId: 'WL004', recyclerId: 'U006', recyclerName: 'GreenEnergy Recyclers', amount: 9500, note: 'Can collect today', collectionPreference: 'Morning', status: 'won', createdAt: daysAgo(2) }], assignedRecycler: 'GreenEnergy Recyclers', assignedDriver: 'Jean Pierre Habimana', collectionDate: new Date().toISOString().split('T')[0], location: 'Nyarugenge, Kigali' },
-    { id: 'WL005', hotelId: 'U005', hotelName: 'Park Inn by Radisson', wasteType: 'UCO', volume: 100, unit: 'liters', quality: 'A', photos: [], minBid: 8000, reservePrice: 12000, auctionDuration: '24h', autoAcceptAbove: 14000, specialInstructions: 'Available after 2 PM', contactPerson: 'Mutesi Uwase', status: 'completed', createdAt: daysAgo(7), expiresAt: daysAgo(6), bids: [{ id: 'B002', listingId: 'WL005', recyclerId: 'U007', recyclerName: 'EcoProcess Rwanda', amount: 13000, note: '', collectionPreference: 'Afternoon', status: 'won', createdAt: daysAgo(7) }], assignedRecycler: 'EcoProcess Rwanda', assignedDriver: 'Emmanuel Mugisha', location: 'Remera, Kigali' },
+    { id: 'WL001', businessId: 'U001', businessName: 'Mille Collines Business', wasteType: 'UCO', volume: 200, unit: 'liters', quality: 'A', photos: [], minBid: 15000, reservePrice: 20000, auctionDuration: '24h', autoAcceptAbove: 25000, specialInstructions: 'Use service entrance at rear', contactPerson: 'Jean Bosco', status: 'open', createdAt: hoursAgo(6), expiresAt: new Date(now.getTime() + 18 * 3600000).toISOString(), bids: [], location: 'Nyarugenge, Kigali' },
+    { id: 'WL002', businessId: 'U002', businessName: 'Serena Business Kigali', wasteType: 'Glass', volume: 150, unit: 'kg', quality: 'A', photos: [], minBid: 8000, reservePrice: 12000, auctionDuration: '12h', autoAcceptAbove: 15000, specialInstructions: 'Sorted by color already', contactPerson: 'Marie Rose', status: 'open', createdAt: hoursAgo(3), expiresAt: new Date(now.getTime() + 9 * 3600000).toISOString(), bids: [], location: 'Kiyovu, Kigali' },
+    { id: 'WL003', businessId: 'U003', businessName: 'Marriott Business Kigali', wasteType: 'Paper/Cardboard', volume: 300, unit: 'kg', quality: 'B', photos: [], minBid: 12000, reservePrice: 18000, auctionDuration: '24h', autoAcceptAbove: 22000, specialInstructions: 'Loading dock access needed', contactPerson: 'Muhire Nkusi', status: 'open', createdAt: hoursAgo(12), expiresAt: new Date(now.getTime() + 12 * 3600000).toISOString(), bids: [], location: 'Kimihurura, Kigali' },
+    { id: 'WL004', businessId: 'U001', businessName: 'Mille Collines Business', wasteType: 'Glass', volume: 80, unit: 'kg', quality: 'B', photos: [], minBid: 5000, reservePrice: 8000, auctionDuration: '6h', autoAcceptAbove: 10000, specialInstructions: '', contactPerson: 'Jean Bosco', status: 'assigned', createdAt: daysAgo(2), expiresAt: daysAgo(1), bids: [{ id: 'B001', listingId: 'WL004', recyclerId: 'U006', recyclerName: 'GreenEnergy Recyclers', amount: 9500, note: 'Can collect today', collectionPreference: 'Morning', status: 'won', createdAt: daysAgo(2) }], assignedRecycler: 'GreenEnergy Recyclers', assignedDriver: 'Jean Pierre Habimana', collectionDate: new Date().toISOString().split('T')[0], location: 'Nyarugenge, Kigali' },
+    { id: 'WL005', businessId: 'U005', businessName: 'Park Inn by Radisson', wasteType: 'UCO', volume: 100, unit: 'liters', quality: 'A', photos: [], minBid: 8000, reservePrice: 12000, auctionDuration: '24h', autoAcceptAbove: 14000, specialInstructions: 'Available after 2 PM', contactPerson: 'Mutesi Uwase', status: 'completed', createdAt: daysAgo(7), expiresAt: daysAgo(6), bids: [{ id: 'B002', listingId: 'WL005', recyclerId: 'U007', recyclerName: 'EcoProcess Rwanda', amount: 13000, note: '', collectionPreference: 'Afternoon', status: 'won', createdAt: daysAgo(7) }], assignedRecycler: 'EcoProcess Rwanda', assignedDriver: 'Emmanuel Mugisha', location: 'Remera, Kigali' },
   ];
 
   // Seed Transactions
   const transactions: Transaction[] = [
     { id: 'TX001', date: daysAgo(7), from: 'Park Inn by Radisson', to: 'EcoProcess Rwanda', wasteType: 'UCO', volume: 100, amount: 13000, fee: 650, status: 'completed', listingId: 'WL005' },
-    { id: 'TX002', date: daysAgo(3), from: 'Mille Collines Hotel', to: 'GreenEnergy Recyclers', wasteType: 'UCO', volume: 150, amount: 22500, fee: 1125, status: 'completed', listingId: 'WL001' },
-    { id: 'TX003', date: daysAgo(1), from: 'Serena Hotel Kigali', to: 'GreenEnergy Recyclers', wasteType: 'Glass', volume: 200, amount: 16000, fee: 800, status: 'pending', listingId: 'WL002' },
-    { id: 'TX004', date: daysAgo(14), from: 'Marriott Hotel Kigali', to: 'EcoProcess Rwanda', wasteType: 'Paper/Cardboard', volume: 250, amount: 30000, fee: 1500, status: 'completed', listingId: 'WL003' },
-    { id: 'TX005', date: daysAgo(5), from: 'Serena Hotel Kigali', to: 'GreenEnergy Recyclers', wasteType: 'UCO', volume: 180, amount: 27000, fee: 1350, status: 'completed', listingId: 'WL002' },
+    { id: 'TX002', date: daysAgo(3), from: 'Mille Collines Business', to: 'GreenEnergy Recyclers', wasteType: 'UCO', volume: 150, amount: 22500, fee: 1125, status: 'completed', listingId: 'WL001' },
+    { id: 'TX003', date: daysAgo(1), from: 'Serena Business Kigali', to: 'GreenEnergy Recyclers', wasteType: 'Glass', volume: 200, amount: 16000, fee: 800, status: 'pending', listingId: 'WL002' },
+    { id: 'TX004', date: daysAgo(14), from: 'Marriott Business Kigali', to: 'EcoProcess Rwanda', wasteType: 'Paper/Cardboard', volume: 250, amount: 30000, fee: 1500, status: 'completed', listingId: 'WL003' },
+    { id: 'TX005', date: daysAgo(5), from: 'Serena Business Kigali', to: 'GreenEnergy Recyclers', wasteType: 'UCO', volume: 180, amount: 27000, fee: 1350, status: 'completed', listingId: 'WL002' },
   ];
 
   // Seed Collections
   const collections: Collection[] = [
-    { id: 'COL001', listingId: 'WL004', hotelName: 'Mille Collines Hotel', recyclerName: 'GreenEnergy Recyclers', driverName: 'Jean Pierre Habimana', driverId: 'U008', wasteType: 'Glass', volume: 80, status: 'scheduled', scheduledDate: new Date().toISOString().split('T')[0], scheduledTime: '14:00', proofPhotos: [], notes: '', location: 'Nyarugenge, Kigali', earnings: 3500 },
-    { id: 'COL002', listingId: 'WL005', hotelName: 'Park Inn by Radisson', recyclerName: 'EcoProcess Rwanda', driverName: 'Emmanuel Mugisha', driverId: 'U009', wasteType: 'UCO', volume: 100, status: 'completed', scheduledDate: daysAgo(7).split('T')[0], scheduledTime: '15:00', completedAt: daysAgo(7), proofPhotos: [], actualWeight: 98, rating: 5, notes: 'Smooth collection', location: 'Remera, Kigali', earnings: 4500 },
-    { id: 'COL003', listingId: 'WL001', hotelName: 'Mille Collines Hotel', recyclerName: 'GreenEnergy Recyclers', driverName: 'Jean Pierre Habimana', driverId: 'U008', wasteType: 'UCO', volume: 200, status: 'completed', scheduledDate: daysAgo(3).split('T')[0], scheduledTime: '10:00', completedAt: daysAgo(3), proofPhotos: [], actualWeight: 195, rating: 4, notes: '', location: 'Nyarugenge, Kigali', earnings: 5000 },
+    { id: 'COL001', listingId: 'WL004', businessName: 'Mille Collines Business', recyclerName: 'GreenEnergy Recyclers', driverName: 'Jean Pierre Habimana', driverId: 'U008', wasteType: 'Glass', volume: 80, status: 'scheduled', scheduledDate: new Date().toISOString().split('T')[0], scheduledTime: '14:00', proofPhotos: [], notes: '', location: 'Nyarugenge, Kigali', earnings: 3500 },
+    { id: 'COL002', listingId: 'WL005', businessName: 'Park Inn by Radisson', recyclerName: 'EcoProcess Rwanda', driverName: 'Emmanuel Mugisha', driverId: 'U009', wasteType: 'UCO', volume: 100, status: 'completed', scheduledDate: daysAgo(7).split('T')[0], scheduledTime: '15:00', completedAt: daysAgo(7), proofPhotos: [], actualWeight: 98, rating: 5, notes: 'Smooth collection', location: 'Remera, Kigali', earnings: 4500 },
+    { id: 'COL003', listingId: 'WL001', businessName: 'Mille Collines Business', recyclerName: 'GreenEnergy Recyclers', driverName: 'Jean Pierre Habimana', driverId: 'U008', wasteType: 'UCO', volume: 200, status: 'completed', scheduledDate: daysAgo(3).split('T')[0], scheduledTime: '10:00', completedAt: daysAgo(3), proofPhotos: [], actualWeight: 195, rating: 4, notes: '', location: 'Nyarugenge, Kigali', earnings: 5000 },
   ];
 
   // Seed Support Tickets
   const tickets: SupportTicket[] = [
-    { id: 'TK001', userId: 'U001', userName: 'Mille Collines Hotel', subject: 'Payment delay for collection #COL003', message: 'Our payment for the UCO collection on Tuesday has not been received yet. Please check.', status: 'open', priority: 'high', createdAt: daysAgo(1), updatedAt: daysAgo(1), responses: [] },
+    { id: 'TK001', userId: 'U001', userName: 'Mille Collines Business', subject: 'Payment delay for collection #COL003', message: 'Our payment for the UCO collection on Tuesday has not been received yet. Please check.', status: 'open', priority: 'high', createdAt: daysAgo(1), updatedAt: daysAgo(1), responses: [] },
     { id: 'TK002', userId: 'U008', userName: 'Jean Pierre Habimana', subject: 'Vehicle maintenance needed', message: 'My Toyota Hilux needs brake pad replacement. Next service was due last week.', status: 'in-progress', priority: 'medium', createdAt: daysAgo(3), updatedAt: daysAgo(2), responses: [{ from: 'Admin', message: 'We have scheduled your vehicle for service on Thursday. Please drop it off at 8 AM.', date: daysAgo(2) }] },
   ];
 
   // Seed Messages
   const messages: Message[] = [
-    { id: 'MSG001', from: 'U006', fromName: 'GreenEnergy Recyclers', to: 'U001', toName: 'Mille Collines Hotel', subject: 'UCO Collection Schedule', body: 'Hello, we would like to schedule the UCO collection for tomorrow morning at 10 AM. Is that convenient?', date: hoursAgo(4), read: false, replies: [] },
+    { id: 'MSG001', from: 'U006', fromName: 'GreenEnergy Recyclers', to: 'U001', toName: 'Mille Collines Business', subject: 'UCO Collection Schedule', body: 'Hello, we would like to schedule the UCO collection for tomorrow morning at 10 AM. Is that convenient?', date: hoursAgo(4), read: false, replies: [] },
     { id: 'MSG002', from: 'U012', fromName: 'Admin', to: 'U006', toName: 'GreenEnergy Recyclers', subject: 'License Renewal Reminder', body: 'Your recycling license REC-2024-001 expires in 30 days. Please submit renewal documents.', date: daysAgo(2), read: true, replies: [{ from: 'U006', fromName: 'GreenEnergy Recyclers', body: 'Thank you for the reminder. We will submit the documents next week.', date: daysAgo(1) }] },
   ];
 
@@ -386,9 +390,9 @@ export function seedDataIfEmpty() {
     {
       id: 'DR001', driverId: 'U008', date: new Date().toISOString().split('T')[0],
       stops: [
-        { id: 'S001', hotelName: 'Mille Collines Hotel', location: 'Nyarugenge', wasteType: 'UCO', volume: 200, eta: '09:00', status: 'completed', contactPerson: 'Jean Bosco', contactPhone: '+250 780 162 164', specialInstructions: 'Service entrance', actualWeight: 195, photos: [], completedAt: hoursAgo(3) },
-        { id: 'S002', hotelName: 'Serena Hotel Kigali', location: 'Kiyovu', wasteType: 'Glass', volume: 150, eta: '10:30', status: 'pending', contactPerson: 'Marie Rose', contactPhone: '+250 780 162 164', specialInstructions: '', photos: [] },
-        { id: 'S003', hotelName: 'Marriott Hotel Kigali', location: 'Kimihurura', wasteType: 'Paper/Cardboard', volume: 300, eta: '12:00', status: 'pending', contactPerson: 'Muhire Nkusi', contactPhone: '+250 780 162 164', specialInstructions: 'Loading dock', photos: [] },
+        { id: 'S001', businessName: 'Mille Collines Business', location: 'Nyarugenge', wasteType: 'UCO', volume: 200, eta: '09:00', status: 'completed', contactPerson: 'Jean Bosco', contactPhone: '+250 780 162 164', specialInstructions: 'Service entrance', actualWeight: 195, photos: [], completedAt: hoursAgo(3) },
+        { id: 'S002', businessName: 'Serena Business Kigali', location: 'Kiyovu', wasteType: 'Glass', volume: 150, eta: '10:30', status: 'pending', contactPerson: 'Marie Rose', contactPhone: '+250 780 162 164', specialInstructions: '', photos: [] },
+        { id: 'S003', businessName: 'Marriott Business Kigali', location: 'Kimihurura', wasteType: 'Paper/Cardboard', volume: 300, eta: '12:00', status: 'pending', contactPerson: 'Muhire Nkusi', contactPhone: '+250 780 162 164', specialInstructions: 'Loading dock', photos: [] },
       ],
       status: 'in-progress', totalDistance: 28, estimatedEarnings: 12500, startTime: '08:30'
     },
@@ -414,5 +418,12 @@ export function seedDataIfEmpty() {
   store.recyclingEvents = recyclingEvents;
   store.auditLogs = [];
   store._seeded = true;
+  setStore(store);
+}
+
+// --- Bulk save helper (used by apiSync) ---
+export function saveAll(collection: string, items: any[]) {
+  const store = getStore();
+  store[collection] = items;
   setStore(store);
 }

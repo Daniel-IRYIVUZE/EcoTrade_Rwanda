@@ -37,10 +37,13 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, width = '10
   const tooltipText = isDark ? '#f3f4f6' : '#111827';
 
   const renderChart = () => {
+    if (!data.datasets || !data.datasets[0]) return null;
+    const dataset = data.datasets[0];
+    
     switch (type) {
       case 'line':
         return (
-          <LineChart data={data.datasets[0].data.map((value, index) => ({
+          <LineChart data={dataset.data.map((value, index) => ({
             name: data.labels[index],
             value
           }))}>
@@ -52,7 +55,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, width = '10
             <Line 
               type="monotone" 
               dataKey="value" 
-              stroke={data.datasets[0].borderColor} 
+              stroke={dataset.borderColor} 
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 6 }}
@@ -62,7 +65,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, width = '10
       
       case 'bar':
         return (
-          <BarChart data={data.datasets[0].data.map((value, index) => ({
+          <BarChart data={dataset.data.map((value, index) => ({
             name: data.labels[index],
             value
           }))}>
@@ -73,7 +76,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, width = '10
             <Legend wrapperStyle={{ color: axisColor }} />
             <Bar 
               dataKey="value" 
-              fill={data.datasets[0].backgroundColor} 
+              fill={dataset.backgroundColor} 
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
@@ -85,7 +88,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, width = '10
             <Pie
               data={data.labels.map((label, index) => ({
                 name: label,
-                value: data.datasets[0].data[index]
+                value: dataset.data[index]
               }))}
               cx="50%"
               cy="50%"
