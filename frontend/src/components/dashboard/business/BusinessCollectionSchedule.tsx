@@ -30,7 +30,7 @@ export default function BusinessCollectionSchedule() {
     scheduledDate: c.scheduled_date ? new Date(c.scheduled_date).toLocaleDateString() : '—',
     scheduledTime: c.scheduled_time || '—',
     wasteType: c.waste_type,
-    volume: `${c.actual_volume || c.actual_weight || '?'} kg`,
+    volume: `${c.actual_volume || '?'} kg`,
     recyclerName: c.recycler_name || 'Pending',
     driverName: c.driver_name || 'Pending',
     status: c.status,
@@ -39,7 +39,7 @@ export default function BusinessCollectionSchedule() {
 
   const handleExport = () => downloadCSV('collection_schedule',
     ['ID', 'Date', 'Time', 'Type', 'Volume', 'Recycler', 'Driver', 'Status'],
-    displayData.map(r => [r.id, r.scheduledDate, r.scheduledTime, r.wasteType, r.volume, r.recyclerName, r.driverName, r.status]));
+    displayData.map(r => [r.id, r.scheduledDate, r.scheduledTime, r.wasteType ?? '', r.volume, r.recyclerName, r.driverName, r.status]));
 
   return (
     <div className="space-y-6">

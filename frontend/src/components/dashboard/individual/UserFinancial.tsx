@@ -14,7 +14,7 @@ export default function UserFinancial() {
     transactionsAPI.mine({ limit: 200 }).then(setTransactions).catch(() => {});
   }, []);
 
-  const totalSpent = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.amount, 0);
+  const totalSpent = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + t.gross_amount, 0);
   const ecoPoints = transactions.length * 10;
   const pointsValue = ecoPoints * 10;
   const savingsFromEco = Math.round(totalSpent * 0.05); // 5% discount on spending
