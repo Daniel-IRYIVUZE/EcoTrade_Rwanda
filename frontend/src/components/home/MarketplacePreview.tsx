@@ -29,16 +29,16 @@ const MarketplacePreview = () => {
 
         // Fetch bids for each listing
         const imageMap: Record<string, string> = {
-          'uco': 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=400',
-          'UCO': 'https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=400',
-          'glass': 'https://images.unsplash.com/photo-1527965498000-2d5b54c4e28c?w=400',
-          'Glass': 'https://images.unsplash.com/photo-1527965498000-2d5b54c4e28c?w=400',
-          'paper': 'https://images.unsplash.com/photo-1607582278229-2f688c009b02?w=400',
-          'Paper/Cardboard': 'https://images.unsplash.com/photo-1607582278229-2f688c009b02?w=400',
-          'plastic': 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400',
-          'Plastic': 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400',
-          'mixed': 'https://images.unsplash.com/photo-1527090526205-beaac8dc3a62?w=400',
-          'Mixed': 'https://images.unsplash.com/photo-1527090526205-beaac8dc3a62?w=400',
+          'uco': 'https://starpetroleumuae.com/wp-content/uploads/2024/07/usedcooking-oil-star-petroleum.png',
+          'UCO': 'https://iamhomesteader.com/wp-content/uploads/2022/05/oil-1.jpg',
+          'glass': 'https://sifiratikvakfi.org/asset/files/atik-turleri/gorseller/05593.jpg',
+          'Glass': 'https://www.recyclingtoday.com/remote/aHR0cHM6Ly9naWVjZG4uYmxvYi5jb3JlLndpbmRvd3MubmV0L2ZpbGV1cGxvYWRzL2ltYWdlLzIwMjMvMDQvMDUvYWRvYmVzdG9ja18zMjI1MjI1MTgtd2ViLmpwZw.V-hr-Sxu014.jpg?format=webp',
+          'paper': 'https://molpack.net/wp-content/uploads/2025/08/Is-Paper-Biodegradable-MOLPACK.jpg',
+          'Paper/Cardboard': 'https://www.reelpaper.com/cdn/shop/articles/paper-waste-why-it-matters-how-to-reduce-it-the-reel-talk-313906_1024x1024.jpg?v=1701927596',
+          'plastic': 'https://www.azocleantech.com/images/Article_Images/ImageForArticle_913(1).jpg',
+          'Plastic': 'https://www.unisort.co.uk/app/uploads/plastic-bottle-waste.png',
+          'mixed': 'https://www.shutterstock.com/image-photo/overflowing-dumpster-mixed-waste-including-260nw-2603239517.jpg',
+          'Mixed': 'https://www.insidewaste.com.au/wp-content/uploads/2018/10/mixed-waste-organic-material.jpg',
         };
 
         const processedListings = await Promise.all(
@@ -244,7 +244,7 @@ const MarketplacePreview = () => {
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
             <div className="text-2xl font-bold text-cyan-600">{stats.totalVolume}</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Tons Available</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Kilograms Available</div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
             <div className="text-2xl font-bold text-cyan-600">{stats.activeRecyclers}</div>

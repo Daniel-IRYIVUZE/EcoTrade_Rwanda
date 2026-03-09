@@ -40,7 +40,7 @@ const AboutPage = () => {
             <div className="absolute inset-0 bg-black/45 z-10" />
             <div
               className="w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=1600)' }}
+              style={{ backgroundImage: 'url(https://assets.vpm.org/dims4/default/ff86e8f/2147483647/strip/true/crop/1754x1080+83+0/resize/880x542!/quality/90/?url=https%3A%2F%2Fk1-prod-vpm.s3.us-east-2.amazonaws.com%2Fbrightspot%2F1f%2F06%2F3740fb7d46ac8e0cd955a7e75182%2Fnat-garbage-1.jpg)' }}
             />
           </div>
           <div className="relative z-20 h-full flex items-center justify-center text-center text-white px-4">

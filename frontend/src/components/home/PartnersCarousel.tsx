@@ -1,11 +1,11 @@
 
 const partners = [
-  { name: 'REMA', logo: '/images/partners/rema-logo.png', color: 'bg-cyan-600' },
-  { name: 'GGGI', logo: '/images/partners/gggi-logo.png', color: 'bg-cyan-600' },
-  { name: 'COPED', logo: '/images/partners/coped-logo.png', color: 'bg-blue-600' },
-  { name: 'ALU', logo: '/images/partners/alu-logo.png', color: 'bg-purple-600' },
-  { name: 'Bank of Kigali', logo: '/images/partners/bk-logo.png', color: 'bg-amber-500' },
-  { name: 'Rwanda Green Fund', logo: '/images/partners/fonerwa-logo.png', color: 'bg-green-600' },
+  { name: 'REMA', logo: 'https://www.rema.gov.rw/fileadmin/user_upload/REMA/Icons_logos/Rema_logo.png', color: 'bg-white ' },
+  { name: 'GGGI', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJc0368IQVXP9wjuOj5t5L1Jyd9TGZa8SAZA&s', color: 'bg-white' },
+  { name: 'COPED', logo: 'https://framerusercontent.com/images/sgtnwfAmpcPX5D6vtha1aCJB8jk.png?width=2164&height=1181', color: 'bg-white' },
+  { name: 'ALU', logo: 'https://start.alueducation.com/resource/1568810909000/AluLogoForAdmissions', color: 'bg-white' },
+  { name: 'Bank of Kigali', logo: 'https://seekvectorlogo.net/wp-content/uploads/2018/12/bank-of-kigali-vector-logo.png', color: 'bg-white' },
+  { name: 'Rwanda Green Fund', logo: 'https://kigali.impacthub.net/wp-content/uploads/2024/10/Group-1037.png', color: 'bg-white' },
 ];
 
 const PartnersCarousel = () => {

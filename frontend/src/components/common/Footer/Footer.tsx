@@ -55,7 +55,7 @@ const Footer = () => {
   ];
 
   const impactStats = [
-    { icon: <Recycle size={20} />, value: '0.1+', label: 'Tons Recycled' },
+    { icon: <Recycle size={20} />, value: '0.1+', label: 'Kilograms Recycled' },
     { icon: <Globe2 size={20} />, value: '3+', label: 'Partners' },
     { icon: <Leaf size={20} />, value: '1K+', label: 'CO₂ Saved (kg)' },
   ];

@@ -153,7 +153,7 @@ const QuickBidModal = ({ listing, onClose, onPlaceBid }: QuickBidModalProps) => 
             By placing a bid, you agree to EcoTrade's terms of service and commit to completing the collection if you win.
           </p>
 
-          {/* Action Buttons */}
+          {/* Action ButKilograms */}
           <div className="flex space-x-3">
             <button
               onClick={onClose}

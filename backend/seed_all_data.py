@@ -42,7 +42,7 @@ The EcoTrade platform is part of this vision, connecting hotels, recyclers, and 
         "tags": "rwanda,sustainability,green economy,waste management,africa",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://images.unsplash.com/photo-1473621038790-b778b4750efe?w=800",
+        "cover_image": "https://www.unicef.org/rwanda/sites/unicef.org.rwanda/files/styles/open_graph_image/public/UNI662540.webp.jpeg?itok=RwkgJwJ2",
     },
     {
         "title": "The Economic Value of Used Cooking Oil Recycling",
@@ -72,7 +72,7 @@ For hotels in Rwanda, proper UCO management offers multiple benefits:
         "tags": "UCO,biodiesel,cooking oil,recycling,energy",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+        "cover_image": "https://qsvenolia.com/wp-content/uploads/2025/01/used-cooking-oil.jpg",
     },
     {
         "title": "Hotel Inyange Kigali: A Case Study in Zero-Waste Operations",
@@ -98,7 +98,7 @@ By partnering with EcoTrade-certified recyclers, the hotel now:
         "tags": "case study,hotel,zero waste,kigali,recycling",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+        "cover_image": "https://kigali.impacthub.net/wp-content/uploads/elementor/thumbs/DSC01566-ri37wx5j5qom5d5dg8v3rrkfkh32rsnrymmu49brfk.jpg",
     },
     {
         "title": "Understanding Rwanda's Plastic Waste Regulations",
@@ -123,7 +123,7 @@ EcoTrade's digital platform automatically generates compliance reports, tracks w
         "tags": "regulations,REMA,plastic,compliance,hotel",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800",
+        "cover_image": "https://abdas.org/wp-content/uploads/2020/08/Rwanda-turns-plastic-into-construction-material.jpg",
     },
     {
         "title": "Top 5 Waste Streams That Hotels Are Missing Revenue On",
@@ -151,7 +151,7 @@ Worn-out bed linen and towels can be sold to industrial rag suppliers at 200 RWF
         "tags": "revenue,hotel,waste,recycling,sustainability",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800",
+        "cover_image": "https://wheeldonbrothers.co.uk/wp-content/uploads/2017/12/recycle-plastic-waste.jpg",
     },
     {
         "title": "Meet the Recyclers: EcoRevive Rwanda's Impact Story",
@@ -177,7 +177,7 @@ Real-time bidding, digital contracts, and GPS tracking have eliminated the ineff
         "tags": "recycler,case study,ecorevive,kigali,growth",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800",
+        "cover_image": "https://www.risa.gov.rw/fileadmin/_processed_/1/f/csm_kusanya_E_waste_29b4c27531.jpeg",
     },
     {
         "title": "How to Set Up a Waste Segregation Programme in Your Hotel",
@@ -215,7 +215,7 @@ Use EcoTrade's dashboard to monitor monthly volumes, revenue, and your Green Sco
         "tags": "guide,waste segregation,hotel,practical,recycling",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=800",
+        "cover_image": "https://137pillarshotels.com/cms/resources/sustainability/recycle-waste-01-01.jpg",
     },
     {
         "title": "Carbon Credits and Green Hotels: What Rwandan Businesses Need to Know",
@@ -242,7 +242,7 @@ Hotels with an EcoTrade Green Score above 80 are eligible to apply for Rwanda's 
         "tags": "carbon credits,sustainability,green hotel,rwanda,environment",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=800",
+        "cover_image": "https://aseza.org/wp-content/uploads/2025/06/climatechange_globe-on-grass-discord.webp",
     },
     {
         "title": "EcoTrade Rwanda Platform Update: New Features in 2025",
@@ -272,7 +272,7 @@ These updates are available to all registered users at no additional cost.""",
         "tags": "news,platform update,features,2025,app",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+        "cover_image": "https://furtherafrica.com/content-files/uploads/2025/11/rwanda_illustration.jpg",
     },
     {
         "title": "Composting at Scale: Lessons from Gorilla Hills Resort",
@@ -305,7 +305,7 @@ Gorilla Hills now holds a **Green Score of 100/100** on EcoTrade — the highest
         "tags": "composting,resort,case study,organic waste,gorilla hills",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800",
+        "cover_image": "https://islandschool.org/wp-content/uploads/2024/03/dorlan-composting-1.jpeg",
     },
     {
         "title": "The Role of Female Entrepreneurs in Rwanda's Recycling Sector",
@@ -328,7 +328,7 @@ Research across multiple African countries shows that women-led enterprises in t
         "tags": "women,entrepreneurs,recycling,rwanda,circular economy",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800",
+        "cover_image": "https://borgenproject.org/wp-content/uploads/52953514554_d67b1439b7_c.jpg",
     },
     {
         "title": "Metal Recycling Opportunities for Hospitality Businesses",
@@ -363,7 +363,7 @@ MetalPlus Recycling and similar EcoTrade-certified partners handle all these str
         "tags": "metal,recycling,aluminum,hotel,revenue",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+        "cover_image": "https://taylorsjunkyard.com/wp-content/uploads/2025/10/how-can-small-businesses-profit-from-commercial-metal-recycling.jpg",
     },
     {
         "title": "EcoTrade's Green Score: How It Works and Why It Matters",
@@ -401,7 +401,7 @@ MetalPlus Recycling and similar EcoTrade-certified partners handle all these str
         "tags": "green score,rating,sustainability,algorithm,hotels",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+        "cover_image": "https://nexioprojects.com/wp-content/uploads/2025/08/The-scoring-methodology-2.svg",
     },
     {
         "title": "Rwanda's Vision 2050: Green Growth and the Circular Economy",

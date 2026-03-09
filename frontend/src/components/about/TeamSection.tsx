@@ -16,7 +16,7 @@ const team = [
     name: 'Daniel IRYIVUZE',
     role: 'Founder & Lead Developer',
     bio: 'Software Engineering student at ALU with passion for circular economy and sustainable technology.',
-    image: '/images/default-avatar.svg',
+    image: 'https://img.freepik.com/premium-vector/male-avatar-icon-unknown-anonymous-person-default-avatar-profile-icon-social-media-user-business-man-man-profile-silhouette-isolated-white-background-vector-illustration_735449-122.jpg?w=360',
     linkedin: '#',
     twitter: '#',
     email: 'daniel@ecotrade.rw'
@@ -25,7 +25,7 @@ const team = [
     name: 'Neza David Tuyishimire',
     role: 'Project Supervisor',
     bio: 'Expert in software development and circular economy initiatives across East Africa.',
-    image: '/images/default-avatar.svg',
+    image: 'https://img.freepik.com/premium-vector/male-avatar-icon-unknown-anonymous-person-default-avatar-profile-icon-social-media-user-business-man-man-profile-silhouette-isolated-white-background-vector-illustration_735449-122.jpg?w=360',
     linkedin: '#',
     twitter: '#',
     email: 'david.neza@ecotrade.rw'
@@ -34,7 +34,7 @@ const team = [
     name: 'Marie Claire Uwase',
     role: 'Operations Lead',
     bio: 'Former sustainability manager at Marriott with deep HORECA sector expertise.',
-    image: '/images/default-avatar.svg',
+    image: 'https://clipart-library.com/2023/75-754849_computer-users-clipart-female-user-icon-hd-png.png',
     linkedin: '#',
     twitter: '#',
     email: 'marie@ecotrade.rw'
@@ -43,7 +43,7 @@ const team = [
     name: 'Jean Paul Habimana',
     role: 'Logistics Coordinator',
     bio: 'Supply chain expert focused on optimizing collection routes and driver management.',
-    image: '/images/default-avatar.svg',
+    image: 'https://img.freepik.com/premium-vector/male-avatar-icon-unknown-anonymous-person-default-avatar-profile-icon-social-media-user-business-man-man-profile-silhouette-isolated-white-background-vector-illustration_735449-122.jpg?w=360',
     linkedin: '#',
     twitter: '#',
     email: 'jp@ecotrade.rw'
@@ -77,7 +77,7 @@ const TeamSection = ({ onReadMore }: TeamSectionProps) => {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-fit h-fit object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>

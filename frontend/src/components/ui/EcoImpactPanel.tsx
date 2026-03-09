@@ -12,7 +12,7 @@ interface EcoMetric {
 }
 
 interface EcoImpactPanelProps {
-  co2Saved: number;      // metric tons
+  co2Saved: number;      // metric Kilograms
   wasteDiverted: number; // kg
   waterSaved?: number;   // liters
   energySaved?: number;  // kWh

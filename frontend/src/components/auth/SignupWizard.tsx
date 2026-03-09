@@ -200,7 +200,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
                   </div>
                 </div>
                 <input type="number" name="processingCapacity" value={formData.processingCapacity} onChange={handleInputChange}
-                  placeholder="Processing Capacity (tons/month)"
+                  placeholder="Processing Capacity (Kilograms/month)"
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
               </div>
             )}
@@ -216,7 +216,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
                   <select name="vehicleType" value={formData.vehicleType} onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
                     <option value="">Select vehicle type</option>
-                    <option value="truck">Truck (3.5 tons)</option>
+                    <option value="truck">Truck (3.5 Kilograms)</option>
                     <option value="pickup">Pickup</option>
                     <option value="motorcycle">Motorcycle</option>
                     <option value="tricycle">Tricycle</option>

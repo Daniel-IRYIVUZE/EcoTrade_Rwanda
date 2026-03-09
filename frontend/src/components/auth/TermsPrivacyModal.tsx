@@ -220,7 +220,7 @@ const TermsPrivacyModal = ({ isOpen, onAccept, onDecline }: TermsPrivacyModalPro
               </label>
             </div>
 
-            {/* Buttons */}
+            {/* ButKilograms */}
             <div className="flex gap-3 pt-4">
               <motion.button
                 whileHover={{ scale: 1.02 }}

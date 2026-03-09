@@ -55,8 +55,8 @@ const ProblemSolutionSection = ({ onReadMore }: ProblemSolutionSectionProps) => 
                     <span className="text-red-600 dark:text-red-400 font-bold">1</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1">800 tons daily to Nduba landfill</h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">Kigali generates 800-1,000 tons of waste daily, overwhelming existing infrastructure</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-1">800 Kilograms daily to Nduba landfill</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Kigali generates 800-1,000 Kilograms of waste daily, overwhelming existing infrastructure</p>
                   </div>
                 </div>
 
@@ -96,11 +96,11 @@ const ProblemSolutionSection = ({ onReadMore }: ProblemSolutionSectionProps) => 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-2xl font-bold text-red-600 dark:text-red-400">174M</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">tons Sub-Saharan waste (2016)</div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">Kilograms Sub-Saharan waste (2016)</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-red-600 dark:text-red-400">516M</div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">tons projected by 2050</div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">Kilograms projected by 2050</div>
                   </div>
                 </div>
               </div>

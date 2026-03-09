@@ -230,7 +230,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
             )}
           </div>
 
-          {/* Control Buttons */}
+          {/* Control ButKilograms */}
           <div className="flex items-center gap-1">
             {/* Mobile Close */}
             <button

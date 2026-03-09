@@ -313,8 +313,8 @@ class _WeighPhotoStep extends StatelessWidget {
                   const SizedBox(width: 12),
                   SegmentedButton<String>(
                     segments: const [
-                      ButtonSegment(value: 'kg', label: Text('kg')),
-                      ButtonSegment(value: 'tonnes', label: Text('T')),
+                      ButKilogramsegment(value: 'kg', label: Text('kg')),
+                      ButKilogramsegment(value: 'tonnes', label: Text('T')),
                     ],
                     selected: {unit},
                     onSelectionChanged: (s) => onUnitChange(s.first),

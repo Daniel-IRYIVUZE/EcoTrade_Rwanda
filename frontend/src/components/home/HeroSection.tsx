@@ -74,7 +74,7 @@ const HeroSection = () => {
             Turn commercial waste into verified income while reducing Kigali's landfill load.
           </p>
 
-          {/* CTA Buttons */}
+          {/* CTA ButKilograms */}
           <div className="flex flex-wrap gap-4">
             {user ? (
               <>

@@ -6,12 +6,12 @@ const stories = [
   {
     hotel: 'Hotel des Mille Collines',
     location: 'Nyarugenge, Kigali',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+    image: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/b3/ef/a9/hotel-des-mille-collines.jpg?w=900&h=500&s=1',
     before: 'RWF 50,000 monthly disposal cost',
     after: 'RWF 30,000 monthly revenue',
     metrics: {
       diversion: '85%',
-      co2: '12.5 tons',
+      co2: '125 Kg',
       revenue: '+RWF 80k'
     },
     quote: "EcoTrade transformed our waste from an expense into a profit center. The platform is incredibly easy to use.",
@@ -20,12 +20,12 @@ const stories = [
   {
     hotel: 'Kigali Marriott Hotel',
     location: 'Gasabo, Kigali',
-    image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+    image: 'https://assets.talentronic.com/photos/employers/241693/537233_l.jpg',
     before: 'RWF 75,000 monthly disposal cost',
     after: 'RWF 45,000 monthly revenue',
     metrics: {
       diversion: '92%',
-      co2: '18.3 tons',
+      co2: '180 Kg',
       revenue: '+RWF 120k'
     },
     quote: "The real-time tracking and instant payments have revolutionized how we handle our recycling program.",
@@ -34,12 +34,12 @@ const stories = [
   {
     hotel: 'Kigali Serena Hotel',
     location: 'Kicukiro, Kigali',
-    image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+    image: 'https://image-tc.galaxy.tf/wijpeg-b9x7g9tddzlq2za9p0d8wto8c/hr-dsc-5630.jpg',
     before: 'RWF 35,000 monthly disposal cost',
     after: 'RWF 25,000 monthly revenue',
     metrics: {
       diversion: '78%',
-      co2: '8.7 tons',
+      co2: '87 Kg',
       revenue: '+RWF 60k'
     },
     quote: "Our Green Score improved dramatically, and we now have verifiable data for our sustainability reports.",
@@ -157,7 +157,7 @@ const SuccessStories = () => {
             </div>
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Navigation ButKilograms */}
           <button
             onClick={prev}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 lg:-translate-x-6 bg-white dark:bg-gray-800 rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow"

@@ -465,7 +465,7 @@ Join the growing number of hotels partnering with certified recyclers through ou
         "slug": "serena-hotel-waste-success",
         "category": "case-study",
         "excerpt": "How one of Kigali's premier hotels achieved 70% waste diversion through strategic partnerships.",
-        "content": """When Kigali Serena Hotel joined EcoTrade Rwanda six months ago, they were disposing of over 2 tons of waste monthly. Today, they've achieved a 70% diversion rate, generating revenue while significantly reducing their environmental impact.
+        "content": """When Kigali Serena Hotel joined EcoTrade Rwanda six months ago, they were disposing of over 2 Kilograms of waste monthly. Today, they've achieved a 70% diversion rate, generating revenue while significantly reducing their environmental impact.
 
 **The Challenge:**
 Like many luxury hotels, Serena faced rising waste disposal costs and growing pressure to demonstrate environmental responsibility to eco-conscious guests.
@@ -542,7 +542,7 @@ Every stakeholder has a role to play in moving up the waste hierarchy.""",
         "slug": "greencycle-rwanda-profile",
         "category": "news",
         "excerpt": "Learn about one of Rwanda's leading recycling companies and their innovative approaches to waste management.",
-        "content": """GreenCycle Rwanda has been at the forefront of Rwanda's recycling revolution since 2018. With a focus on UCO, plastics, and glass, they've diverted over 500 tons of waste from landfills.
+        "content": """GreenCycle Rwanda has been at the forefront of Rwanda's recycling revolution since 2018. With a focus on UCO, plastics, and glass, they've diverted over 500 Kilograms of waste from landfills.
 
 **About GreenCycle:**
 Founded by environmental engineer Jean-Pierre Habimana, GreenCycle operates from a modern facility in Kigali's industrial zone. They employ 45 people and operate a fleet of 8 collection vehicles.

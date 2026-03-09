@@ -341,7 +341,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
       {renderStepIndicator()}
       {renderStep()}
 
-      {/* Action Buttons */}
+      {/* Action ButKilograms */}
       <div className="mt-8 flex flex-col sm:flex-row justify-between gap-3">
         {step > 1 && step < 4 && (
           <button

@@ -84,7 +84,7 @@ export default function BusinessNewListing() {
               </div>
               <div className="flex gap-2">
                 <div className="flex-1"><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Quantity *</label><input type="number" value={form.quantity} onChange={e => update('quantity', e.target.value)} placeholder="e.g. 500" className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>
-                <div className="w-24"><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label><select value={form.unit} onChange={e => update('unit', e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm"><option value="kg">kg</option><option value="L">Liters</option><option value="tons">Tons</option></select></div>
+                <div className="w-24"><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Unit</label><select value={form.unit} onChange={e => update('unit', e.target.value)} className="w-full px-3 py-2 border rounded-lg text-sm"><option value="kg">kg</option><option value="L">Liters</option><option value="Kilograms">Kilograms</option></select></div>
               </div>
             </div>
             <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label><textarea value={form.description} onChange={e => update('description', e.target.value)} rows={3} placeholder="Describe the waste quality, source, and any relevant details..." className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>

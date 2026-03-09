@@ -26,7 +26,7 @@ WASTE_IMAGES = {
     'glass':          'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=600&auto=format&fit=crop',
     'paper_cardboard':'https://images.unsplash.com/photo-1565793979079-60b777cf9f41?w=600&auto=format&fit=crop',
     'plastic':        'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=600&auto=format&fit=crop',
-    'metal':          'https://images.unsplash.com/photo-1605627079912-97c3810a11a4?w=600&auto=format&fit=crop',
+    'organic':          'https://images.unsplash.com/photo-1605627079912-97c3810a11a4?w=600&auto=format&fit=crop',
     'organic':        'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&auto=format&fit=crop',
     'mixed':          'https://images.unsplash.com/photo-1532996122724-e3c679b576d8?w=600&auto=format&fit=crop',
 }
@@ -111,7 +111,7 @@ def seed():
             'green_score': 88, 'total_waste_listed': 3200, 'total_revenue': 2800000,
             'waste_types': [
                 {'type': 'paper_cardboard', 'vol': 510, 'min_bid': 380, 'title': 'Paper & Cardboard — Office & Packaging Waste'},
-                {'type': 'metal', 'vol': 175, 'min_bid': 520, 'title': 'Scrap Metal — Kitchen Equipment & Fittings'},
+                {'type': 'Organic', 'vol': 175, 'min_bid': 520, 'title': 'Organic Food Waste — Kitchen Compost'},
             ]
         },
     ]

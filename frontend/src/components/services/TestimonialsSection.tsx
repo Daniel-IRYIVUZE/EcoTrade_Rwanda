@@ -107,7 +107,7 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        {/* Filter Buttons */}
+        {/* Filter ButKilograms */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           <button
             onClick={() => {
@@ -213,7 +213,7 @@ const TestimonialsSection = () => {
             </div>
           </div>
 
-          {/* Navigation Buttons */}
+          {/* Navigation ButKilograms */}
           {filteredTestimonials.length > 1 && (
             <>
               <button

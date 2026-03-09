@@ -66,14 +66,14 @@ const CATEGORY_MAP: Record<string, string> = {
 
 // High-quality Unsplash images per waste category
 const IMAGE_MAP: Record<string, string> = {
-  UCO: 'https://images.unsplash.com/photo-1528803689045-db3310f02a0e?w=600&auto=format&fit=crop',
-  Glass: 'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=600&auto=format&fit=crop',
-  Paper: 'https://images.unsplash.com/photo-1571204829887-3b8d69e4094d?w=600&auto=format&fit=crop',
-  Cardboard: 'https://images.unsplash.com/photo-1565793979079-60b777cf9f41?w=600&auto=format&fit=crop',
-  Plastic: 'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=600&auto=format&fit=crop',
-  Metal: 'https://images.unsplash.com/photo-1605627079912-97c3810a11a4?w=600&auto=format&fit=crop',
-  Organic: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&auto=format&fit=crop',
-  Mixed: 'https://images.unsplash.com/photo-1532996122724-e3c679b576d8?w=600&auto=format&fit=crop',
+  UCO: 'https://iamhomesteader.com/wp-content/uploads/2022/05/oil-1.jpg',
+  Glass: 'https://www.roadrunnerwm.com/hubfs/Blog/Hero%20Images/RR-Blog-Why-Glass-Recycling-Going-Away.jpg',
+  Paper: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTvZggnil69mXGV3c0uL-pnTkKhYdW_IOB1A&s',
+  Cardboard: 'https://miro.medium.com/1*j9BnLsdm0LWdsDAcGU5tRA.jpeg',
+  Plastic: 'https://www.azocleantech.com/images/Article_Images/ImageForArticle_913(1).jpg',
+  Metal: 'https://business-waste.s3.eu-west-2.amazonaws.com/wp-content/uploads/2024/02/13150342/metal-header.jpg',
+  Organic: 'https://www.bu.edu/sph/files/2024/02/composting_medium-size.jpg',
+  Mixed: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZ5nRlDSWJYKlPbc8vQzi4uFTd_STPRQAxgQ&s',
 };
 
 function getTimeLeft(expiresAt?: string): { text: string; minutes: number } {

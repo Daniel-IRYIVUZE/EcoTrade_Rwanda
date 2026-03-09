@@ -178,7 +178,7 @@ const ListingDetailModal = ({ listing, onClose, onBid }: ListingDetailModalProps
                 </div>
               )}
 
-              {/* Action Buttons */}
+              {/* Action ButKilograms */}
               <div className="flex space-x-4">
                 <button
                   onClick={onBid}
