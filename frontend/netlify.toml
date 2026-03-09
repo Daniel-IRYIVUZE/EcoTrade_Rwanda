@@ -1,0 +1,62 @@
+# Netlify deployment configuration for EcoTrade Rwanda Web Frontend
+# Docs: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+# ── Build Settings ─────────────────────────────────────────────────────────────
+[build]
+  command       = "npm run build"
+  publish       = "dist"
+  base          = "."
+
+[build.environment]
+  NODE_VERSION  = "20"
+  NPM_VERSION   = "10"
+  # Set your backend API URL as a build-time env variable in the Netlify dashboard:
+  # VITE_API_BASE_URL = "https://your-backend.example.com/api"
+
+# ── Dev Server (netlify dev) ────────────────────────────────────────────────────
+[dev]
+  command       = "npm run dev"
+  port          = 5174
+  targetPort    = 5174
+  framework     = "vite"
+
+# ── SPA Catch-All Redirect (React Router) ──────────────────────────────────────
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+
+# ── Security & Performance Headers ─────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options          = "DENY"
+    X-Content-Type-Options   = "nosniff"
+    X-XSS-Protection         = "1; mode=block"
+    Referrer-Policy          = "strict-origin-when-cross-origin"
+    Permissions-Policy       = "camera=(), microphone=(), geolocation=(self)"
+
+# Long-lived cache for hashed static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# No-cache for the HTML entry point (always revalidate)
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# ── Context-Specific Overrides ──────────────────────────────────────────────────
+# Production branch
+[context.production]
+  command = "npm run build"
+
+# Preview deploys (pull requests)
+[context.deploy-preview]
+  command = "npm run build"
+
+# Branch deploys
+[context.branch-deploy]
+  command = "npm run build"
