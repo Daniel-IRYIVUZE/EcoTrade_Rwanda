@@ -67,7 +67,7 @@ class Driver(Base):
     updated_at      = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
     # Relationships
-    user        = relationship("User", back_populates="driver")
+    user        = relationship("User", back_populates="driver", lazy="joined")
     vehicle     = relationship("Vehicle", back_populates="driver")
     recycler    = relationship("Recycler", foreign_keys=[recycler_id])
     collections = relationship("Collection", back_populates="driver")

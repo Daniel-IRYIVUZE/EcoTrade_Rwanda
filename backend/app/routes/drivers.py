@@ -116,3 +116,44 @@ def list_my_vehicles(db: Session = Depends(get_db),
     if not driver:
         return []
     return crud_vehicle.get_by_driver(db, driver.id)
+
+
+# ── Fleet Vehicles (recycler-managed) ────────────────────────────────────────
+
+@router.get("/fleet-vehicles", response_model=list[VehicleRead],
+            dependencies=[Depends(require_role(UserRole.recycler, UserRole.admin))])
+def list_fleet_vehicles(db: Session = Depends(get_db),
+                        current_user: User = Depends(get_current_active_user)):
+    """Recycler: list all vehicles in their fleet."""
+    from app.crud import crud_recycler as _crud_recycler
+    recycler = _crud_recycler.get_by_user(db, current_user.id)
+    if not recycler:
+        raise HTTPException(404, "Recycler profile not found.")
+    return crud_vehicle.get_by_recycler(db, recycler.id)
+
+
+@router.post("/fleet-vehicles", response_model=VehicleRead, status_code=201,
+             dependencies=[Depends(require_role(UserRole.recycler, UserRole.admin))])
+def create_fleet_vehicle(payload: VehicleCreate, db: Session = Depends(get_db),
+                         current_user: User = Depends(get_current_active_user)):
+    """Recycler: register a new vehicle in their fleet."""
+    from app.crud import crud_recycler as _crud_recycler
+    recycler = _crud_recycler.get_by_user(db, current_user.id)
+    if not recycler:
+        raise HTTPException(404, "Recycler profile not found.")
+    return crud_vehicle.create(db, obj_in=payload, recycler_id=recycler.id)
+
+
+@router.delete("/fleet-vehicles/{vehicle_id}", status_code=204,
+               dependencies=[Depends(require_role(UserRole.recycler, UserRole.admin))])
+def delete_fleet_vehicle(vehicle_id: int, db: Session = Depends(get_db),
+                         current_user: User = Depends(get_current_active_user)):
+    """Recycler: remove a vehicle from their fleet."""
+    from app.crud import crud_recycler as _crud_recycler
+    recycler = _crud_recycler.get_by_user(db, current_user.id)
+    if not recycler:
+        raise HTTPException(404, "Recycler profile not found.")
+    v = crud_vehicle.get(db, vehicle_id)
+    if not v or v.recycler_id != recycler.id:
+        raise HTTPException(404, "Vehicle not found in your fleet.")
+    crud_vehicle.remove(db, id=vehicle_id)

@@ -1,7 +1,7 @@
 """schemas/collection.py"""
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel
+from typing import Any, Optional, List
+from pydantic import BaseModel, model_validator
 from app.models.collection import CollectionStatus
 
 
@@ -45,21 +45,58 @@ class CollectionRead(BaseModel):
     id:             int
     listing_id:     int
     hotel_id:       int
-    recycler_id:    Optional[int]
-    driver_id:      Optional[int]
-    vehicle_id:     Optional[int]
+    recycler_id:    Optional[int] = None
+    driver_id:      Optional[int] = None
+    vehicle_id:     Optional[int] = None
     status:         CollectionStatus
-    scheduled_date: Optional[datetime]
-    scheduled_time: Optional[str]
-    started_at:     Optional[datetime]
-    arrived_at:     Optional[datetime]
-    collected_at:   Optional[datetime]
-    completed_at:   Optional[datetime]
-    actual_volume:  Optional[float]
-    notes:          Optional[str]
-    driver_notes:   Optional[str]
+    scheduled_date: Optional[datetime] = None
+    scheduled_time: Optional[str] = None
+    started_at:     Optional[datetime] = None
+    arrived_at:     Optional[datetime] = None
+    collected_at:   Optional[datetime] = None
+    completed_at:   Optional[datetime] = None
+    actual_volume:  Optional[float] = None
+    notes:          Optional[str] = None
+    driver_notes:   Optional[str] = None
     proofs:         List[ProofRead] = []
     created_at:     datetime
     updated_at:     datetime
+
+    # Denormalized fields populated from ORM relationships
+    hotel_name:    Optional[str] = None
+    recycler_name: Optional[str] = None
+    driver_name:   Optional[str] = None
+    waste_type:    Optional[str] = None
+    volume:        Optional[float] = None
+    unit:          Optional[str] = None
+    location:      Optional[str] = None
+    earnings:      Optional[float] = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def enrich_from_relationships(cls, data: Any) -> Any:
+        if not hasattr(data, '__dict__'):
+            return data
+        try:
+            if data.hotel:
+                data.__dict__.setdefault('hotel_name', data.hotel.hotel_name)
+                data.__dict__.setdefault('location',   data.hotel.address)
+            if data.recycler:
+                data.__dict__.setdefault('recycler_name', data.recycler.company_name)
+            if data.driver and data.driver.user:
+                data.__dict__.setdefault('driver_name', data.driver.user.full_name or data.driver.user.email)
+            if data.listing:
+                listing = data.listing
+                data.__dict__.setdefault('waste_type', listing.waste_type.value if listing.waste_type else None)
+                data.__dict__.setdefault('volume',     listing.volume)
+                data.__dict__.setdefault('unit',       listing.unit)
+                # Fallback hotel_name from listing if not already set
+                if not data.__dict__.get('hotel_name') and listing.hotel:
+                    data.__dict__['hotel_name'] = listing.hotel.hotel_name
+            if data.transaction:
+                data.__dict__.setdefault('earnings', data.transaction.net_amount or 0.0)
+        except Exception:
+            pass
+        return data
 
     model_config = {"from_attributes": True}

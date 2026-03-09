@@ -1,7 +1,7 @@
 """schemas/transaction.py"""
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel
+from typing import Optional, Any
+from pydantic import BaseModel, model_validator
 from app.models.transaction import TransactionStatus, PaymentMethod, PaymentStatus
 
 
@@ -17,19 +17,37 @@ class TransactionCreate(BaseModel):
 
 class TransactionRead(BaseModel):
     id:             int
-    listing_id:     Optional[int]
-    collection_id:  Optional[int]
-    hotel_id:       Optional[int]
-    recycler_id:    Optional[int]
+    listing_id:     Optional[int] = None
+    collection_id:  Optional[int] = None
+    hotel_id:       Optional[int] = None
+    recycler_id:    Optional[int] = None
     reference:      str
     gross_amount:   float
     platform_fee:   float
     net_amount:     float
     status:         TransactionStatus
     payment_method: PaymentMethod
-    description:    Optional[str]
-    completed_at:   Optional[datetime]
+    description:    Optional[str] = None
+    hotel_name:     Optional[str] = None
+    recycler_name:  Optional[str] = None
+    completed_at:   Optional[datetime] = None
     created_at:     datetime
+    updated_at:     Optional[datetime] = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def extract_related_names(cls, data: Any) -> Any:
+        if hasattr(data, 'hotel') and data.hotel:
+            try:
+                data.__dict__.setdefault('hotel_name', data.hotel.hotel_name)
+            except Exception:
+                pass
+        if hasattr(data, 'recycler') and data.recycler:
+            try:
+                data.__dict__.setdefault('recycler_name', data.recycler.company_name)
+            except Exception:
+                pass
+        return data
 
     model_config = {"from_attributes": True}
 

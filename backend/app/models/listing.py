@@ -30,6 +30,7 @@ class ListingStatus(str, enum.Enum):
     draft     = "draft"
     open      = "open"
     accepting = "accepting"   # bid accepted, awaiting collection
+    closed    = "closed"      # listing closed / bid won
     collected = "collected"
     completed = "completed"
     expired   = "expired"

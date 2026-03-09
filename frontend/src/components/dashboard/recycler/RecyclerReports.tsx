@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
 import { downloadCSV, downloadPDF } from '../../../utils/dataStore';
-import { collectionsAPI, transactionsAPI } from '../../../services/api';
-import type { Collection, Transaction } from '../../../services/api';
+import { collectionsAPI, transactionsAPI, recyclersAPI } from '../../../services/api';
+import type { Collection, Transaction, RecyclerProfile } from '../../../services/api';
 import { Download } from 'lucide-react';
 import DataTable from '../DataTable';
-import { companyProfile } from './_shared';
 
 export default function RecyclerReports() {
   const [generating, setGenerating] = useState<number | null>(null);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [recyclerProfile, setRecyclerProfile] = useState<RecyclerProfile | null>(null);
   const now = new Date();
   const month = now.toLocaleString('default', { month: 'long', year: 'numeric' });
 
   useEffect(() => {
     collectionsAPI.list({ limit: 500 }).then(setCollections).catch(() => {});
-    transactionsAPI.list({ limit: 500 }).then(setTransactions).catch(() => {});
+    transactionsAPI.mine({ limit: 500 }).then(setTransactions).catch(() => {});
+    recyclersAPI.me().then(setRecyclerProfile).catch(() => {});
   }, []);
+
+  const companyName = recyclerProfile?.company_name || 'EcoTrade Recycler';
 
   const generateReport = (type: string, id: number) => {
     setGenerating(id);
@@ -25,12 +28,12 @@ export default function RecyclerReports() {
         downloadCSV(`collections_${month.replace(/ /g, '_')}`, ['ID', 'Hotel', 'Driver', 'Type', 'Volume', 'Status', 'Date', 'Earnings'],
           collections.map(c => [String(c.id), c.hotel_name || 'N/A', c.driver_name || 'N/A', c.waste_type || '', String(c.volume), c.status, c.scheduled_date || '', String(c.earnings || 0)]));
       } else if (type === 'Revenue') {
-        downloadCSV(`revenue_${month.replace(/ /g, '_')}`, ['ID', 'Date', 'From', 'Type', 'Amount', 'Fee', 'Net', 'Status'],
-          transactions.map(t => [String(t.id), t.created_at ? new Date(t.created_at).toLocaleDateString() : '', t.from_user || '', t.waste_type || '', String(t.amount ?? 0), String(t.fee || 0), String((t.amount ?? 0) - (t.fee || 0)), t.status]));
+        downloadCSV(`revenue_${month.replace(/ /g, '_')}`, ['ID', 'Date', 'Hotel', 'Description', 'Gross Amount', 'Platform Fee', 'Net Amount', 'Status'],
+          transactions.map(t => [String(t.id), t.created_at ? new Date(t.created_at).toLocaleDateString() : '', t.hotel_name || '', t.description || '', String(t.gross_amount ?? 0), String(t.platform_fee ?? 0), String(t.net_amount ?? 0), t.status]));
       } else {
         const totalVol = collections.reduce((s, c) => s + (c.volume || 0), 0);
-        downloadPDF(`${type} Report — ${companyProfile.name}`,
-          `${type.toUpperCase()} REPORT\n${companyProfile.name} — ${month}\n\nTotal Collections: ${collections.length}\nTotal Volume: ${totalVol.toLocaleString()} units\nEarnings: RWF ${transactions.reduce((s, t) => s + (t.amount ?? 0), 0).toLocaleString()}\n\nEcoTrade Rwanda | Kigali, Rwanda`);
+        downloadPDF(`${type} Report — ${companyName}`,
+          `${type.toUpperCase()} REPORT\n${companyName} — ${month}\n\nTotal Collections: ${collections.length}\nTotal Volume: ${totalVol.toLocaleString()} units\nEarnings: RWF ${transactions.reduce((s, t) => s + (t.gross_amount ?? 0), 0).toLocaleString()}\n\nEcoTrade Rwanda | Kigali, Rwanda`);
       }
       setGenerating(null);
     }, 600);

@@ -12,6 +12,7 @@ import RecyclerSettings from '../../components/dashboard/recycler/RecyclerSettin
 import RecyclerReports from '../../components/dashboard/recycler/RecyclerReports';
 import RecyclerZones from '../../components/dashboard/recycler/RecyclerZones';
 import RecyclerMessages from '../../components/dashboard/recycler/RecyclerMessages';
+import RecyclerDrivers from '../../components/dashboard/recycler/RecyclerDrivers';
 
 /* ─── Main: RecyclerDashboard Router ────────────────────────── */
 const RecyclerDashboard = () => (
@@ -19,6 +20,7 @@ const RecyclerDashboard = () => (
     <Route index element={<RecyclerOverview />} />
     <Route path="overview" element={<RecyclerOverview />} />
     <Route path="fleet" element={<RecyclerFleet />} />
+    <Route path="drivers" element={<RecyclerDrivers />} />
     <Route path="marketplace" element={<RecyclerAvailableWaste />} />
     <Route path="bids" element={<RecyclerBids />} />
     <Route path="collections" element={<RecyclerActiveCollections />} />

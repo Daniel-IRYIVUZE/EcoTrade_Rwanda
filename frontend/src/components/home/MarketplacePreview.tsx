@@ -37,8 +37,12 @@ const MarketplacePreview = () => {
           'Paper/Cardboard': 'https://www.reelpaper.com/cdn/shop/articles/paper-waste-why-it-matters-how-to-reduce-it-the-reel-talk-313906_1024x1024.jpg?v=1701927596',
           'plastic': 'https://www.azocleantech.com/images/Article_Images/ImageForArticle_913(1).jpg',
           'Plastic': 'https://www.unisort.co.uk/app/uploads/plastic-bottle-waste.png',
-          'mixed': 'https://www.shutterstock.com/image-photo/overflowing-dumpster-mixed-waste-including-260nw-2603239517.jpg',
-          'Mixed': 'https://www.insidewaste.com.au/wp-content/uploads/2018/10/mixed-waste-organic-material.jpg',
+          'metal': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQORmJ-A_Xj0yfK4pmBbNI8a8P4nAFH9hymvg&s',
+          'Metal': 'https://business-waste.s3.eu-west-2.amazonaws.com/wp-content/uploads/2024/02/13150342/metal-header.jpg',
+          'organic': 'https://www.bu.edu/sph/files/2024/02/composting_medium-size.jpg',
+          'Organic': 'https://www.bu.edu/sph/files/2024/02/composting_medium-size.jpg',
+          'mixed': 'https://www.mncenter.org/sites/default/files/full-images/AdobeStock_354975790%20(1).jpeg',
+          'Mixed': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwAyTmFGbkOcrBrzgJCVfiojxSTiOR-CV4Zg&s',
         };
 
         const processedListings = await Promise.all(

@@ -40,7 +40,7 @@ export default function AdminOverview() {
         usersAPI.list({ limit: 500 }).catch(() => [] as APIUser[]),
         listingsAPI.list({ limit: 500 }).catch(() => [] as WasteListing[]),
         transactionsAPI.list({ limit: 500 }).catch(() => [] as Transaction[]),
-        collectionsAPI.list({ limit: 500 }).catch(() => [] as Collection[]),
+        collectionsAPI.all({ limit: 500 }).catch(() => [] as Collection[]),
       ]);
       setUsers(us);
       setListings(ls);
@@ -60,11 +60,13 @@ export default function AdminOverview() {
   const recyclers    = users.filter(u => u.role === 'recycler');
   const drivers      = users.filter(u => u.role === 'driver');
   const pendingUsers = users.filter(u => u.status === 'pending');
-  const totalRevenue = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + (t.fee || 0), 0);
-  const totalWaste   = collections.filter(c => c.status === 'completed').reduce((s, c) => s + (c.volume || 0), 0);
+  const totalRevenue = transactions.filter(t => t.status === 'completed').reduce((s, t) => s + (t.platform_fee || 0), 0);
+  const totalWaste   = collections.filter(c => c.status === 'completed').reduce((s, c) => s + (c.actual_volume || c.volume || 0), 0);
   const co2Saved     = (totalWaste * 1.3) / 1000;
   const openListings = listings.filter(l => l.status === 'open');
   const activeRoutes = collections.filter(c => c.status === 'en_route');
+
+  console.log("Here are the totals", totalWaste, co2Saved)
 
   const last7 = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() - (6 - i));
@@ -106,8 +108,8 @@ export default function AdminOverview() {
       id: `txn-${t.id}-${i}`,
       icon: <DollarSign size={11} />,
       iconBg: 'bg-cyan-600',
-      title: `Payment RWF ${(t.amount ?? 0).toLocaleString()} received`,
-      subtitle: `${t.from_user ?? ''} → ${t.to_user ?? ''}`,
+      title: `Payment RWF ${(t.gross_amount ?? 0).toLocaleString()} received`,
+      subtitle: `${t.hotel_name ?? ''} → ${t.recycler_name ?? ''}`,
       time: new Date(t.created_at).toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }),
       badge: 'Paid',
       badgeColor: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300',

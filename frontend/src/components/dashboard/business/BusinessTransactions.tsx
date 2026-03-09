@@ -26,24 +26,24 @@ export default function BusinessTransactions() {
   const filtered = statusFilter === 'all' ? transactions : transactions.filter(t => t.status === statusFilter);
 
   const completed = transactions.filter(t => t.status === 'completed');
-  const totalEarned = completed.reduce((s, t) => s + (t.amount || 0), 0);
-  const totalFees   = completed.reduce((s, t) => s + (t.fee || 0), 0);
+  const totalEarned = completed.reduce((s, t) => s + (t.gross_amount || 0), 0);
+  const totalFees   = completed.reduce((s, t) => s + (t.platform_fee || 0), 0);
   const net = totalEarned - totalFees;
 
   const displayData = filtered.map(t => ({
     id: t.id,
     date: t.created_at ? new Date(t.created_at).toLocaleDateString() : '—',
-    recycler: t.to_user || '—',
-    type: t.waste_type || '—',
-    amount: t.amount || 0,
-    commission: t.fee || 0,
-    net: (t.amount || 0) - (t.fee || 0),
+    recycler: t.recycler_name || '—',
+    description: t.description || '—',
+    amount: t.gross_amount || 0,
+    commission: t.platform_fee || 0,
+    net: t.net_amount || 0,
     status: t.status,
   }));
 
   const handleExport = () => downloadCSV('transactions',
-    ['ID', 'Date', 'Recycler', 'Type', 'Amount', 'Commission', 'Net', 'Status'],
-    displayData.map(r => [r.id, r.date, r.recycler, r.type, r.amount, r.commission, r.net, r.status]));
+    ['ID', 'Date', 'Recycler', 'Description', 'Gross Amount', 'Fee', 'Net', 'Status'],
+    displayData.map(r => [r.id, r.date, r.recycler, r.description, r.amount, r.commission, r.net, r.status]));
 
   return (
     <div className="space-y-6">

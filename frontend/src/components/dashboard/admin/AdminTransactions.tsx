@@ -23,13 +23,15 @@ export default function AdminTransactions() {
 
   const filtered = transactions.filter(t =>
     (statusFilter === 'all' || t.status === statusFilter) &&
-    ((t.from_user || '').toLowerCase().includes(search.toLowerCase()) ||
-     (t.to_user || '').toLowerCase().includes(search.toLowerCase()) ||
-     String(t.listing_id || '').toLowerCase().includes(search.toLowerCase()))
+    ((t.hotel_name || '').toLowerCase().includes(search.toLowerCase()) ||
+     (t.recycler_name || '').toLowerCase().includes(search.toLowerCase()) ||
+     (t.reference || '').toLowerCase().includes(search.toLowerCase()) ||
+     (t.description || '').toLowerCase().includes(search.toLowerCase()) ||
+     String(t.listing_id || '').includes(search))
   );
 
-  const totalRevenue = filtered.filter(t => t.status === 'completed').reduce((s, t) => s + t.amount, 0);
-  const totalFees = filtered.filter(t => t.status === 'completed').reduce((s, t) => s + t.fee, 0);
+  const totalRevenue = filtered.filter(t => t.status === 'completed').reduce((s, t) => s + (t.gross_amount ?? 0), 0);
+  const totalFees = filtered.filter(t => t.status === 'completed').reduce((s, t) => s + (t.platform_fee ?? 0), 0);
 
   const handleStatusChange = (t: Transaction, newStatus: Transaction['status']) => {
     setTransactions(prev => prev.map(x => x.id === t.id ? { ...x, status: newStatus } : x));
@@ -37,11 +39,12 @@ export default function AdminTransactions() {
   };
 
   const handleExport = () => {
-    downloadCSV('transactions', 
-      ['ID', 'Listing', 'From', 'To', 'Amount', 'Platform Fee', 'Status', 'Date'],
+    downloadCSV('transactions',
+      ['ID', 'Reference', 'Hotel', 'Recycler', 'Gross Amount', 'Platform Fee', 'Net Amount', 'Payment Method', 'Status', 'Description', 'Date'],
       filtered.map(t => [
-        String(t.id), String(t.listing_id || ''), t.from_user || '', t.to_user || '',
-        String(t.amount ?? 0), String(t.fee || 0), t.status,
+        String(t.id), t.reference || '', t.hotel_name || '', t.recycler_name || '',
+        String(t.gross_amount ?? 0), String(t.platform_fee ?? 0), String(t.net_amount ?? 0),
+        t.payment_method || '', t.status, t.description || '',
         t.created_at ? new Date(t.created_at).toLocaleDateString() : ''
       ])
     );
@@ -66,7 +69,7 @@ export default function AdminTransactions() {
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total Volume', value: `RWF ${totalRevenue.toLocaleString()}`, color: 'border-l-green-500' },
+          { label: 'Total Revenue', value: `RWF ${totalRevenue.toLocaleString()}`, color: 'border-l-green-500' },
           { label: 'Platform Fees', value: `RWF ${totalFees.toLocaleString()}`, color: 'border-l-blue-500' },
           { label: 'Transactions', value: filtered.length, color: 'border-l-cyan-500' },
         ].map(s => (
@@ -112,7 +115,7 @@ export default function AdminTransactions() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
               <tr>
-                {['ID', 'Listing', 'From', 'To', 'Amount', 'Fee', 'Status', 'Date', ''].map(h => (
+                {['ID', 'Reference', 'Hotel', 'Recycler', 'Gross Amount', 'Fee', 'Net', 'Status', 'Date', ''].map(h => (
                   <th key={h} className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400">
                     {h}
                   </th>
@@ -122,29 +125,30 @@ export default function AdminTransactions() {
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="text-center py-8 text-gray-400 dark:text-gray-500">
+                  <td colSpan={10} className="text-center py-8 text-gray-400 dark:text-gray-500">
                     No transactions found
                   </td>
                 </tr>
               )}
               {filtered.map(t => (
                 <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900">
+                  <td className="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">#{t.id}</td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">
-                    {String(t.id).substring(0, 8)}...
+                    {(t.reference || '—').substring(0, 16)}{t.reference && t.reference.length > 16 ? '…' : ''}
                   </td>
-                  <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">
-                    {String(t.listing_id || '—').substring(0, 8)}
-                  </td>
-                  <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{t.from_user}</td>
-                  <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{t.to_user}</td>
+                  <td className="px-4 py-3 text-xs text-gray-800 dark:text-gray-200 font-medium">{t.hotel_name || '—'}</td>
+                  <td className="px-4 py-3 text-xs text-gray-600 dark:text-gray-400">{t.recycler_name || '—'}</td>
                   <td className="px-4 py-3 font-semibold text-gray-800 dark:text-gray-200">
-                    RWF {(t.amount ?? 0).toLocaleString()}
+                    RWF {(t.gross_amount ?? 0).toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-green-600 dark:text-green-400 text-xs">
-                    +RWF {(t.fee || 0).toLocaleString()}
+                    +RWF {(t.platform_fee ?? 0).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-cyan-700 dark:text-cyan-300 font-medium">
+                    RWF {(t.net_amount ?? 0).toLocaleString()}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[t.status]}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLORS[t.status] || ''}`}>
                       {t.status}
                     </span>
                   </td>
@@ -215,15 +219,19 @@ export default function AdminTransactions() {
             <div className="p-5 space-y-3 text-sm">
               {[
                 ['Transaction ID', `#${selected.id}`],
-                ['Listing ID', String(selected.listing_id || '—').substring(0, 8)],
-                ['From', selected.from_user || '—'],
-                ['To', selected.to_user || '—'],
-                ['Amount', `RWF ${(selected.amount ?? 0).toLocaleString()}`],
-                ['Platform Fee', `RWF ${(selected.fee || 0).toLocaleString()}`],
-                ['Net to Seller', `RWF ${((selected.amount ?? 0) - (selected.fee || 0)).toLocaleString()}`],
-                ['Waste Type', selected.waste_type || '—'],
+                ['Reference', selected.reference || '—'],
+                ['Hotel (Seller)', selected.hotel_name || '—'],
+                ['Recycler (Buyer)', selected.recycler_name || '—'],
+                ['Listing ID', selected.listing_id ? `#${selected.listing_id}` : '—'],
+                ['Collection ID', selected.collection_id ? `#${selected.collection_id}` : '—'],
+                ['Gross Amount', `RWF ${(selected.gross_amount ?? 0).toLocaleString()}`],
+                ['Platform Fee (5%)', `RWF ${(selected.platform_fee ?? 0).toLocaleString()}`],
+                ['Net to Hotel', `RWF ${(selected.net_amount ?? 0).toLocaleString()}`],
+                ['Payment Method', selected.payment_method?.replace('_', ' ') || '—'],
+                ['Description', selected.description || '—'],
                 ['Status', selected.status],
-                ['Date', selected.created_at ? new Date(selected.created_at).toLocaleString() : '—']
+                ['Completed', selected.completed_at ? new Date(selected.completed_at).toLocaleString() : '—'],
+                ['Created', selected.created_at ? new Date(selected.created_at).toLocaleString() : '—'],
               ].map(([k, v]) => (
                 <div key={String(k)} className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">{String(k)}</span>

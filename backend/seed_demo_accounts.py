@@ -22,13 +22,21 @@ def past(days=3):
     return (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
 
 WASTE_IMAGES = {
-    'uco':            'https://images.unsplash.com/photo-1528803689045-db3310f02a0e?w=600&auto=format&fit=crop',
-    'glass':          'https://images.unsplash.com/photo-1577401239170-897942555fb3?w=600&auto=format&fit=crop',
-    'paper_cardboard':'https://images.unsplash.com/photo-1565793979079-60b777cf9f41?w=600&auto=format&fit=crop',
-    'plastic':        'https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=600&auto=format&fit=crop',
-    'organic':          'https://images.unsplash.com/photo-1605627079912-97c3810a11a4?w=600&auto=format&fit=crop',
-    'organic':        'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&auto=format&fit=crop',
-    'mixed':          'https://images.unsplash.com/photo-1532996122724-e3c679b576d8?w=600&auto=format&fit=crop',
+    'uco':            'https://starpetroleumuae.com/wp-content/uploads/2024/07/usedcooking-oil-star-petroleum.png',
+    'UCO':            'https://iamhomesteader.com/wp-content/uploads/2022/05/oil-1.jpg',
+    'glass':          'https://sifiratikvakfi.org/asset/files/atik-turleri/gorseller/05593.jpg',
+    'Glass':          'https://www.recyclingtoday.com/remote/aHR0cHM6Ly9naWVjZG4uYmxvYi5jb3JlLndpbmRvd3MubmV0L2ZpbGV1cGxvYWRzL2ltYWdlLzIwMjMvMDQvMDUvYWRvYmVzdG9ja18zMjI1MjI1MTgtd2ViLmpwZw.V-hr-Sxu014.jpg?format=webp',
+    'paper':          'https://molpack.net/wp-content/uploads/2025/08/Is-Paper-Biodegradable-MOLPACK.jpg',
+    'paper_cardboard':'https://www.reelpaper.com/cdn/shop/articles/paper-waste-why-it-matters-how-to-reduce-it-the-reel-talk-313906_1024x1024.jpg?v=1701927596',
+    'Paper/Cardboard':'https://www.reelpaper.com/cdn/shop/articles/paper-waste-why-it-matters-how-to-reduce-it-the-reel-talk-313906_1024x1024.jpg?v=1701927596',
+    'plastic':        'https://www.azocleantech.com/images/Article_Images/ImageForArticle_913(1).jpg',
+    'Plastic':        'https://www.unisort.co.uk/app/uploads/plastic-bottle-waste.png',
+    'metal':          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQORmJ-A_Xj0yfK4pmBbNI8a8P4nAFH9hymvg&s',
+    'Metal':          'https://business-waste.s3.eu-west-2.amazonaws.com/wp-content/uploads/2024/02/13150342/metal-header.jpg',
+    'organic':        'https://www.bu.edu/sph/files/2024/02/composting_medium-size.jpg',
+    'Organic':        'https://www.bu.edu/sph/files/2024/02/composting_medium-size.jpg',
+    'mixed':          'https://www.mncenter.org/sites/default/files/full-images/AdobeStock_354975790%20(1).jpeg',
+    'Mixed':          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwAyTmFGbkOcrBrzgJCVfiojxSTiOR-CV4Zg&s',
 }
 
 def seed():

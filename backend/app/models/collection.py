@@ -45,13 +45,13 @@ class Collection(Base):
     updated_at        = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 
     # Relationships
-    listing     = relationship("WasteListing", back_populates="collection")
-    hotel       = relationship("Hotel", back_populates="collections")
-    recycler    = relationship("Recycler", back_populates="collections")
-    driver      = relationship("Driver", back_populates="collections")
+    listing     = relationship("WasteListing", back_populates="collection", lazy="joined")
+    hotel       = relationship("Hotel", back_populates="collections", lazy="joined")
+    recycler    = relationship("Recycler", back_populates="collections", lazy="joined")
+    driver      = relationship("Driver", back_populates="collections", lazy="joined")
     vehicle     = relationship("Vehicle", back_populates="collections")
     proofs      = relationship("CollectionProof", back_populates="collection", cascade="all, delete-orphan")
-    transaction = relationship("Transaction", back_populates="collection", uselist=False)
+    transaction = relationship("Transaction", back_populates="collection", uselist=False, lazy="joined")
 
 
 class CollectionProof(Base):

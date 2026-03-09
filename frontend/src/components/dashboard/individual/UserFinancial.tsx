@@ -22,8 +22,8 @@ export default function UserFinancial() {
   const spendingHistory = transactions.map(t => ({
     id: t.id,
     date: t.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],
-    items: `${t.waste_type || 'Waste'} from ${t.from_user || 'seller'}`,
-    amount: `RWF ${(t.amount ?? 0).toLocaleString()}`,
+    items: `${t.description || 'Waste transaction'} — ${t.hotel_name || t.recycler_name || 'EcoTrade'}`,
+    amount: `RWF ${(t.gross_amount ?? 0).toLocaleString()}`,
     status: t.status || 'pending',
     _status: t.status
   }));
@@ -31,7 +31,7 @@ export default function UserFinancial() {
   const spendingByMonth: Record<string, number> = {};
   transactions.forEach(t => {
     const month = t.created_at?.slice(0, 7) || new Date().toISOString().slice(0, 7);
-    spendingByMonth[month] = (spendingByMonth[month] || 0) + (t.amount ?? 0);
+    spendingByMonth[month] = (spendingByMonth[month] || 0) + (t.gross_amount ?? 0);
   });
 
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

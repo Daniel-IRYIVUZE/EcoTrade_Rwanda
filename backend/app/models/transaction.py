@@ -48,6 +48,8 @@ class Transaction(Base):
     listing    = relationship("WasteListing", back_populates="transaction")
     collection = relationship("Collection", back_populates="transaction")
     payments   = relationship("Payment", back_populates="transaction", cascade="all, delete-orphan")
+    hotel      = relationship("Hotel", foreign_keys=[hotel_id], lazy="joined")
+    recycler   = relationship("Recycler", foreign_keys=[recycler_id], lazy="joined")
 
 
 class PaymentStatus(str, enum.Enum):

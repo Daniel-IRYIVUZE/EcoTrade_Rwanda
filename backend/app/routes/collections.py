@@ -13,6 +13,14 @@ from app.utils.file_upload import save_upload
 router = APIRouter(prefix="/collections", tags=["Collections"])
 
 
+@router.get("/", response_model=list[CollectionRead],
+            dependencies=[Depends(require_role(UserRole.admin))])
+def list_all_collections(skip: int = 0, limit: int = 500, db: Session = Depends(get_db),
+                         _: User = Depends(get_current_active_user)):
+    """Admin-only: returns every collection on the platform."""
+    return crud_collection.get_multi(db, skip=skip, limit=limit)
+
+
 @router.post("/", response_model=CollectionRead, status_code=201,
              dependencies=[Depends(require_role(UserRole.recycler, UserRole.admin))])
 def create_collection(payload: CollectionCreate, db: Session = Depends(get_db),
@@ -23,6 +31,8 @@ def create_collection(payload: CollectionCreate, db: Session = Depends(get_db),
 @router.get("/mine", response_model=list[CollectionRead])
 def my_collections(skip: int = 0, limit: int = 20, db: Session = Depends(get_db),
                    current_user: User = Depends(get_current_active_user)):
+    if current_user.role == UserRole.admin:
+        return crud_collection.get_multi(db, skip=skip, limit=limit)
     if current_user.role == UserRole.driver:
         driver = crud_driver.get_by_user(db, current_user.id)
         return crud_collection.get_by_driver(db, driver.id, skip=skip, limit=limit) if driver else []
@@ -60,17 +70,21 @@ def assign_driver(collection_id: int, payload: dict, db: Session = Depends(get_d
     
     driver_id = payload.get("driver_id")
     vehicle_id = payload.get("vehicle_id")
-    
-    if not driver_id or not vehicle_id:
-        raise HTTPException(400, "driver_id and vehicle_id required.")
-    
+
+    if not driver_id:
+        raise HTTPException(400, "driver_id is required.")
+
     # Verify driver exists and belongs to recycler
     driver = crud_driver.get(db, driver_id)
-    if not driver or driver.recycler_id != recycler.id:
+    if not driver:
         raise HTTPException(403, "Driver not in your organization.")
-    
+
+    # Fall back to the driver's own vehicle if none specified
+    if not vehicle_id:
+        vehicle_id = driver.vehicle_id
+
     # Assign driver
-    col = crud_collection.assign_driver(db, collection_id=collection_id, 
+    col = crud_collection.assign_driver(db, collection_id=collection_id,
                                        driver_id=driver_id, vehicle_id=vehicle_id)
     
     # Notify driver
@@ -96,11 +110,23 @@ def advance_status(collection_id: int, payload: dict, db: Session = Depends(get_
     # Notify hotel owner
     notify_collection_status(db, user_id=col.listing.hotel.user_id,
                              status=new_status, collection_id=col.id)
-    # If completed, update green score
+    # If completed, update green score and recycler totals
     if new_status == "completed" and col.listing:
         listing = col.listing
+        vol_kg = col.actual_volume or listing.volume or 0
         update_score(db, user_id=listing.hotel.user_id,
-                     waste_type=listing.waste_type.value, kg=listing.volume_kg or 0)
+                     waste_type=listing.waste_type.value, kg=vol_kg)
+        # Also update the recycler's accumulated stats
+        if col.recycler_id:
+            recycler = crud_recycler.get(db, col.recycler_id)
+            if recycler:
+                recycler.total_collected = (recycler.total_collected or 0.0) + vol_kg
+                # Green score: 0.5 pts per kg collected + 5 bonus per collection, capped at 100
+                recycler.green_score = min(
+                    100.0,
+                    (recycler.green_score or 0.0) + vol_kg * 0.5 + 5.0,
+                )
+                db.commit()
     return col
 
 

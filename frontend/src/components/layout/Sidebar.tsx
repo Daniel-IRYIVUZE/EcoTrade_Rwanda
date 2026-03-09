@@ -59,7 +59,6 @@ const roleConfigs: Record<string, {
       { path: '/dashboard/business/settings', label: 'Hotel Settings', icon: <Settings size={20} /> },
       { path: '/dashboard/business/reports', label: 'Reports & Certificates', icon: <Star size={20} /> },
       { path: '/dashboard/business/messages', label: 'Messages', icon: <MessageSquare size={20} /> },
-      { path: '/dashboard/business/drivers', label: 'Drivers', icon: <Truck size={20} /> },
       { path: '/dashboard/business/location', label: 'My Location', icon: <MapPin size={20} /> },
     ]
   },
@@ -69,6 +68,7 @@ const roleConfigs: Record<string, {
     navItems: [
       { path: '/dashboard/recycler', label: 'Dashboard', icon: <BarChart3 size={20} /> },
       { path: '/dashboard/recycler/fleet', label: 'My Fleet', icon: <Truck size={20} /> },
+      { path: '/dashboard/recycler/drivers', label: 'Drivers', icon: <Truck size={20} /> },
       { path: '/dashboard/recycler/marketplace', label: 'Available Waste', icon: <ShoppingCart size={20} /> },
       { path: '/dashboard/recycler/bids', label: 'My Bids', icon: <Eye size={20} /> },
       { path: '/dashboard/recycler/collections', label: 'Active Collections', icon: <Route size={20} /> },
@@ -230,7 +230,7 @@ const Sidebar = ({ userRole }: SidebarProps) => {
             )}
           </div>
 
-          {/* Control ButKilograms */}
+          {/* Control Buttons */}
           <div className="flex items-center gap-1">
             {/* Mobile Close */}
             <button

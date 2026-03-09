@@ -30,7 +30,7 @@ export default function BusinessCollectionSchedule() {
     scheduledDate: c.scheduled_date ? new Date(c.scheduled_date).toLocaleDateString() : '—',
     scheduledTime: c.scheduled_time || '—',
     wasteType: c.waste_type,
-    volume: `${c.volume || c.actual_weight || '?'} kg`,
+    volume: `${c.actual_volume || c.actual_weight || '?'} kg`,
     recyclerName: c.recycler_name || 'Pending',
     driverName: c.driver_name || 'Pending',
     status: c.status,

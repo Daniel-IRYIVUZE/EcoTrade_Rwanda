@@ -135,36 +135,51 @@ export interface Bid {
 export interface Transaction {
   id: number;
   listing_id?: number;
-  from_user: string;
-  to_user: string;
-  waste_type: string;
-  volume: number;
-  amount: number;
-  fee: number;
+  collection_id?: number;
+  hotel_id?: number;
+  recycler_id?: number;
+  reference: string;
+  gross_amount: number;
+  platform_fee: number;
+  net_amount: number;
   status: string;
+  payment_method: string;
+  description?: string;
+  hotel_name?: string;
+  recycler_name?: string;
+  completed_at?: string;
   created_at: string;
-  receipt?: string;
+  updated_at?: string;
 }
 
 export interface Collection {
   id: number;
-  listing_id?: number;
-  hotel_name: string;
-  recycler_name: string;
-  driver_name: string;
+  listing_id: number;
+  hotel_id: number;
+  recycler_id?: number;
   driver_id?: number;
-  waste_type: string;
-  volume: number;
+  vehicle_id?: number;
   status: string;
-  scheduled_date: string;
+  scheduled_date?: string;
   scheduled_time?: string;
+  started_at?: string;
+  arrived_at?: string;
+  collected_at?: string;
   completed_at?: string;
-  actual_weight?: number;
-  rating?: number;
+  actual_volume?: number;
   notes?: string;
-  location?: string;
-  earnings: number;
+  driver_notes?: string;
   created_at: string;
+  updated_at?: string;
+  // Denormalized from relationships
+  hotel_name?: string;
+  recycler_name?: string;
+  driver_name?: string;
+  waste_type?: string;
+  volume?: number;
+  unit?: string;
+  location?: string;
+  earnings?: number;
 }
 
 export interface SupportTicket {
@@ -362,6 +377,9 @@ export const usersAPI = {
 
   me: () => request<APIUser>('/users/me'),
 
+  updateMe: (data: { full_name?: string; phone?: string; email?: string }) =>
+    request<APIUser>('/users/me', { method: 'PATCH', body: JSON.stringify(data) }),
+
   uploadAvatar: (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -461,6 +479,17 @@ export const transactionsAPI = {
 // ─── Collections ─────────────────────────────────────────────────────────────
 
 export const collectionsAPI = {
+  // Admin-only: fetches ALL collections on the platform
+  all: (params?: { skip?: number; limit?: number }) => {
+    const q = new URLSearchParams(
+      Object.fromEntries(
+        Object.entries(params || {}).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])
+      )
+    ).toString();
+    return request<Collection[]>(`/collections${q ? `?${q}` : ''}`);
+  },
+
+  // Role-scoped: returns only the current user's collections
   list: (params?: { status?: string; driver_id?: number; skip?: number; limit?: number }) => {
     const q = new URLSearchParams(
       Object.fromEntries(
@@ -478,7 +507,7 @@ export const collectionsAPI = {
   updateStatus: (id: number, data: { status: string; actual_weight?: number; rating?: number; notes?: string }) =>
     request<Collection>(`/collections/${id}/advance`, { method: 'POST', body: JSON.stringify(data) }),
 
-  assignDriver: (id: number, data: { driver_id: number; vehicle_id: number }) =>
+  assignDriver: (id: number, data: { driver_id: number; vehicle_id?: number }) =>
     request<Collection>(`/collections/${id}/assign-driver`, { method: 'POST', body: JSON.stringify(data) }),
 
   uploadProof: (id: number, file: File) => {
@@ -710,6 +739,16 @@ export interface RecyclerProfile {
 
 export const recyclersAPI = {
   me: () => request<RecyclerProfile>('/recyclers/me'),
+  update: (data: {
+    company_name?: string;
+    address?: string;
+    city?: string;
+    phone?: string;
+    website?: string;
+    description?: string;
+    waste_types_handled?: string[];
+    storage_capacity?: number;
+  }) => request<RecyclerProfile>('/recyclers/me', { method: 'PATCH', body: JSON.stringify(data) }),
   list: (params?: { skip?: number; limit?: number }) => {
     const q = new URLSearchParams(params as Record<string, string>).toString();
     return request<RecyclerProfile[]>(`/recyclers${q ? `?${q}` : ''}`);
@@ -726,12 +765,20 @@ export interface InventoryItem {
   current_stock: number;
   capacity: number;
   unit: string;
+  notes?: string;
   last_updated: string;
   created_at: string;
 }
 
 export const inventoryAPI = {
   mine: () => request<InventoryItem[]>('/inventory/mine'),
+  create: (data: { material_type: string; current_stock?: number; capacity?: number; unit?: string; notes?: string }) =>
+    request<InventoryItem>('/inventory', { method: 'POST', body: JSON.stringify(data) }),
+  update: (id: number, data: { material_type?: string; current_stock?: number; capacity?: number; unit?: string; notes?: string }) =>
+    request<InventoryItem>(`/inventory/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  delete: (id: number) => request<void>(`/inventory/${id}`, { method: 'DELETE' }),
+  adjust: (id: number, delta: number) =>
+    request<InventoryItem>(`/inventory/${id}/adjust`, { method: 'PATCH', body: JSON.stringify({ delta }) }),
 };
 
 // ─── Drivers ──────────────────────────────────────────────────────────────────
@@ -754,7 +801,28 @@ export interface DriverProfile {
   name?: string;
   vehicle_type?: string;
   plate_number?: string;
+  capacity_kg?: number;
 }
+
+export interface VehicleItem {
+  id: number;
+  recycler_id: number;
+  plate_number: string;
+  vehicle_type: string;
+  make?: string;
+  model?: string;
+  year?: number;
+  capacity_kg: number;
+  status: 'active' | 'maintenance' | 'inactive';
+  created_at: string;
+}
+
+export const vehiclesAPI = {
+  list: () => request<VehicleItem[]>('/drivers/fleet-vehicles'),
+  create: (data: { plate_number: string; vehicle_type: string; capacity_kg: number; make?: string; model?: string; year?: number }) =>
+    request<VehicleItem>('/drivers/fleet-vehicles', { method: 'POST', body: JSON.stringify(data) }),
+  delete: (id: number) => request<void>(`/drivers/fleet-vehicles/${id}`, { method: 'DELETE' }),
+};
 
 export const driversAPI = {
   list: (params?: { skip?: number; limit?: number }) => {

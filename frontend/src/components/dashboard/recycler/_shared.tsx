@@ -20,6 +20,23 @@ export const inventoryData: any[] = [];
 export const revenueTrend = { labels: [], datasets: [] };
 export const collectionsByType = { labels: [], datasets: [] };
 
+/**
+ * Single source-of-truth green score calculation used by both
+ * RecyclerOverview and RecyclerGreenImpact so they always agree.
+ *
+ * Priority:
+ *  1. DB value (profile.green_score) if > 0  →  authoritative
+ *  2. Computed from completed collections     →  fallback
+ */
+export function computeGreenScore(
+  dbGreenScore: number | undefined | null,
+  completedCollectionsKg: number,
+  completedCollectionsCount: number,
+): number {
+  if (dbGreenScore && dbGreenScore > 0) return Math.min(100, Math.round(dbGreenScore));
+  return Math.min(100, Math.round(completedCollectionsKg * 0.5 + completedCollectionsCount * 5));
+}
+
 export const StatusBadge = ({ status }: { status: string }) => {
   const styles: Record<string, string> = {
     active: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200',

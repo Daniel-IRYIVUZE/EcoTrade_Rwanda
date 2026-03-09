@@ -57,7 +57,7 @@ export default function AdminReports() {
       usersAPI.list({ limit: 500 }).catch(() => [] as APIUser[]),
       listingsAPI.list({ limit: 500 }).catch(() => [] as WasteListing[]),
       transactionsAPI.list({ limit: 500 }).catch(() => [] as Transaction[]),
-      collectionsAPI.list({ limit: 500 }).catch(() => [] as Collection[]),
+      collectionsAPI.all({ limit: 500 }).catch(() => [] as Collection[]),
     ]).then(([us, ls, ts, cs]) => {
       setUsers(us); setListings(ls); setTransactions(ts); setCollections(cs);
     });
@@ -67,28 +67,69 @@ export default function AdminReports() {
   const stats = {
     totalUsers: users.length,
     activeListings: listings.filter(l => l.status === 'open').length,
-    totalRevenue: completedTransactions.reduce((s, t) => s + (t.amount || 0), 0),
-    co2Saved: collections.reduce((s, c) => s + (c.volume || 0) * 0.5, 0),
+    totalRevenue: completedTransactions.reduce((s, t) => s + (t.gross_amount || 0), 0),
+    co2Saved: collections.reduce((s, c) => s + (c.actual_volume || c.volume || 0) * 0.5, 0),
   };
+
+  const tableHTML = (headers: string[], rows: string[][]) => `
+    <table>
+      <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>`;
 
   const generateReport = (type: string) => {
     setGenerating(type);
     setTimeout(() => {
+      const reportTitle = (REPORT_TYPES.find(r => r.id === type)?.label || type) + ' Report';
+      const metaBlock = `<p style="color:#666;margin:8px 0"><strong>Generated:</strong> ${new Date().toLocaleString()} &nbsp;|&nbsp; <strong>Period:</strong> ${dateFrom} to ${dateTo}</p>`;
+
       if (format === 'pdf') {
-        const reportTitle = (REPORT_TYPES.find(r => r.id === type)?.label || type) + ' Report';
-        downloadPDF(reportTitle, `
-          <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { color: #0891b2; border-bottom: 2px solid #0891b2; padding-bottom: 10px; }
-            .meta { color: #666; margin: 20px 0; }
-          </style>
-          <h1>${reportTitle}</h1>
-          <div class="meta">
-            <p>Generated: ${new Date().toLocaleString()}</p>
-            <p>Period: ${dateFrom} to ${dateTo}</p>
-          </div>
-          <p>Report generated from EcoTrade Rwanda platform data.</p>
-        `);
+        let body = '';
+        switch (type) {
+          case 'users':
+            body = tableHTML(
+              ['ID', 'Name', 'Email', 'Role', 'Status', 'Joined'],
+              users.map(u => [String(u.id), u.full_name || '', u.email || '', u.role, u.status,
+                u.created_at ? new Date(u.created_at).toLocaleDateString() : ''])
+            );
+            break;
+          case 'listings':
+            body = tableHTML(
+              ['ID', 'Hotel', 'Waste Type', 'Volume', 'Unit', 'Min Bid (RWF)', 'Status', 'Date'],
+              listings.map(l => [String(l.id), l.hotel_name || 'N/A', l.waste_type, String(l.volume),
+                l.unit, String(l.min_bid ?? 0), l.status,
+                l.created_at ? new Date(l.created_at).toLocaleDateString() : ''])
+            );
+            break;
+          case 'transactions':
+            body = tableHTML(
+              ['ID', 'Reference', 'Hotel', 'Recycler', 'Gross (RWF)', 'Fee (RWF)', 'Net (RWF)', 'Status', 'Date'],
+              transactions.map(t => [String(t.id), t.reference || '', t.hotel_name || '', t.recycler_name || '',
+                String(t.gross_amount ?? 0), String(t.platform_fee ?? 0), String(t.net_amount ?? 0), t.status,
+                t.created_at ? new Date(t.created_at).toLocaleDateString() : ''])
+            );
+            break;
+          case 'environmental':
+            body = tableHTML(
+              ['ID', 'Hotel', 'Driver', 'Waste Type', 'Volume (kg/L)', 'CO₂ Saved (kg)', 'Date'],
+              collections.map(c => [String(c.id), c.hotel_name || 'N/A', c.driver_name || '',
+                c.waste_type || '', String(c.actual_volume || c.volume || 0),
+                ((c.actual_volume || c.volume || 0) * 0.5).toFixed(2),
+                c.scheduled_date ? new Date(c.scheduled_date).toLocaleDateString() : ''])
+            );
+            break;
+          case 'collections':
+            body = tableHTML(
+              ['ID', 'Hotel', 'Recycler', 'Driver', 'Waste Type', 'Volume', 'Status', 'Date'],
+              collections.map(c => [String(c.id), c.hotel_name || 'N/A', c.recycler_name || '',
+                c.driver_name || '', c.waste_type || '', String(c.volume), c.status,
+                c.scheduled_date ? new Date(c.scheduled_date).toLocaleDateString() : ''])
+            );
+            break;
+          default:
+            body = '<p>No data available for this report type.</p>';
+        }
+        downloadPDF(reportTitle, metaBlock + body);
         setGenerating(null);
         return;
       }
@@ -115,10 +156,10 @@ export default function AdminReports() {
           break;
         case 'transactions':
           downloadCSV('financial_report',
-            ['ID', 'Listing', 'From', 'To', 'Amount', 'Fee', 'Status', 'Date'],
+            ['ID', 'Reference', 'Hotel', 'Recycler', 'Gross Amount', 'Platform Fee', 'Net Amount', 'Status', 'Date'],
             transactions.map(t => [
-              String(t.id), String(t.listing_id || ''), t.from_user || '', t.to_user || '',
-              String(t.amount ?? 0), String(t.fee || 0), t.status,
+              String(t.id), t.reference || '', t.hotel_name || '', t.recycler_name || '',
+              String(t.gross_amount ?? 0), String(t.platform_fee ?? 0), String(t.net_amount ?? 0), t.status,
               t.created_at ? new Date(t.created_at).toLocaleDateString() : ''
             ])
           );

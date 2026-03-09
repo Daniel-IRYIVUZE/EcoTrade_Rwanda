@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Star, Truck, MapPin, Phone, CheckCircle, Clock, AlertCircle, X, UserCheck, RefreshCw, Zap } from 'lucide-react';
 import StatCard from '../StatCard';
-import { driversAPI, hotelCollectionAPI, collectionsAPI } from '../../../services/api';
+import { driversAPI, collectionsAPI } from '../../../services/api';
 import type { DriverProfile } from '../../../services/api';
 
 /* ─── Types ─────────────────────────────────────────────────── */
@@ -244,7 +244,7 @@ export default function BusinessDrivers() {
     if (!selectedDriver) return;
     setAssigning(true);
     try {
-      await hotelCollectionAPI.requestDriver(collectionId, {
+      await collectionsAPI.assignDriver(collectionId, {
         driver_id: selectedDriver.id,
         vehicle_id: selectedDriver.vehicle_id,
       });

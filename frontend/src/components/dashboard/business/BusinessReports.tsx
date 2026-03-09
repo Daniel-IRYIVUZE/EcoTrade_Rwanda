@@ -50,8 +50,8 @@ export default function BusinessReports() {
           <tbody>${rows || '<tr><td colspan="7">No listings found.</td></tr>'}</tbody></table>`);
       } else if (type === 'Revenue Report') {
         const completedTxns = transactions.filter(t => t.status === 'completed');
-        const netRev = completedTxns.reduce((s, t) => s + (t.amount||0) - (t.fee||0), 0);
-        const rows = transactions.map(t => `<tr><td>${t.id}</td><td>${t.created_at ? new Date(t.created_at).toLocaleDateString() : ''}</td><td>${t.from_user||''}</td><td>${t.to_user||''}</td><td>${t.waste_type||''}</td><td>RWF ${(t.amount||0).toLocaleString()}</td><td>RWF ${(t.fee||0).toLocaleString()}</td><td>RWF ${((t.amount||0)-(t.fee||0)).toLocaleString()}</td><td>${t.status}</td></tr>`).join('');
+        const netRev = completedTxns.reduce((s, t) => s + (t.net_amount || 0), 0);
+        const rows = transactions.map(t => `<tr><td>${t.id}</td><td>${t.created_at ? new Date(t.created_at).toLocaleDateString() : ''}</td><td>${t.hotel_name||''}</td><td>${t.recycler_name||''}</td><td>${t.description||''}</td><td>RWF ${(t.gross_amount||0).toLocaleString()}</td><td>RWF ${(t.platform_fee||0).toLocaleString()}</td><td>RWF ${(t.net_amount||0).toLocaleString()}</td><td>${t.status}</td></tr>`).join('');
         downloadPDF(`Revenue Report — ${hotelName}`, `
           <div class="stat-grid">
             <div class="stat-card"><div class="stat-value">${transactions.length}</div><div class="stat-label">Total Transactions</div></div>

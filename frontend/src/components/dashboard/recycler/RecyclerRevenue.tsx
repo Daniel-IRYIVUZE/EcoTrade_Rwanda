@@ -25,22 +25,22 @@ export default function RecyclerRevenue() {
       .finally(() => setLoading(false));
   }, []);
 
-  const totalRevenue = transactions.reduce((s, t) => s + (t.amount || 0), 0);
-  const totalFees    = transactions.reduce((s, t) => s + (t.fee    || 0), 0);
+  const totalRevenue = transactions.reduce((s, t) => s + (t.gross_amount || 0), 0);
+  const totalFees    = transactions.reduce((s, t) => s + (t.platform_fee || 0), 0);
   const net          = totalRevenue - totalFees;
-  const pending      = transactions.filter(t => t.status === 'pending').reduce((s, t) => s + (t.amount || 0), 0);
+  const pending      = transactions.filter(t => t.status === 'pending').reduce((s, t) => s + (t.gross_amount || 0), 0);
 
   const monthlyRevenue = Array(12).fill(0);
-  transactions.forEach(t => { if (t.created_at) monthlyRevenue[new Date(t.created_at).getMonth()] += t.amount || 0; });
+  transactions.forEach(t => { if (t.created_at) monthlyRevenue[new Date(t.created_at).getMonth()] += t.gross_amount || 0; });
   const revenueTrend = { labels: MONTHS, datasets: [{ label: 'Revenue (RWF)', data: monthlyRevenue, borderColor: '#0891b2', backgroundColor: 'rgba(8,145,178,0.1)', fill: true }] };
 
   const typeMap: Record<string,number> = {};
-  transactions.forEach(t => { typeMap[t.waste_type || 'Other'] = (typeMap[t.waste_type || 'Other'] || 0) + (t.amount || 0); });
+  transactions.forEach(t => { typeMap[t.description || 'Other'] = (typeMap[t.description || 'Other'] || 0) + (t.gross_amount || 0); });
   const revenueByType = { labels: Object.keys(typeMap), datasets: [{ label: 'Revenue', data: Object.values(typeMap), backgroundColor: '#0891b2' }] };
 
   const handleExport = () => exportCSV('revenue_report',
-    ['ID','Date','Hotel','Type','Volume','Amount','Fee','Net','Status'],
-    transactions.map(t => [t.id, t.created_at ? new Date(t.created_at).toLocaleDateString() : '', t.from_user || '', t.waste_type || '', t.volume || 0, t.amount || 0, t.fee || 0, (t.amount||0)-(t.fee||0), t.status]));
+    ['ID','Date','Hotel','Description','Gross Amount','Platform Fee','Net Amount','Status'],
+    transactions.map(t => [t.id, t.created_at ? new Date(t.created_at).toLocaleDateString() : '', t.hotel_name || '', t.description || '', t.gross_amount || 0, t.platform_fee || 0, t.net_amount || 0, t.status]));
 
   return (
     <div className="space-y-6">
@@ -69,14 +69,14 @@ export default function RecyclerRevenue() {
         ) : (
           <DataTable
             columns={[
-              { key: 'id',        label: 'ID',     render: (v: number)  => <span className="font-mono text-sm">#{v}</span> },
-              { key: 'created_at',label: 'Date',   render: (v: string)  => v ? new Date(v).toLocaleDateString() : '—' },
-              { key: 'from_user', label: 'Hotel' },
-              { key: 'waste_type',label: 'Type' },
-              { key: 'volume',    label: 'Volume', render: (v: number)  => `${v ?? 0} kg` },
-              { key: 'amount',    label: 'Amount', render: (v: number)  => <span className="font-semibold">RWF {(v||0).toLocaleString()}</span> },
-              { key: 'fee',       label: 'Fee',    render: (v: number)  => <span className="text-yellow-600">RWF {(v||0).toLocaleString()}</span> },
-              { key: 'status',    label: 'Status', render: (v: string)  => <StatusBadge status={v} /> },
+              { key: 'id',         label: 'ID',       render: (v: number)  => <span className="font-mono text-sm">#{v}</span> },
+              { key: 'created_at', label: 'Date',     render: (v: string)  => v ? new Date(v).toLocaleDateString() : '—' },
+              { key: 'hotel_name', label: 'Hotel' },
+              { key: 'description',label: 'Description' },
+              { key: 'gross_amount', label: 'Gross',  render: (v: number)  => <span className="font-semibold">RWF {(v||0).toLocaleString()}</span> },
+              { key: 'platform_fee', label: 'Fee',    render: (v: number)  => <span className="text-yellow-600">RWF {(v||0).toLocaleString()}</span> },
+              { key: 'net_amount',  label: 'Net',     render: (v: number)  => <span className="text-green-600">RWF {(v||0).toLocaleString()}</span> },
+              { key: 'status',    label: 'Status',   render: (v: string)  => <StatusBadge status={v} /> },
             ]}
             data={transactions}
             pageSize={8}

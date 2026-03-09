@@ -30,7 +30,7 @@ export default function AdminAnalytics() {
         listingsAPI.list().catch(() => []),
         usersAPI.list({ limit: 100 }).catch(() => []),
         transactionsAPI.list({ limit: 100 }).catch(() => []),
-        collectionsAPI.list({ limit: 100 }).catch(() => []),
+        collectionsAPI.all({ limit: 100 }).catch(() => []),
       ]);
       
       setListings(listingsData);
@@ -53,11 +53,11 @@ export default function AdminAnalytics() {
     const wasteByType = listings.reduce((acc, l) => { acc[l.waste_type] = (acc[l.waste_type] || 0) + l.volume; return acc; }, {} as Record<string, number>);
     const usersByRole = users.reduce((acc, u) => { acc[u.role] = (acc[u.role] || 0) + 1; return acc; }, {} as Record<string, number>);
     const completedTxn = transactions.filter(t => t.status === 'completed');
-    const totalRevenue = completedTxn.reduce((s, t) => s + (t.amount ?? 0), 0);
-    const totalCO2 = collections.reduce((s, c) => s + (c.volume || 0) * 0.5, 0);
-    const totalWasteVolume = collections.reduce((s, c) => s + (c.volume || 0), 0);
-    const lastMonthRevenue = completedTxn.filter(t => new Date(t.created_at) > new Date(Date.now() - 60 * 24*60*60*1000)).reduce((s, t) => s + (t.amount ?? 0), 0);
-    const prevMonthRevenue = completedTxn.filter(t => { const d = new Date(t.created_at); return d > new Date(Date.now()-90*24*60*60*1000) && d < new Date(Date.now()-60*24*60*60*1000); }).reduce((s, t) => s + (t.amount ?? 0), 0);
+    const totalRevenue = completedTxn.reduce((s, t) => s + (t.gross_amount ?? 0), 0);
+    const totalCO2 = collections.reduce((s, c) => s + (c.actual_volume || 0) * 0.5, 0);
+    const totalWasteVolume = collections.reduce((s, c) => s + (c.actual_volume || 0), 0);
+    const lastMonthRevenue = completedTxn.filter(t => new Date(t.created_at) > new Date(Date.now() - 60 * 24*60*60*1000)).reduce((s, t) => s + (t.gross_amount ?? 0), 0);
+    const prevMonthRevenue = completedTxn.filter(t => { const d = new Date(t.created_at); return d > new Date(Date.now()-90*24*60*60*1000) && d < new Date(Date.now()-60*24*60*60*1000); }).reduce((s, t) => s + (t.gross_amount ?? 0), 0);
     const revenueTrend = prevMonthRevenue ? ((lastMonthRevenue - prevMonthRevenue) / prevMonthRevenue) * 100 : 0;
     return {
       wasteByType, usersByRole, completedTxn, pendingTxn: transactions.filter(t => t.status === 'pending'),
@@ -224,11 +224,11 @@ export default function AdminAnalytics() {
             {transactions.slice(0, 6).map(txn => (
               <div key={txn.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/40 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/40 transition-colors cursor-pointer">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{txn.from} → {txn.to}</p>
-                  <p className="text-xs text-gray-400">{txn.date ? new Date(txn.date).toLocaleDateString() : ''}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{txn.hotel_name || 'Hotel'} → {txn.recycler_name || 'Recycler'}</p>
+                  <p className="text-xs text-gray-400">{txn.created_at ? new Date(txn.created_at).toLocaleDateString() : ''}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-cyan-600 dark:text-cyan-400">RWF {(txn.amount ?? 0).toLocaleString()}</p>
+                  <p className="text-sm font-bold text-cyan-600 dark:text-cyan-400">RWF {(txn.gross_amount ?? 0).toLocaleString()}</p>
                   <StatusBadge status={txn.status} size="sm" dot={false} />
                 </div>
               </div>
