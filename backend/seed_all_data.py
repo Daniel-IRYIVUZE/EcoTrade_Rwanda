@@ -72,7 +72,7 @@ For hotels in Rwanda, proper UCO management offers multiple benefits:
         "tags": "UCO,biodiesel,cooking oil,recycling,energy",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://qsvenolia.com/wp-content/uploads/2025/01/used-cooking-oil.jpg",
+        "cover_image": "https://qsvenolia.com/wp-content/uploads/2026/01/used-cooking-oil.jpg",
     },
     {
         "title": "Hotel Inyange Kigali: A Case Study in Zero-Waste Operations",
@@ -102,10 +102,10 @@ By partnering with EcoTrade-certified recyclers, the hotel now:
     },
     {
         "title": "Understanding Rwanda's Plastic Waste Regulations",
-        "slug": "rwanda-plastic-waste-regulations-2025",
+        "slug": "rwanda-plastic-waste-regulations-2026",
         "category": "news",
         "excerpt": "What the latest REMA regulations mean for hotels and hospitality businesses.",
-        "content": """The Rwanda Environment Management Authority (REMA) has updated its regulations on single-use plastics effective January 2025. Here is what hospitality businesses need to know.
+        "content": """The Rwanda Environment Management Authority (REMA) has updated its regulations on single-use plastics effective January 2026. Here is what hospitality businesses need to know.
 
 **Key Changes:**
 1. Complete ban on single-use plastic bottles under 1 litre for events and in-room amenities
@@ -242,14 +242,14 @@ Hotels with an EcoTrade Green Score above 80 are eligible to apply for Rwanda's 
         "tags": "carbon credits,sustainability,green hotel,rwanda,environment",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://aseza.org/wp-content/uploads/2025/06/climatechange_globe-on-grass-discord.webp",
+        "cover_image": "https://aseza.org/wp-content/uploads/2026/06/climatechange_globe-on-grass-discord.webp",
     },
     {
-        "title": "EcoTrade Rwanda Platform Update: New Features in 2025",
-        "slug": "ecotrade-platform-update-2025",
+        "title": "EcoTrade Rwanda Platform Update: New Features in 2026",
+        "slug": "ecotrade-platform-update-2026",
         "category": "news",
         "excerpt": "We've added GPS tracking, instant bid notifications, and downloadable green certificates.",
-        "content": """EcoTrade Rwanda is excited to announce a major platform update rolling out across March–April 2025.
+        "content": """EcoTrade Rwanda is excited to announce a major platform update rolling out across March–April 2026.
 
 **New Features:**
 
@@ -269,10 +269,10 @@ New charts showing waste diversion trends, revenue projections, and carbon savin
 Download the new EcoTrade mobile app from Google Play or Apple App Store. Full functionality on any device.
 
 These updates are available to all registered users at no additional cost.""",
-        "tags": "news,platform update,features,2025,app",
+        "tags": "news,platform update,features,2026,app",
         "is_published": True,
         "is_featured": True,
-        "cover_image": "https://furtherafrica.com/content-files/uploads/2025/11/rwanda_illustration.jpg",
+        "cover_image": "https://furtherafrica.com/content-files/uploads/2026/11/rwanda_illustration.jpg",
     },
     {
         "title": "Composting at Scale: Lessons from Gorilla Hills Resort",
@@ -363,7 +363,7 @@ MetalPlus Recycling and similar EcoTrade-certified partners handle all these str
         "tags": "metal,recycling,aluminum,hotel,revenue",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://taylorsjunkyard.com/wp-content/uploads/2025/10/how-can-small-businesses-profit-from-commercial-metal-recycling.jpg",
+        "cover_image": "https://taylorsjunkyard.com/wp-content/uploads/2026/10/how-can-small-businesses-profit-from-commercial-metal-recycling.jpg",
     },
     {
         "title": "EcoTrade's Green Score: How It Works and Why It Matters",
@@ -401,7 +401,7 @@ MetalPlus Recycling and similar EcoTrade-certified partners handle all these str
         "tags": "green score,rating,sustainability,algorithm,hotels",
         "is_published": True,
         "is_featured": False,
-        "cover_image": "https://nexioprojects.com/wp-content/uploads/2025/08/The-scoring-methodology-2.svg",
+        "cover_image": "https://nexioprojects.com/wp-content/uploads/2026/08/The-scoring-methodology-2.svg",
     },
     {
         "title": "Rwanda's Vision 2050: Green Growth and the Circular Economy",
@@ -419,7 +419,7 @@ The strategy explicitly calls for:
 **Policy Enablers Already in Place:**
 - Extended Producer Responsibility (EPR) legislation enacted 2023
 - Green Bonds framework launched (Ministry of Finance, 2024)
-- Rwanda Carbon Market Regulation (REMA, 2025)
+- Rwanda Carbon Market Regulation (REMA, 2026)
 - Sustainable Tourism Policy (RDB, 2024)
 
 **Role of EcoTrade:**
@@ -584,7 +584,7 @@ Today, Kigali is regularly cited as one of the cleanest cities in Africa. The tr
 - 2012: Citywide waste collection monopoly broken up; private operators licensed
 - 2019: Organic waste composting made mandatory for commercial premises
 - 2023: EPR framework enacted
-- 2025: Digital waste tracking becomes mandatory for star-rated hotels
+- 2026: Digital waste tracking becomes mandatory for star-rated hotels
 
 **The Role of Citizens:**
 Rwanda's umuganda (monthly community work day) maintains streets, parks, and waterways. Citizens genuinely take pride in their environment — a cultural asset that supports all formal policy initiatives.
@@ -646,7 +646,7 @@ MICE (Meetings, Incentives, Conferences, Exhibitions) revenue in Rwanda grew by 
 6. Event waste diversion certificate (EcoTrade-generated, presented to client)
 
 **Certification Options:**
-- EcoTrade Green Events Standard (available April 2025)
+- EcoTrade Green Events Standard (available April 2026)
 - Rwanda Tourism Board Sustainable MICE Certification
 - GSTC-Recognised Accreditation (for international clients)
 
@@ -691,7 +691,7 @@ Rwanda's energy regulator is developing a feed-in tariff for biogas electricity,
         "slug": "ecotrade-certification-programme-launch",
         "category": "news",
         "excerpt": "Hotels and recyclers can now apply for EcoTrade's official certification badges.",
-        "content": """EcoTrade Rwanda is proud to announce the launch of its official Certification Programme, available from April 2025.
+        "content": """EcoTrade Rwanda is proud to announce the launch of its official Certification Programme, available from April 2026.
 
 **Three Certification Levels:**
 
@@ -721,8 +721,8 @@ Rwanda's energy regulator is developing a feed-in tariff for biogas electricity,
 - Listing in EcoTrade's Certified Hotels directory (distributed to travel agencies and corporate bookers)
 - Access to premium certification pricing from EcoTrade-certified recyclers
 
-Apply via your EcoTrade dashboard from 1 April 2025.""",
-        "tags": "certification,programme,news,2025,launch",
+Apply via your EcoTrade dashboard from 1 April 2026.""",
+        "tags": "certification,programme,news,2026,launch",
         "is_published": True,
         "is_featured": True,
         "cover_image": "https://images.unsplash.com/photo-1495527400402-35b9b4b6025d?w=800",
@@ -734,7 +734,7 @@ Apply via your EcoTrade dashboard from 1 April 2025.""",
         "excerpt": "Kigali's ambitious plastic-free goal means hotels must accelerate their transition today.",
         "content": """The City of Kigali has set a bold target: plastic-free operations by 2030. For hotels, this means accelerating the transition away from single-use plastics across all touchpoints.
 
-**High-Priority Changes (2025–2026):**
+**High-Priority Changes (2026–2026):**
 - In-room amenities: switch to bar soap, shampoo bars, and bamboo toothbrushes
 - F&B: paper or bamboo straws only; no plastic cutlery at any events
 - Welcome packs: fabric tote bags instead of plastic — guests love taking them home

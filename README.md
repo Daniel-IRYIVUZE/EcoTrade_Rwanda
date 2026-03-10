@@ -206,6 +206,8 @@ python -m uvicorn app.main:app --reload --port 8000
 The API will be available at http://localhost:8000  
 Interactive docs (Swagger UI) at http://localhost:8000/api/docs
 
+> **Deployed API:** https://api.ecotrade-rwanda.com/api/docs
+
 ---
 
 ## Demo Login Credentials
@@ -318,6 +320,8 @@ Deploy the FastAPI server using a WSGI-compatible host (Railway, Render, or a VP
 ```bash
 gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
+
+Deployed API: https://api.ecotrade-rwanda.com/api/docs
 
 ---
 

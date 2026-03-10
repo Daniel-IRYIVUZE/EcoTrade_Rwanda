@@ -20,7 +20,7 @@ EcoTrade Rwanda is a Flutter-based mobile application for Android, iOS, and Web.
 
 ## Introduction
 
-The mobile app is built with Flutter using Dart. It uses Riverpod for state management, go_router for navigation, and the HTTP package for REST API communication with the FastAPI backend at `http://localhost:8000/api`. All map screens use real OpenStreetMap tiles via `flutter_map` — no fake placeholder maps remain. The app falls back to locally cached data when the backend is unreachable.
+The mobile app is built with Flutter using Dart. It uses Riverpod for state management, go_router for navigation, and the HTTP package for REST API communication with the FastAPI backend at `http://localhost:8000/api` in development (or the deployed API at https://api.ecotrade-rwanda.com/api/docs in production). All map screens use real OpenStreetMap tiles via `flutter_map` — no fake placeholder maps remain. The app falls back to locally cached data when the backend is unreachable.
 
 ---
 

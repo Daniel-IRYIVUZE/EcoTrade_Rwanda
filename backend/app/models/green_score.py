@@ -14,7 +14,7 @@ class GreenScore(Base):
 
     id              = Column(Integer, primary_key=True, index=True)
     user_id         = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    period          = Column(String(20), nullable=False)   # "2025-07" monthly period
+    period          = Column(String(20), nullable=False)   # "2026-07" monthly period
     waste_diverted  = Column(Float, default=0.0)           # kg
     co2_saved       = Column(Float, default=0.0)           # kg CO2
     water_saved     = Column(Float, default=0.0)           # liters

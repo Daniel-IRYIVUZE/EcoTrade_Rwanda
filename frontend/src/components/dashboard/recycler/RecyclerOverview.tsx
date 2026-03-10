@@ -17,6 +17,7 @@ import EcoImpactPanel from '../../ui/EcoImpactPanel';
 import BidTicker, { type TickerItem } from '../../ui/BidTicker';
 import ActivityFeed, { type ActivityItem } from '../../ui/ActivityFeed';
 import { companyProfile, computeGreenScore } from './_shared';
+import AutoAssignPanel from './AutoAssignPanel';
 
 export default function RecyclerOverview() {
   const navigate = useNavigate();
@@ -292,6 +293,9 @@ export default function RecyclerOverview() {
           </div>
         </Widget>
       </div>
+
+      {/* Auto-Assignment: nearest driver per waste location */}
+      <AutoAssignPanel onApplied={load} />
 
       {/* Activity Feed + Eco Impact */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

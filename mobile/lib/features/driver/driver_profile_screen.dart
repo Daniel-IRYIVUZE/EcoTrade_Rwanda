@@ -186,8 +186,8 @@ class DriverProfileScreen extends ConsumerWidget {
                     children: [
                       _DocumentRow(label: "Driver's License", status: 'verified', expiry: 'Expires: Feb 2027'),
                       _DocumentRow(label: 'National ID', status: 'verified', expiry: 'No expiry'),
-                      _DocumentRow(label: 'Vehicle License', status: 'verified', expiry: 'Expires: Oct 2025'),
-                      _DocumentRow(label: 'Vehicle Insurance', status: 'expiring', expiry: 'Expires: Aug 2025'),
+                      _DocumentRow(label: 'Vehicle License', status: 'verified', expiry: 'Expires: Oct 2026'),
+                      _DocumentRow(label: 'Vehicle Insurance', status: 'expiring', expiry: 'Expires: Aug 2026'),
                     ],
                   ).animate().fadeIn(delay: 250.ms),
 

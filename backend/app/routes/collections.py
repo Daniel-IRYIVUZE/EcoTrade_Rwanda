@@ -9,6 +9,7 @@ from app.models.user import User, UserRole
 from app.services.notification_service import notify_collection_status, notify_driver_assigned
 from app.services.green_score_service import update_score
 from app.utils.file_upload import save_upload
+from app.services.assignment_service import auto_assign_collections
 
 router = APIRouter(prefix="/collections", tags=["Collections"])
 
@@ -181,3 +182,55 @@ def hotel_request_driver(collection_id: int, payload: dict, db: Session = Depend
     except Exception:
         pass  # Notification failure is non-critical
     return col
+
+
+# ── Auto-assignment: nearest available driver per waste location ──────────────
+
+@router.post(
+    "/auto-assign",
+    response_model=list[dict],
+    dependencies=[Depends(require_role(UserRole.recycler, UserRole.admin))],
+    summary="Auto-assign nearest driver to each unassigned collection",
+    description=(
+        "Uses the Haversine (geodesic) distance formula to match every unassigned, "
+        "geo-coded collection to the nearest available driver that has current GPS "
+        "coordinates.  Pass `apply=true` to persist the assignments.  "
+        "Pass `balance_load=true` to spread assignments more evenly across drivers."
+    ),
+)
+def auto_assign(
+    balance_load: bool = False,
+    apply: bool = False,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Preview or apply nearest-driver assignment for all pending collections.
+
+    Query params
+    ------------
+    balance_load : bool (default false)
+        Add a 500 m workload penalty per already-assigned collection so that
+        drivers with fewer assignments are preferred when distances are similar.
+    apply : bool (default false)
+        When true, writes the driver assignments to the database.
+        When false (default), returns a preview without touching the DB.
+    """
+    recycler = crud_recycler.get_by_user(db, current_user.id)
+    if not recycler and current_user.role != UserRole.admin:
+        raise HTTPException(403, "Recycler profile not found.")
+
+    recycler_id = recycler.id if recycler else None
+    if recycler_id is None:
+        raise HTTPException(400, "Admin must specify a recycler context.")
+
+    try:
+        results = auto_assign_collections(
+            db,
+            recycler_id=recycler_id,
+            balance_load=balance_load,
+            apply=apply,
+        )
+    except ValueError as exc:
+        raise HTTPException(422, str(exc))
+
+    return results

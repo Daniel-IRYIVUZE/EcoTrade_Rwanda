@@ -112,7 +112,7 @@ const ImpactMetrics = ({ onReadMore }: ImpactMetricsProps) => {
                 <div className={`p-3 rounded-lg ${metric.color} bg-opacity-50`}>
                   <metric.icon className={`w-6 h-6 text-${metric.color.split('-')[1]}-100`} />
                 </div>
-                <span className="text-sm text-gray-400 dark:text-gray-500">Since 2025</span>
+                <span className="text-sm text-gray-400 dark:text-gray-500">Since 2026</span>
               </div>
               
               <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">

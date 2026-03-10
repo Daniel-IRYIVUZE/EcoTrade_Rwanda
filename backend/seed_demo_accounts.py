@@ -26,7 +26,7 @@ WASTE_IMAGES = {
     'UCO':            'https://iamhomesteader.com/wp-content/uploads/2022/05/oil-1.jpg',
     'glass':          'https://sifiratikvakfi.org/asset/files/atik-turleri/gorseller/05593.jpg',
     'Glass':          'https://www.recyclingtoday.com/remote/aHR0cHM6Ly9naWVjZG4uYmxvYi5jb3JlLndpbmRvd3MubmV0L2ZpbGV1cGxvYWRzL2ltYWdlLzIwMjMvMDQvMDUvYWRvYmVzdG9ja18zMjI1MjI1MTgtd2ViLmpwZw.V-hr-Sxu014.jpg?format=webp',
-    'paper':          'https://molpack.net/wp-content/uploads/2025/08/Is-Paper-Biodegradable-MOLPACK.jpg',
+    'paper':          'https://molpack.net/wp-content/uploads/2026/08/Is-Paper-Biodegradable-MOLPACK.jpg',
     'paper_cardboard':'https://www.reelpaper.com/cdn/shop/articles/paper-waste-why-it-matters-how-to-reduce-it-the-reel-talk-313906_1024x1024.jpg?v=1701927596',
     'Paper/Cardboard':'https://www.reelpaper.com/cdn/shop/articles/paper-waste-why-it-matters-how-to-reduce-it-the-reel-talk-313906_1024x1024.jpg?v=1701927596',
     'plastic':        'https://www.azocleantech.com/images/Article_Images/ImageForArticle_913(1).jpg',

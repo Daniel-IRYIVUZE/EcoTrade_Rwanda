@@ -23,7 +23,7 @@ Live Demo: https://ecotrade-rwanda.netlify.app
 
 ## Introduction
 
-The EcoTrade Rwanda web frontend is a multi-role dashboard platform built with React 19 and TypeScript. It supports five user roles: Admin, Business, Recycler, Driver, and Individual. The app connects to the FastAPI backend at `http://localhost:8000/api` when available and falls back to localStorage-seeded data when the backend is unreachable, making it usable both with and without a running server.
+The EcoTrade Rwanda web frontend is a multi-role dashboard platform built with React 19 and TypeScript. It supports five user roles: Admin, Business, Recycler, Driver, and Individual. The app connects to the FastAPI backend at `http://localhost:8000/api` in development (or the deployed API at https://api.ecotrade-rwanda.com/api/docs in production) and falls back to localStorage-seeded data when the backend is unreachable, making it usable both with and without a running server.
 
 ---
 
@@ -245,7 +245,8 @@ npm run build
 netlify deploy --prod
 ```
 
-Live URL: https://ecotrade-rwanda.netlify.app
+Live URL: https://ecotrade-rwanda.netlify.app  
+Backend API: https://api.ecotrade-rwanda.com/api/docs
 
 ### Vercel
 

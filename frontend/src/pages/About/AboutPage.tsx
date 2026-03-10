@@ -4,11 +4,11 @@ import Navbar from '../../components/common/Navbar/Navbar';
 import Footer from '../../components/common/Footer/Footer';
 import MissionSection from '../../components/about/MissionSection';
 import ProblemSolutionSection from '../../components/about/ProblemSolutionSection';
-import TeamSection from '../../components/about/TeamSection';
+// import TeamSection from '../../components/about/TeamSection';
 import TimelineSection from '../../components/about/TimelineSection';
 import ImpactMetrics from '../../components/about/ImpactMetrics';
-import PartnersSection from '../../components/about/PartnersSection';
-import AdvisoryBoard from '../../components/about/AdvisoryBoard';
+// import PartnersSection from '../../components/about/PartnersSection';
+// import AdvisoryBoard from '../../components/about/AdvisoryBoard';
 import ValuesSection from '../../components/about/ValuesSection';
 import Modal from '../../components/common/Modal/Modal';
 import { Info } from 'lucide-react';
@@ -62,9 +62,9 @@ const AboutPage = () => {
         <ProblemSolutionSection onReadMore={handleOpenModal} />
         <ValuesSection onReadMore={handleOpenModal} />
         <TimelineSection onReadMore={handleOpenModal} />
-        <TeamSection onReadMore={handleOpenModal} />
-        <AdvisoryBoard onReadMore={handleOpenModal} />
-        <PartnersSection onReadMore={handleOpenModal} />
+        {/* <TeamSection onReadMore={handleOpenModal} />
+        <AdvisoryBoard onReadMore={handleOpenModal} /> */}
+        {/* <PartnersSection onReadMore={handleOpenModal} /> */}
       </main>
 
       {/* Enhanced About Modal */}

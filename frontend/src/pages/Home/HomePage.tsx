@@ -11,7 +11,7 @@ import StatsCounter from '../../components/home/StatsCounter';
 import MarketplacePreview from '../../components/home/MarketplacePreview';
 import CTASection from '../../components/home/CTASection';
 import NewsletterSection from '../../components/home/NewsletterSection';
-import PartnersCarousel from '../../components/home/PartnersCarousel';
+// import PartnersCarousel from '../../components/home/PartnersCarousel';
 
 const HomePage = () => {
   return (
@@ -26,7 +26,7 @@ const HomePage = () => {
         <InteractiveMap />
         <SuccessStories />
         <MarketplacePreview />
-        <PartnersCarousel />
+        {/* <PartnersCarousel /> */}
         <CTASection />
         <NewsletterSection />
       </main>

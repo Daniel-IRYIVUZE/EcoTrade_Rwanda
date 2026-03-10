@@ -191,6 +191,29 @@ export interface Collection {
   earnings?: number;
 }
 
+/** Result shape returned by POST /collections/auto-assign */
+export interface AutoAssignResult {
+  collection_id: number;
+  location: {
+    lat: number;
+    lng: number;
+    label: string;
+    waste_type: string | null;
+    volume: number | null;
+  };
+  assigned_driver: {
+    id: number;
+    name: string;
+    lat: number;
+    lng: number;
+    status: string | null;
+    vehicle_type: string | null;
+    plate_number: string | null;
+  };
+  distance_m: number;
+  workload: number;
+}
+
 export interface SupportTicket {
   id: number;
   user_id: number;
@@ -526,6 +549,20 @@ export const collectionsAPI = {
       method: 'POST',
       body: formData,
     }, true);
+  },
+
+  /** Nearest-driver auto-assignment.
+   *  @param balanceLoad  Add a workload penalty so drivers share assignments evenly.
+   *  @param apply        When true the assignments are persisted; otherwise preview only.
+   */
+  autoAssign: (balanceLoad = false, apply = false) => {
+    const q = new URLSearchParams({
+      balance_load: String(balanceLoad),
+      apply: String(apply),
+    }).toString();
+    return request<AutoAssignResult[]>(`/collections/auto-assign?${q}`, {
+      method: 'POST',
+    });
   },
 };
 

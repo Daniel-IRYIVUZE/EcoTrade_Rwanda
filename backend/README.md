@@ -30,6 +30,8 @@ python -m uvicorn app.main:app --reload --port 8000
 
 API: **http://localhost:8000** | Docs: **http://localhost:8000/api/docs**
 
+> **Deployed API:** https://api.ecotrade-rwanda.com/api/docs
+
 > **Note**: The database (`ecotrade.db`) is created automatically from SQLAlchemy models on first run. No migration tool is required.
 
 > **Windows + Python 3.12+**: Use `--prefer-binary` to avoid compilation issues with `pydantic-core` and other C extensions.
@@ -272,7 +274,7 @@ backend/
 | Stats | /api/stats | Public platform statistics |
 | Admin | /api/admin | Admin dashboard data |
 
-Full request/response schemas are available at `/api/docs` once the server is running.
+Full request/response schemas are available at `/api/docs` once the server is running, or via the deployed API at https://api.ecotrade-rwanda.com/api/docs.
 
 ---
 
