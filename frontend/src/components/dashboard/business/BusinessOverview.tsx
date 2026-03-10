@@ -42,7 +42,7 @@ export default function BusinessOverview() {
   }, []);
 
   const openListings  = listings.filter(l => l.status === 'open');
-  const totalRevenue  = transactions.reduce((s, t) => s + (t.amount || 0), 0);
+  const totalRevenue  = transactions.reduce((s, t) => s + (t.gross_amount || 0), 0);
   const unreadMsgs    = messages.filter(m => !m.is_read).length;
   const activeCollect = collections.filter(c => c.status === 'scheduled' || c.status === 'en-route');
   const sparkRevenue   = [35, 40, 45, 50, 55, 60, 65, 80, 90, 85, 95, 100];
@@ -216,10 +216,10 @@ export default function BusinessOverview() {
           <ActivityFeed items={activityItems} emptyText="No recent activity" />
         </Widget>
         <EcoImpactPanel
-          co2Saved={collections.reduce((s, c) => s + c.volume * 0.5, 0) / 1000}
-          wasteDiverted={collections.reduce((s, c) => s + c.volume, 0)}
-          waterSaved={collections.reduce((s, c) => s + c.volume * 3.5, 0)}
-          energySaved={collections.reduce((s, c) => s + c.volume * 0.8, 0)}
+          co2Saved={collections.reduce((s, c) => s + Number(c.volume ?? 0) * 0.5, 0) / 1000}
+          wasteDiverted={collections.reduce((s, c) => s + Number(c.volume ?? 0), 0)}
+          waterSaved={collections.reduce((s, c) => s + Number(c.volume ?? 0) * 3.5, 0)}
+          energySaved={collections.reduce((s, c) => s + Number(c.volume ?? 0) * 0.8, 0)}
         />
       </div>
     </div>

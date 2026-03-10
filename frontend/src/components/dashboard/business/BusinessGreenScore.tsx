@@ -27,7 +27,7 @@ export default function BusinessGreenScore() {
 
   // Fallback calculation when API score is not loaded
   const completedCollections = collections.filter(c => c.status === 'completed');
-  const totalWaste = completedCollections.reduce((s, c) => s + c.volume, 0);
+  const totalWaste = completedCollections.reduce((s, c) => s + (c.volume ?? 0), 0);
   const totalCollections = collections.length;
   const totalListings = listings.length;
 

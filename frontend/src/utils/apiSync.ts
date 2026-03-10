@@ -93,7 +93,7 @@ export async function syncFromAPI(userRole: string): Promise<void> {
       to: t.to_user || '',
       wasteType: t.waste_type || '',
       volume: t.volume || 0,
-      amount: t.amount || 0,
+      amount: t.gross_amount || 0,
       fee: t.fee || 0,
       status: t.status as DSTx['status'],
       date: t.created_at,

@@ -19,15 +19,15 @@ export default function BusinessRevenue() {
   }, []);
 
   const completed      = transactions.filter(t => t.status === 'completed');
-  const totalRevenue   = completed.reduce((s, t) => s + (t.amount || 0), 0);
+  const totalRevenue   = completed.reduce((s, t) => s + (t.gross_amount || 0), 0);
   const currentMonth   = new Date().toISOString().slice(0, 7);
-  const thisMonth      = completed.filter(t => t.created_at?.startsWith(currentMonth)).reduce((s, t) => s + (t.amount || 0), 0);
+  const thisMonth      = completed.filter(t => t.created_at?.startsWith(currentMonth)).reduce((s, t) => s + (t.gross_amount || 0), 0);
   const avgPerListing  = completed.length > 0 ? Math.round(totalRevenue / completed.length) : 0;
-  const pendingPayouts = transactions.filter(t => t.status === 'pending').reduce((s, t) => s + (t.amount || 0), 0);
+  const pendingPayouts = transactions.filter(t => t.status === 'pending').reduce((s, t) => s + (t.gross_amount || 0), 0);
 
   const wasteTypeRevenue: Record<string, number> = {};
   transactions.forEach(t => {
-    wasteTypeRevenue[t.waste_type || 'Other'] = (wasteTypeRevenue[t.waste_type || 'Other'] || 0) + (t.amount || 0);
+    wasteTypeRevenue[t.waste_type || 'Other'] = (wasteTypeRevenue[t.waste_type || 'Other'] || 0) + (t.gross_amount || 0);
   });
 
   const revenueByType = {

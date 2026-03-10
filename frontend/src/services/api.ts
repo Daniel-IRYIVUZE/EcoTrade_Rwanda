@@ -150,6 +150,13 @@ export interface Transaction {
   completed_at?: string;
   created_at: string;
   updated_at?: string;
+  // Extended / denormalized fields
+  from_user?: string;
+  to_user?: string;
+  waste_type?: string;
+  volume?: number;
+  fee?: number;
+  receipt?: string;
 }
 
 export interface Collection {
@@ -167,6 +174,8 @@ export interface Collection {
   collected_at?: string;
   completed_at?: string;
   actual_volume?: number;
+  actual_weight?: number;
+  rating?: number;
   notes?: string;
   driver_notes?: string;
   created_at: string;

@@ -24,7 +24,7 @@ export default function DriverCompletedJobs() {
     : completedJobs;
 
   const totalEarnings = completedCols.length > 0 ? completedCols.reduce((s, c) => s + (c.earnings ?? 0), 0) : 333000;
-  const totalWeight = completedCols.length > 0 ? (completedCols.reduce((s, c) => s + (c.actual_weight ?? c.volume), 0) / 1000).toFixed(1) + 't' : '10.1t';
+  const totalWeight = completedCols.length > 0 ? (completedCols.reduce((s, c) => s + Number(c.actual_weight ?? c.volume ?? 0), 0) / 1000).toFixed(1) + 't' : '10.1t';
   const avgRating = completedCols.length > 0 ? (completedCols.reduce((s, c) => s + (c.rating ?? 4.8), 0) / completedCols.length).toFixed(1) : '4.8';
 
   return (

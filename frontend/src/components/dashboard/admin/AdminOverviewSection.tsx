@@ -23,7 +23,7 @@ const AdminOverviewSection = () => {
         new Date(l.created_at).toDateString() === today
       ).length;
       const completedTransactions = transactions.filter(t => t.status === 'completed');
-      const totalRevenue = completedTransactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+      const totalRevenue = completedTransactions.reduce((sum, t) => sum + (t.gross_amount || 0), 0);
       const disputes = transactions.filter(t => t.status === 'disputed').length;
       setStats({
         totalRevenue,
