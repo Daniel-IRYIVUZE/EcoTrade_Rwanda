@@ -5,7 +5,7 @@ import StatCard from '../StatCard';
 import Widget from '../Widget';
 import DataTable from '../DataTable';
 import ChartComponent from '../ChartComponent';
-import { userProfile, wasteByType } from './_shared';
+
 
 const POINTS_MAP: Record<string, number> = {
   Plastic: 10, 'Paper/Cardboard': 5, Glass: 15, 'Organic Waste': 3, Metal: 30, 'E-Waste': 25, Mixed: 8,
@@ -45,14 +45,14 @@ export default function UserMyImpact() {
   const totalKg = events.reduce((s, e) => s + e.weight, 0);
   const totalPts = events.reduce((s, e) => s + e.points, 0);
   const co2Saved = (totalKg * 1.3).toFixed(1);
-  const greenScore = userProfile.greenScore;
+  const greenScore = Math.min(100, Math.round(totalPts / 10));
 
   const wasteChartLive = events.length > 0 ? {
     labels: [...new Set(events.map(e => e.waste_type))],
     datasets: [{ data: [...new Set(events.map(e => e.waste_type))].map(t => events.filter(e => e.waste_type === t).reduce((s, e) => s + e.weight, 0)) }],
-  } : wasteByType;
+  } : { labels: ['No data'], datasets: [{ data: [1], backgroundColor: '#e5e7eb' }] };
 
-  const unlocked = (kg: number) => events.length > 0 ? totalKg >= kg : userProfile.totalRecycled >= kg;
+  const unlocked = (kg: number) => totalKg >= kg;
 
   return (
     <div className="space-y-6">
@@ -61,9 +61,9 @@ export default function UserMyImpact() {
         <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700"><Plus size={16} /> Log Recycling Event</button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <StatCard title="Total Recycled" value={`${events.length > 0 ? totalKg.toFixed(1) : userProfile.totalRecycled} kg`} icon={<Recycle size={22} />} color="cyan" />
-        <StatCard title="CO₂ Saved" value={`${events.length > 0 ? co2Saved : userProfile.co2Saved} kg`} icon={<Leaf size={22} />} color="blue" />
-        <StatCard title="Eco Points" value={events.length > 0 ? totalPts : 301} icon={<Star size={22} />} color="purple" />
+        <StatCard title="Total Recycled" value={`${totalKg.toFixed(1)} kg`} icon={<Recycle size={22} />} color="cyan" />
+        <StatCard title="CO₂ Saved" value={`${co2Saved} kg`} icon={<Leaf size={22} />} color="blue" />
+        <StatCard title="Eco Points" value={totalPts} icon={<Star size={22} />} color="purple" />
         <StatCard title="Green Score" value={greenScore} icon={<Trophy size={22} />} color="orange" progress={greenScore} />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

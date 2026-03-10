@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
+import { driversAPI, vehiclesAPI, type DriverProfile, type VehicleItem } from '../../../services/api';
 import { Truck, Battery, Fuel, Activity, AlertTriangle } from 'lucide-react';
-import { driverProfile } from './_shared';
 
 const ProgressBar = ({ value, color }: { value: number; color: string }) => (
   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
@@ -8,13 +9,27 @@ const ProgressBar = ({ value, color }: { value: number; color: string }) => (
 );
 
 export default function DriverVehicle() {
-  const v = { ...driverProfile, licensePlate: driverProfile.plate };
+  const [driver, setDriver] = useState<DriverProfile | null>(null);
+  const [vehicle, setVehicle] = useState<VehicleItem | null>(null);
+
+  useEffect(() => {
+    driversAPI.me().then(setDriver).catch(() => {});
+    vehiclesAPI.list().then(list => { if (list.length > 0) setVehicle(list[0]); }).catch(() => {});
+  }, []);
+
+  const vehicleName = vehicle
+    ? `${vehicle.make || ''} ${vehicle.model || vehicle.vehicle_type}`.trim()
+    : (driver?.vehicle_type || 'Vehicle');
+  const plate = vehicle?.plate_number || driver?.plate_number || '—';
+  const capacity = vehicle?.capacity_kg ? `${vehicle.capacity_kg} kg` : (driver?.capacity_kg ? `${driver.capacity_kg} kg` : '—');
+  const vehicleStatus = vehicle?.status || 'active';
+  const year = vehicle?.year ? String(vehicle.year) : '—';
 
   const maintenance = [
-    { item: 'Oil Change', due: '2024-08-15', status: 'OK', daysLeft: 40 },
-    { item: 'Tire Rotation', due: '2024-07-30', status: 'Due Soon', daysLeft: 25 },
-    { item: 'Brake Inspection', due: '2024-09-01', status: 'OK', daysLeft: 57 },
-    { item: 'Air Filter', due: '2024-07-25', status: 'Action Required', daysLeft: 20 },
+    { item: 'Oil Change', due: '2026-05-15', status: 'OK', daysLeft: 66 },
+    { item: 'Tire Rotation', due: '2026-04-30', status: 'Due Soon', daysLeft: 51 },
+    { item: 'Brake Inspection', due: '2026-06-01', status: 'OK', daysLeft: 83 },
+    { item: 'Air Filter', due: '2026-04-25', status: 'Action Required', daysLeft: 46 },
   ];
   const statusColor: Record<string, string> = {
     'OK': 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20', 'Due Soon': 'text-yellow-700 dark:text-yellow-700 bg-yellow-50 dark:bg-yellow-900/20', 'Action Required': 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20',
@@ -27,16 +42,21 @@ export default function DriverVehicle() {
         <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl"><Truck size={24} className="text-cyan-600" /></div>
-            <div><h2 className="text-lg font-semibold text-gray-900 dark:text-white">{v.vehicle}</h2><p className="text-sm text-gray-500 dark:text-gray-400">License Plate: {v.licensePlate}</p></div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{vehicleName}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">License Plate: {plate}</p>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             {[
-              ['Fuel Efficiency', '11.2 km/L'],
-              ['Total Distance', '45,800 km'],
-              ['Avg Load', '2.4 tonnes'],
-              ['Last Service', '2024-06-01'],
-              ['Next Service', '2024-08-15'],
-              ['Insurance Exp.', '2025-01-31'],
+              ['Make', vehicle?.make || '—'],
+              ['Model', vehicle?.model || '—'],
+              ['Year', year],
+              ['Capacity', capacity],
+              ['Type', vehicle?.vehicle_type || driver?.vehicle_type || '—'],
+              ['Driver Rating', driver ? `${driver.rating.toFixed(1)} ★` : '—'],
+              ['Total Trips', driver ? String(driver.total_trips) : '—'],
+              ['Status', vehicleStatus],
             ].map(([k, val]) => (
               <div key={k} className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3">
                 <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">{k}</p>
