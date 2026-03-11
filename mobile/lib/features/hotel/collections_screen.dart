@@ -7,6 +7,7 @@ import '../../core/providers/app_providers.dart';
 import '../../core/models/models.dart';
 import '../../core/router/app_router.dart';
 import '../shared/widgets/shared_cards.dart';
+import '../shared/live_tracking_screen.dart';
 
 class CollectionsScreen extends ConsumerStatefulWidget {
   const CollectionsScreen({super.key});
@@ -225,9 +226,15 @@ class _CollectionCard extends StatelessWidget {
               ],
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => context.push(AppRoutes.driverNavigation),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => LiveTrackingScreen(collection: collection),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.my_location, size: 16),
-                  label: const Text('Track'),
+                  label: const Text('Show Map'),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(0, 40),
                     padding: const EdgeInsets.symmetric(horizontal: 12),

@@ -8,7 +8,7 @@ import '../../core/router/app_router.dart';
 import '../../core/providers/app_providers.dart';
 import '../shared/widgets/shared_cards.dart';
 import '../shared/widgets/offline_banner.dart';
-import 'navigation_screen.dart';
+import '../shared/live_tracking_screen.dart';
 import 'collection_screen.dart';
 import 'earnings_screen.dart';
 import 'driver_profile_screen.dart';
@@ -24,11 +24,27 @@ class DriverMainScreen extends ConsumerStatefulWidget {
 class _DriverMainScreenState extends ConsumerState<DriverMainScreen> {
   int _selectedIndex = 0;
 
+  Collection? _firstStartedCollection(List<Collection> collections) {
+    final started = collections.where((c) =>
+        c.status == CollectionStatus.enRoute ||
+        c.status == CollectionStatus.scheduled ||
+        c.status == CollectionStatus.collected);
+    return started.isNotEmpty
+        ? started.first
+        : (collections.isNotEmpty ? collections.first : null);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final driverCollections = ref.watch(driverCollectionsProvider);
+    final mapTarget = _firstStartedCollection(driverCollections);
     final screens = [
       _DriverHomeTab(onGoToProfile: () => setState(() => _selectedIndex = 4)),
-      const NavigationScreen(),
+      mapTarget == null
+          ? const Scaffold(
+              body: Center(child: Text('No collections available for tracking.')),
+            )
+          : LiveTrackingScreen(collection: mapTarget, pushDriverLocation: true),
       const CollectionScreen(),
       const EarningsScreen(),
       const DriverProfileScreen(),

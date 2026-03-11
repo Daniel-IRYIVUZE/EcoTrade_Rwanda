@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import '../shared/live_tracking_screen.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/models/models.dart';
 import '../../core/providers/app_providers.dart';
@@ -15,6 +15,7 @@ class CollectionScreen extends ConsumerStatefulWidget {
 
 class _CollectionScreenState extends ConsumerState<CollectionScreen> {
   int _step = 0;
+  String _filter = 'started';
   final List<String> _steps = [
     'Arrive',
     'Weigh & Photo',
@@ -36,6 +37,21 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final collections = ref.watch(driverCollectionsProvider);
+    final started = collections.where((c) =>
+      c.status == CollectionStatus.enRoute ||
+      c.status == CollectionStatus.scheduled ||
+      c.status == CollectionStatus.collected
+    ).toList();
+    final done = collections.where((c) =>
+      c.status == CollectionStatus.completed ||
+      c.status == CollectionStatus.verified ||
+      c.status == CollectionStatus.missed
+    ).toList();
+    final visible = _filter == 'started' ? started : done;
+    final currentCollection = visible.isNotEmpty ? visible.first : null;
+    final completedCount = done.length;
+
     final route = ref.watch(driverRouteProvider);
     final stops = route.stops;
     final stopIdx = stops.indexWhere((s) =>
@@ -44,13 +60,27 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
         s.status == RouteStopStatus.pending);
     final currentStop =
         stopIdx >= 0 ? stops[stopIdx] : (stops.isNotEmpty ? stops.first : null);
-    final completedCount =
-        stops.where((s) => s.status == RouteStopStatus.completed).length;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Collection'),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _filter,
+                borderRadius: BorderRadius.circular(10),
+                items: const [
+                  DropdownMenuItem(value: 'started', child: Text('Started')),
+                  DropdownMenuItem(value: 'done', child: Text('Done')),
+                ],
+                onChanged: (value) {
+                  if (value != null) setState(() => _filter = value);
+                },
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: Chip(
@@ -81,6 +111,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                 child: [
                   _ArriveStep(
                       stop: currentStop,
+                      currentCollection: currentCollection,
                       onNext: () => setState(() => _step = 1)),
                   _WeighPhotoStep(
                     weightCtrl: _weightCtrl,
@@ -107,7 +138,7 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                     },
                   ),
                   _CompleteStep(onDone: () {
-                    if (context.canPop()) context.pop();
+                    Navigator.of(context).maybePop();
                   }),
                 ][_step],
               ),
@@ -196,8 +227,9 @@ class _StepBar extends StatelessWidget {
 
 class _ArriveStep extends StatelessWidget {
   final RouteStop? stop;
+  final Collection? currentCollection;
   final VoidCallback onNext;
-  const _ArriveStep({required this.onNext, this.stop});
+  const _ArriveStep({required this.onNext, this.stop, this.currentCollection});
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +249,24 @@ class _ArriveStep extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+                      if (currentCollection != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => LiveTrackingScreen(
+                                    collection: currentCollection,
+                                    pushDriverLocation: true,
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.map, size: 16),
+                            label: const Text('Show Map'),
+                          ),
+                        ),
               Row(
                 children: [
                   const Icon(Icons.business, color: AppColors.primary),

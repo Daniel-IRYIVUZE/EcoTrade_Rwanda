@@ -6,7 +6,6 @@ import '../providers/app_providers.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/auth/login_screen.dart';
-import '../../features/auth/register_screen.dart';
 import '../../features/auth/verify_otp_screen.dart';
 import '../../features/auth/forgot_password_screen.dart';
 import '../../features/hotel/hotel_main_screen.dart';
@@ -33,7 +32,6 @@ class AppRoutes {
   static const String splash = '/';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
-  static const String register = '/register';
   static const String verifyOtp = '/verify-otp';
   static const String forgotPassword = '/forgot-password';
   static const String terms = '/terms';
@@ -92,7 +90,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loc = state.matchedLocation;
       final publicPaths = [
         AppRoutes.login,
-        AppRoutes.register,
         AppRoutes.verifyOtp,
         AppRoutes.forgotPassword,
         AppRoutes.terms,
@@ -127,10 +124,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.register,
-        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: AppRoutes.verifyOtp,

@@ -332,6 +332,8 @@ class Collection {
   final double? rating;
   final String? notes;
   final String location;
+  final double? destinationLat;
+  final double? destinationLng;
   final double earnings;
 
   const Collection({
@@ -353,6 +355,8 @@ class Collection {
     this.rating,
     this.notes,
     required this.location,
+    this.destinationLat,
+    this.destinationLng,
     this.earnings = 0,
   });
 }

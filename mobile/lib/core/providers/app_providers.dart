@@ -221,6 +221,9 @@ CollectionStatus _mapCollectionStatus(String s) {
   switch (s.toLowerCase()) {
     case 'scheduled':
       return CollectionStatus.scheduled;
+    case 'accepted':
+    case 'assigned':
+      return CollectionStatus.enRoute;
     case 'en_route':
     case 'arrived':
     case 'confirmed':
@@ -270,7 +273,9 @@ Collection _collectionFromApi(Map<String, dynamic> j) {
         ? DateTime.tryParse(j['scheduled_date'] as String) ?? DateTime.now()
         : DateTime.now(),
     scheduledTime: j['scheduled_time'] as String? ?? '09:00',
-    location: '',
+    location: (j['hotel_address'] as String?) ?? (j['location'] as String?) ?? '',
+    destinationLat: (j['listing_lat'] as num?)?.toDouble() ?? (j['hotel_lat'] as num?)?.toDouble(),
+    destinationLng: (j['listing_lng'] as num?)?.toDouble() ?? (j['hotel_lng'] as num?)?.toDouble(),
     earnings: 0,
   );
 }

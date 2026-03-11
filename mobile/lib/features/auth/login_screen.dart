@@ -239,29 +239,6 @@ validator: (v) {
                   ),
                 ).animate().slideY(begin: 0.2, duration: 400.ms, delay: 100.ms).fadeIn(),
 
-                const SizedBox(height: 24),
-
-                // Sign up row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account? ",
-                      style: TextStyle(color: AppColors.textSecondary),
-                    ),
-                    GestureDetector(
-                      onTap: () => context.go(AppRoutes.register),
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
-
                 const SizedBox(height: 32),
               ],
             ),

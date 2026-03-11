@@ -286,6 +286,17 @@ class ApiService {
       if (actualWeight != null) 'actual_weight': actualWeight,
     });
   }
+
+  static Future<Map<String, dynamic>> getCollectionTracking(int id) async {
+    return await _request('GET', '/collections/$id/tracking');
+  }
+
+  static Future<Map<String, dynamic>> updateDriverLocation(double lat, double lng) async {
+    return await _request('PATCH', '/drivers/me/location', body: {
+      'latitude': lat,
+      'longitude': lng,
+    });
+  }
   
   static Future<Map<String, dynamic>> uploadCollectionProof(int id, List<int> bytes, String filename) async {
     final uri = Uri.parse('$baseUrl/collections/$id/proofs');

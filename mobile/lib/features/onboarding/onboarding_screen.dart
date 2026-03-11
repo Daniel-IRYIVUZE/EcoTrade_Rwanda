@@ -157,9 +157,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ElevatedButton(
                       onPressed: () {
                         LocalStorageService.instance.markOnboardingSeen();
-                        context.go(AppRoutes.register);
+                        context.go(AppRoutes.login);
                       },
-                      child: const Text('Create Account'),
+                      child: const Text('Go to Login'),
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton(

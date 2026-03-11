@@ -662,7 +662,7 @@ export default function RecyclerFleet() {
                             <p className="font-medium truncate">{assignment.hotelName}</p>
                             <p className="text-[11px] text-gray-500 truncate">Waste: {assignment.wasteType} · Volume: {assignment.volumeText}</p>
                           </div>
-                          <StatusBadge status={assignment.status} size="sm" dot />
+                          <StatusBadge status={assignment.status} />
                         </div>
                       ))}
                     </div>
