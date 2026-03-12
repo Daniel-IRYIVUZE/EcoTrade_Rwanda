@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { X, CheckCircle } from 'lucide-react';
 import Navbar from '../../components/common/Navbar/Navbar';
 import Footer from '../../components/common/Footer/Footer';
 import MarketplaceHero from '../../components/marketplace/MarketplaceHero';
 import MarketplaceGrid from '../../components/marketplace/MarketplaceGrid';
 import MarketplaceMap from '../../components/marketplace/MarketplaceMap';
-import LiveBidActivity from '../../components/marketplace/LiveBidActivity';
+// import LiveBidActivity from '../../components/marketplace/LiveBidActivity';
 import MarketplaceStats from '../../components/marketplace/MarketplaceStats';
 import QuickBidModal from '../../components/marketplace/QuickBidModal';
 import ListingDetailModal from '../../components/marketplace/ListingDetailModal';
@@ -268,21 +268,21 @@ const MarketplacePage = () => {
     setFilteredListings(filtered);
   }, [filters, listings, searchQuery]);
 
-  const tickerItems = useMemo(
-    () =>
-      listings
-        .flatMap((l) =>
-          l.bids.map((bid, idx) => ({
-            id: `${l.id}-${idx}`,
-            recycler: bid.recycler,
-            wasteType: l.type,
-            amount: bid.amount,
-            time: bid.time,
-          }))
-        )
-        .slice(0, 10),
-    [listings]
-  );
+  // const tickerItems = useMemo(
+  //   () =>
+  //     listings
+  //       .flatMap((l) =>
+  //         l.bids.map((bid, idx) => ({
+  //           id: `${l.id}-${idx}`,
+  //           recycler: bid.recycler,
+  //           wasteType: l.type,
+  //           amount: bid.amount,
+  //           time: bid.time,
+  //         }))
+  //       )
+  //       .slice(0, 10),
+  //   [listings]
+  // );
 
   const handleListingClick = (listing: any) => {
     setSelectedListing(listing as ListingViewModel);
@@ -417,9 +417,9 @@ const MarketplacePage = () => {
               )}
             </div>
 
-            <div className="hidden xl:block w-72 flex-shrink-0">
+            {/* <div className="hidden xl:block w-72 flex-shrink-0">
               <LiveBidActivity items={tickerItems.length > 0 ? tickerItems : undefined} />
-            </div>
+            </div> */}
           </div>
         </div>
 

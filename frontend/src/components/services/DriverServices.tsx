@@ -82,13 +82,13 @@ const DriverServices = () => {
     }
   ];
 
-  const earnings = [
-    { type: 'Base Pay per Stop', amount: 'RWF 1,500 - 2,500' },
-    { type: 'Distance Bonus', amount: 'RWF 50/km' },
-    { type: 'Quality Bonus', amount: 'RWF 500 - 1,000' },
-    { type: 'On-time Completion', amount: 'RWF 2,000/day' },
-    { type: 'Weekly Top Performer', amount: 'RWF 10,000' }
-  ];
+  // const earnings = [
+  //   { type: 'Base Pay per Stop', amount: 'RWF 1,500 - 2,500' },
+  //   { type: 'Distance Bonus', amount: 'RWF 50/km' },
+  //   { type: 'Quality Bonus', amount: 'RWF 500 - 1,000' },
+  //   { type: 'On-time Completion', amount: 'RWF 2,000/day' },
+  //   { type: 'Weekly Top Performer', amount: 'RWF 10,000' }
+  // ];
 
   return (
     <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +103,7 @@ const DriverServices = () => {
       </div>
 
       {/* Earnings Calculator Preview */}
-      <div className="bg-yellow-700 rounded-3xl p-8 text-white mb-12">
+      {/* <div className="bg-yellow-700 rounded-3xl p-8 text-white mb-12">
         <h3 className="text-2xl font-bold mb-6">Potential Daily Earnings</h3>
         <div className="grid md:grid-cols-5 gap-4 mb-6">
           {earnings.map((item, index) => (
@@ -116,7 +116,7 @@ const DriverServices = () => {
         <div className="text-center pt-4 border-t border-white/20">
           <p className="text-2xl font-bold">Average Daily Total: RWF 12,000 - 20,000</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Features Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">

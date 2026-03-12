@@ -32,7 +32,7 @@ const ServicesHero = () => {
           </p>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             <div className="bg-gray-800/10 dark:bg-gray-800/10 backdrop-blur-sm rounded-xl p-4">
               <div className="text-2xl font-bold">4+</div>
               <div className="text-sm text-cyan-200">Businesses To be Served</div>
@@ -45,7 +45,7 @@ const ServicesHero = () => {
               <div className="text-2xl font-bold">3+</div>
               <div className="text-sm text-cyan-200">Active  Drivers To be recruited</div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

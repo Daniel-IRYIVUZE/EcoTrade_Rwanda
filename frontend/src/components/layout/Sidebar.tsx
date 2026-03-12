@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, Users, Package, Truck, Settings, BarChart3, DollarSign,
   Calendar, Map, FileText, ShoppingCart, Recycle, LogOut, ChevronLeft,
-  ChevronRight, Menu, X, Shield, ClipboardList, Trophy, MessageSquare, MapPin, Phone, Star, Eye,
+  ChevronRight, Menu, X, ClipboardList, Trophy, MessageSquare, MapPin, Phone, Star, Eye,
   CheckCircle, Warehouse, Route,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -33,15 +33,15 @@ const roleConfigs: Record<string, {
       { path: '/dashboard/admin', label: 'Dashboard Home', icon: <BarChart3 size={20} /> },
       { path: '/dashboard/admin/users', label: 'User Management', icon: <Users size={20} /> },
       { path: '/dashboard/admin/listings', label: 'Waste Listings', icon: <Package size={20} /> },
-      { path: '/dashboard/admin/route-monitor', label: 'Route Monitor', icon: <Map size={20} /> },
+      // { path: '/dashboard/admin/route-monitor', label: 'Route Monitor', icon: <Map size={20} /> },
       { path: '/dashboard/admin/transactions', label: 'Transactions', icon: <DollarSign size={20} /> },
       { path: '/dashboard/admin/analytics', label: 'Analytics', icon: <BarChart3 size={20} /> },
-      { path: '/dashboard/admin/verification', label: 'Verification Queue', icon: <Shield size={20} />},
-      { path: '/dashboard/admin/audit-logs', label: 'Audit Logs', icon: <ClipboardList size={20} /> },
+      // { path: '/dashboard/admin/verification', label: 'Verification Queue', icon: <Shield size={20} />},
+      // { path: '/dashboard/admin/audit-logs', label: 'Audit Logs', icon: <ClipboardList size={20} /> },
       { path: '/dashboard/admin/green-scores', label: 'Green Scores', icon: <Trophy size={20} /> },
       { path: '/dashboard/admin/blog', label: 'Blog Management', icon: <FileText size={20} /> },
       { path: '/dashboard/admin/reports', label: 'Reports', icon: <FileText size={20} /> },
-      { path: '/dashboard/admin/support', label: 'Support Tickets', icon: <MessageSquare size={20} />},
+      // { path: '/dashboard/admin/support', label: 'Support Tickets', icon: <MessageSquare size={20} />},
       { path: '/dashboard/admin/settings', label: 'System Settings', icon: <Settings size={20} /> },
     ]
   },

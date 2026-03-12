@@ -4,11 +4,11 @@ import Footer from '../../components/common/Footer/Footer';
 import HeroSection from '../../components/home/HeroSection';
 import HowItWorks from '../../components/home/HowItWorks';
 import KeyFeatures from '../../components/home/KeyFeatures';
-import LiveImpactTicker from '../../components/home/LiveImpactTicker';
-import InteractiveMap from '../../components/home/InteractiveMap';
+// import LiveImpactTicker from '../../components/home/LiveImpactTicker';
+// import InteractiveMap from '../../components/home/InteractiveMap';
 import SuccessStories from '../../components/home/SuccessStories';
-import StatsCounter from '../../components/home/StatsCounter';
-import MarketplacePreview from '../../components/home/MarketplacePreview';
+// import StatsCounter from '../../components/home/StatsCounter';
+// import MarketplacePreview from '../../components/home/MarketplacePreview';
 import CTASection from '../../components/home/CTASection';
 import NewsletterSection from '../../components/home/NewsletterSection';
 // import PartnersCarousel from '../../components/home/PartnersCarousel';
@@ -19,13 +19,13 @@ const HomePage = () => {
       <Navbar />
       <main className="pt-16">
         <HeroSection />
-        <StatsCounter />
+        {/* <StatsCounter /> */}
         <HowItWorks />
         <KeyFeatures />
-        <LiveImpactTicker />
-        <InteractiveMap />
+        {/* <LiveImpactTicker /> */}
+        {/* <InteractiveMap /> */}
         <SuccessStories />
-        <MarketplacePreview />
+        {/* <MarketplacePreview /> */}
         {/* <PartnersCarousel /> */}
         <CTASection />
         <NewsletterSection />

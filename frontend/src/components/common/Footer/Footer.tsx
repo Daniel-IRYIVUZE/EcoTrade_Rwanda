@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Instagram, Twitter, Mail, MapPin, Phone, Facebook, Linkedin, Youtube,
-  ArrowUp, Leaf, Recycle, Globe2, ChevronRight
+  ArrowUp, ChevronRight
 } from 'lucide-react';
 
 const Footer = () => {
@@ -54,11 +54,11 @@ const Footer = () => {
     { label: 'Support Center', path: '/contact' },
   ];
 
-  const impactStats = [
-    { icon: <Recycle size={20} />, value: '0.1+', label: 'Kilograms Recycled' },
-    { icon: <Globe2 size={20} />, value: '3+', label: 'Partners' },
-    { icon: <Leaf size={20} />, value: '1K+', label: 'CO₂ Saved (kg)' },
-  ];
+  // const impactStats = [
+  //   { icon: <Recycle size={20} />, value: '0.1+', label: 'Kilograms Recycled' },
+  //   { icon: <Globe2 size={20} />, value: '3+', label: 'Partners' },
+  //   { icon: <Leaf size={20} />, value: '1K+', label: 'CO₂ Saved (kg)' },
+  // ];
 
   return (
     <>
@@ -75,7 +75,7 @@ const Footer = () => {
 
       <footer className="bg-gray-950 dark:bg-gray-950 text-gray-300 border-t border-gray-800">
         {/* Impact Stats Bar */}
-        <div className="bg-cyan-900/50 border-b border-cyan-800/30">
+        {/* <div className="bg-cyan-900/50 border-b border-cyan-800/30">
           <div className="lg:w-11/12 max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="grid grid-cols-3 gap-4">
               {impactStats.map((stat, index) => (
@@ -89,7 +89,7 @@ const Footer = () => {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Main Footer Content */}
         <div className="lg:w-11/12 max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10">

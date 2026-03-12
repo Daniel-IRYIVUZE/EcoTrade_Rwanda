@@ -115,7 +115,7 @@ const BusinessServices = () => {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
         <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-xl p-6 text-center">
           <div className="text-3xl font-bold text-cyan-600 dark:text-cyan-400 mb-2">40%</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Lower Disposal Costs</div>
@@ -132,7 +132,7 @@ const BusinessServices = () => {
           <div className="text-3xl font-bold text-yellow-700 dark:text-yellow-700 mb-2">RWF 50k</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">Avg Monthly Revenue</div>
         </div>
-      </div>
+      </div> */}
 
       {/* Features Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">

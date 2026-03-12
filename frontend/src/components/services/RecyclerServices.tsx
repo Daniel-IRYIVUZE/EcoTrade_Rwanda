@@ -81,28 +81,28 @@ const RecyclerServices = () => {
     }
   ];
 
-  const benefits = [
-    {
-      metric: '23',
-      label: 'Active Recyclers',
-      description: 'Growing network of partners'
-    },
-    {
-      metric: '156',
-      label: 'Supply Sources',
-      description: 'Businesses and restaurants'
-    },
-    {
-      metric: '0.1T',
-      label: 'Monthly Volume',
-      description: 'Available for collection'
-    },
-    {
-      metric: '40%',
-      label: 'Cost Reduction',
-      description: 'Through route optimization'
-    }
-  ];
+  // const benefits = [
+  //   {
+  //     metric: '23',
+  //     label: 'Active Recyclers',
+  //     description: 'Growing network of partners'
+  //   },
+  //   {
+  //     metric: '156',
+  //     label: 'Supply Sources',
+  //     description: 'Businesses and restaurants'
+  //   },
+  //   {
+  //     metric: '0.1T',
+  //     label: 'Monthly Volume',
+  //     description: 'Available for collection'
+  //   },
+  //   {
+  //     metric: '40%',
+  //     label: 'Cost Reduction',
+  //     description: 'Through route optimization'
+  //   }
+  // ];
 
   return (
     <div className="max-w-11/12 mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,7 +117,7 @@ const RecyclerServices = () => {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
         {benefits.map((benefit, index) => (
           <div key={index} className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 text-center">
             <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">{benefit.metric}</div>
@@ -125,7 +125,7 @@ const RecyclerServices = () => {
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{benefit.description}</div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Features Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">

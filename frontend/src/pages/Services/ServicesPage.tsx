@@ -7,7 +7,7 @@ import ServiceTabs from '../../components/services/ServiceTabs';
 import BusinessServices from '../../components/services/BusinessServices';
 import RecyclerServices from '../../components/services/RecyclerServices';
 import DriverServices from '../../components/services/DriverServices';
-import PricingCalculator from '../../components/services/PricingCalculator';
+// import PricingCalculator from '../../components/services/PricingCalculator';
 import ServiceComparison from '../../components/services/ServiceComparison';
 import FAQSection from '../../components/services/FAQSection';
 import TestimonialsSection from '../../components/services/TestimonialsSection';
@@ -36,7 +36,7 @@ const ServicesPage = () => {
         </div>
 
         {/* Pricing Calculator */}
-        <PricingCalculator />
+        {/* <PricingCalculator /> */}
 
         {/* Service Comparison Table */}
         <ServiceComparison />

@@ -1,13 +1,13 @@
 // components/home/HeroSection.tsx
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { ArrowRight, Award, LayoutDashboard } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const TARGETS = { waste: 16.1, co2: 24, revenue: 125.1 };
+// const TARGETS = { waste: 16.1, co2: 24, revenue: 125.1 };
 
 const HeroSection = () => {
-  const [counts, setCounts] = useState({ waste: 0, co2: 0, revenue: 0 });
+  // const [counts, setCounts] = useState({ waste: 0, co2: 0, revenue: 0 });
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -27,12 +27,12 @@ const HeroSection = () => {
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3);
-      setCounts({
-        waste: Math.round(TARGETS.waste * ease),
-        co2: Math.round(TARGETS.co2 * ease),
-        revenue: Math.round(TARGETS.revenue * 10 * ease) / 10,
-      });
+      // const ease = 1 - Math.pow(1 - progress, 3);
+      // setCounts({
+      //   waste: Math.round(TARGETS.waste * ease),
+      //   co2: Math.round(TARGETS.co2 * ease),
+      //   revenue: Math.round(TARGETS.revenue * 10 * ease) / 10,
+      // });
       if (progress < 1) frame = requestAnimationFrame(step);
     };
 
@@ -108,18 +108,12 @@ const HeroSection = () => {
                 >
                   Partner as Recycler
                 </Link>
-                <Link
-                  to="/login"
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-7 py-4 rounded-xl font-semibold transform hover:-translate-y-1 transition-all duration-300 border border-white/30"
-                >
-                  Become a Driver
-                </Link>
               </>
             )}
           </div>
 
           {/* Live Counters */}
-          <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/20">
+          {/* <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/20">
             <div>
               <p className="text-3xl lg:text-4xl font-bold text-white tabular-nums">
                 {counts.waste.toLocaleString()} Kg
@@ -138,7 +132,7 @@ const HeroSection = () => {
               </p>
               <p className="text-cyan-200 text-sm mt-1">Revenue Generated</p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>

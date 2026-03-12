@@ -13,21 +13,21 @@ const ServiceTabs = ({ activeTab, setActiveTab }: ServiceTabsProps) => {
       label: 'Businesses & Restaurants',
       icon: Building2,
       color: 'bg-cyan-500',
-      count: 156
+      // count: 
     },
     {
       id: 'recyclers',
       label: 'Recyclers',
       icon: Factory,
       color: 'bg-blue-600',
-      count: 23
+      // count: 23
     },
     {
       id: 'drivers',
       label: 'Drivers',
       icon: Truck,
       color: 'bg-yellow-700',
-      count: 47
+      // count: 47
     }
   ];
 
@@ -59,7 +59,7 @@ const ServiceTabs = ({ activeTab, setActiveTab }: ServiceTabsProps) => {
                 <p className={`text-sm ${
                   activeTab === tab.id ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
                 }`}>
-                  {tab.count} active
+                  {/* {tab.count} active */}
                 </p>
               </div>
             </div>

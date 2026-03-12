@@ -6,7 +6,7 @@ import MissionSection from '../../components/about/MissionSection';
 import ProblemSolutionSection from '../../components/about/ProblemSolutionSection';
 // import TeamSection from '../../components/about/TeamSection';
 import TimelineSection from '../../components/about/TimelineSection';
-import ImpactMetrics from '../../components/about/ImpactMetrics';
+// import ImpactMetrics from '../../components/about/ImpactMetrics';
 // import PartnersSection from '../../components/about/PartnersSection';
 // import AdvisoryBoard from '../../components/about/AdvisoryBoard';
 import ValuesSection from '../../components/about/ValuesSection';
@@ -58,7 +58,7 @@ const AboutPage = () => {
         </section>
 
         <MissionSection onReadMore={handleOpenModal} />
-        <ImpactMetrics onReadMore={handleOpenModal} />
+        {/* <ImpactMetrics onReadMore={handleOpenModal} /> */}
         <ProblemSolutionSection onReadMore={handleOpenModal} />
         <ValuesSection onReadMore={handleOpenModal} />
         <TimelineSection onReadMore={handleOpenModal} />
