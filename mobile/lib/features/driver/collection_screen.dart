@@ -233,6 +233,7 @@ class _ArriveStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selectedCollection = currentCollection;
     final businessName = stop?.businessName ?? 'Business';
     final location = stop?.location ?? 'Kigali';
     final wasteLabel = stop?.wasteType.label ?? 'Waste';
@@ -249,7 +250,7 @@ class _ArriveStep extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                      if (currentCollection != null)
+                      if (selectedCollection != null)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: OutlinedButton.icon(
@@ -257,7 +258,7 @@ class _ArriveStep extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => LiveTrackingScreen(
-                                    collection: currentCollection,
+                                    collection: selectedCollection,
                                     pushDriverLocation: true,
                                   ),
                                 ),
