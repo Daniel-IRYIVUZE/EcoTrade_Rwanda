@@ -27,12 +27,14 @@ export default function DriverTodaysRoute() {
   const [showCards, setShowCards] = useState(false);
   const [showRoutePanel, setShowRoutePanel] = useState(true);
   const [mapLayer, setMapLayer] = useState<'normal' | 'dark' | 'satellite'>('normal');
+  const [roadRoute, setRoadRoute] = useState<[number, number][]>([]);
   const tileLayerRef = useRef<any>(null);
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<any>(null);
   const leafletRef = useRef<any>(null);
   const driverMarkerRef = useRef<any>(null);
   const hotelMarkersRef = useRef<any[]>([]);
+  const routeAbortRef = useRef<AbortController | null>(null);
 
   const load = useCallback(() => {
     // Fetch ALL collections assigned to this driver (role-scoped by backend)
@@ -191,6 +193,73 @@ export default function DriverTodaysRoute() {
     _lng: c.listing_lng ?? c.hotel_lng ?? null as number | null,
   }));
 
+  // Kigali city center — fallback when no coordinates in DB
+  const KIGALI_CENTER: [number, number] = [-1.9441, 30.0619];
+  const KIGALI_OFFSETS: [number, number][] = [
+    [0, 0], [0.008, 0.005], [-0.006, 0.009], [0.010, -0.007],
+    [-0.009, -0.005], [0.005, 0.012], [-0.012, 0.003],
+  ];
+
+  const getStopCoords = useCallback(() => {
+    const stopCoords: Array<{ lat: number; lng: number; stop: typeof stops[0] }> = [];
+    stops.forEach((stop, i) => {
+      const lat = (stop._lat as number | null) ?? (KIGALI_CENTER[0] + KIGALI_OFFSETS[i % KIGALI_OFFSETS.length][0]);
+      const lng = (stop._lng as number | null) ?? (KIGALI_CENTER[1] + KIGALI_OFFSETS[i % KIGALI_OFFSETS.length][1]);
+      stopCoords.push({ lat, lng, stop });
+    });
+    return stopCoords;
+  }, [stops]);
+
+  // Fetch road-following route geometry (driver -> pending stops)
+  useEffect(() => {
+    if (!driverPos) {
+      setRoadRoute([]);
+      return;
+    }
+
+    const stopCoords = getStopCoords();
+    const pendingCoords = stopCoords
+      .filter(s => !['completed', 'collected', 'verified'].includes(s.stop.status))
+      .map(s => [s.lat, s.lng] as [number, number]);
+
+    if (!pendingCoords.length) {
+      setRoadRoute([]);
+      return;
+    }
+
+    const routePoints: [number, number][] = [driverPos, ...pendingCoords];
+    const coordsString = routePoints.map(([lat, lng]) => `${lng},${lat}`).join(';');
+    const url = `https://router.project-osrm.org/route/v1/driving/${coordsString}?overview=full&geometries=geojson&steps=false`;
+
+    routeAbortRef.current?.abort();
+    const controller = new AbortController();
+    routeAbortRef.current = controller;
+
+    fetch(url, { signal: controller.signal })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`Routing failed: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        const geometry = data?.routes?.[0]?.geometry?.coordinates;
+        if (Array.isArray(geometry) && geometry.length > 1) {
+          const roadCoords = geometry
+            .map((coord: [number, number]) => [coord[1], coord[0]] as [number, number])
+            .filter(([lat, lng]) => Number.isFinite(lat) && Number.isFinite(lng));
+          setRoadRoute(roadCoords.length > 1 ? roadCoords : routePoints);
+        } else {
+          setRoadRoute(routePoints);
+        }
+      })
+      .catch((err) => {
+        if (err?.name !== 'AbortError') {
+          setRoadRoute(routePoints);
+        }
+      });
+
+    return () => controller.abort();
+  }, [driverPos, getStopCoords]);
+
   // Update live markers whenever GPS pos, tracking data or collections change
   useEffect(() => {
     const L = leafletRef.current;
@@ -217,20 +286,8 @@ export default function DriverTodaysRoute() {
     hotelMarkersRef.current.forEach(m => m.remove());
     hotelMarkersRef.current = [];
 
-    // Kigali city center — fallback when no coordinates in DB
-    const KIGALI_CENTER: [number, number] = [-1.9441, 30.0619];
-    const KIGALI_OFFSETS: [number, number][] = [
-      [0, 0], [0.008, 0.005], [-0.006, 0.009], [0.010, -0.007],
-      [-0.009, -0.005], [0.005, 0.012], [-0.012, 0.003],
-    ];
-
     // Collect stop coordinates: prefer listing_lat/lng, fallback to hotel_lat/lng, then Kigali scatter
-    const stopCoords: Array<{ lat: number; lng: number; stop: typeof stops[0] }> = [];
-    stops.forEach((stop, i) => {
-      const lat = (stop._lat as number | null) ?? (KIGALI_CENTER[0] + KIGALI_OFFSETS[i % KIGALI_OFFSETS.length][0]);
-      const lng = (stop._lng as number | null) ?? (KIGALI_CENTER[1] + KIGALI_OFFSETS[i % KIGALI_OFFSETS.length][1]);
-      stopCoords.push({ lat, lng, stop });
-    });
+    const stopCoords = getStopCoords();
 
     // Place a numbered marker for every stop
     stopCoords.forEach(({ lat, lng, stop }, i) => {
@@ -251,14 +308,10 @@ export default function DriverTodaysRoute() {
       hotelMarkersRef.current.push(m);
     });
 
-    // Draw blue dashed polyline: driver → each unfinished stop in order
+    // Draw blue dashed polyline: route snapped to roads
     if (driverPos && stopCoords.length > 0) {
-      const pendingCoords = stopCoords
-        .filter(s => !['completed', 'collected', 'verified'].includes(s.stop.status))
-        .map(s => [s.lat, s.lng] as [number, number]);
-      if (pendingCoords.length > 0) {
-        const routePoints: [number, number][] = [driverPos, ...pendingCoords];
-        const line = L.polyline(routePoints, { color: '#2563eb', weight: 4, dashArray: '10 6', opacity: 0.85 }).addTo(map);
+      if (roadRoute.length > 1) {
+        const line = L.polyline(roadRoute, { color: '#2563eb', weight: 4, dashArray: '10 6', opacity: 0.85 }).addTo(map);
         hotelMarkersRef.current.push(line as any);
       }
       const items = [driverMarkerRef.current, ...hotelMarkersRef.current].filter(Boolean);
@@ -269,7 +322,7 @@ export default function DriverTodaysRoute() {
       if (items.length > 0) map.fitBounds(L.featureGroup(items).getBounds().pad(0.2));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMapReady, driverPos, trackingMap, stops]);
+  }, [isMapReady, driverPos, trackingMap, getStopCoords, roadRoute]);
 
   const completedStops = stops.filter(s => s.status === 'completed' || s.status === 'collected' || s.status === 'verified').length;
   const totalStops = stops.length;
