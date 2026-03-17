@@ -73,12 +73,12 @@ const roleConfigs: Record<string, {
       { path: '/dashboard/recycler/bids', label: 'My Bids', icon: <Eye size={20} /> },
       { path: '/dashboard/recycler/collections', label: 'Active Collections', icon: <Route size={20} /> },
       { path: '/dashboard/recycler/inventory', label: 'Inventory', icon: <Warehouse size={20} /> },
-      { path: '/dashboard/recycler/revenue', label: 'Revenue', icon: <DollarSign size={20} /> },
+      // { path: '/dashboard/recycler/revenue', label: 'Revenue', icon: <DollarSign size={20} /> },
       { path: '/dashboard/recycler/impact', label: 'Green Impact', icon: <Trophy size={20} /> },
       { path: '/dashboard/recycler/settings', label: 'Company Settings', icon: <Settings size={20} /> },
       { path: '/dashboard/recycler/reports', label: 'Reports', icon: <FileText size={20} /> },
-      { path: '/dashboard/recycler/zones', label: 'Collection Zones', icon: <MapPin size={20} /> },
-      { path: '/dashboard/recycler/messages', label: 'Messages', icon: <MessageSquare size={20} /> },
+      // { path: '/dashboard/recycler/zones', label: 'Collection Zones', icon: <MapPin size={20} /> },
+      // { path: '/dashboard/recycler/messages', label: 'Messages', icon: <MessageSquare size={20} /> },
     ]
   },
   driver: {
