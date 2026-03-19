@@ -66,12 +66,12 @@ def notify_driver_assigned(db: Session, *, driver_user_id: int, hotel_name: str,
 
 
 def notify_bid_rejected(db: Session, *, recycler_user_id: int, hotel_name: str,
-                        listing_title: str, reason: str | None = None) -> None:
+                        listing_title: str, listing_id: int, reason: str | None = None) -> None:
     """Notify recycler when bid is rejected."""
     body = f"{hotel_name} rejected your bid on '{listing_title}'."
     if reason:
         body += f" {reason}"
     notify(db, user_id=recycler_user_id, title="Bid Rejected",
-           body=body, type=NotificationType.bid_rejected)
+           body=body, type=NotificationType.bid_rejected, link=f"/listings/{listing_id}")
 
 
