@@ -146,7 +146,7 @@ class _RecyclerCollectionsScreenState extends ConsumerState<RecyclerCollectionsS
   }
 
   void _showAssignDriver(BuildContext context, Collection col) {
-    final drivers = ['Jean Paul Kagame', 'Marie Claire Uwera', 'Pierre Nkurunziza', 'Eric Mutabazi'];
+    final driversAsync = ref.read(driversProvider);
 
     showModalBottomSheet(
       context: context,
@@ -167,23 +167,46 @@ class _RecyclerCollectionsScreenState extends ConsumerState<RecyclerCollectionsS
               style: const TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 16),
-            ...drivers.map((driver) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: AppColors.primaryLight,
-                    child: Text(
-                      driver.split(' ').map((e) => e[0]).take(2).join(),
-                      style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                  title: Text(driver),
-                  subtitle: const Text('Available • 0 active jobs'),
-                  trailing: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(minimumSize: const Size(70, 32)),
-                    child: const Text('Assign'),
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                )),
+            driversAsync.when(
+              loading: () => const Center(child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: CircularProgressIndicator(),
+              )),
+              error: (_, __) => const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Text('Could not load drivers', style: TextStyle(color: AppColors.textSecondary)),
+              ),
+              data: (drivers) {
+                if (drivers.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Text('No drivers available', style: TextStyle(color: AppColors.textSecondary)),
+                  );
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: drivers.map((driver) {
+                    final name = driver['full_name'] as String? ?? driver['name'] as String? ?? 'Driver';
+                    final isAvailable = driver['is_available'] as bool? ?? true;
+                    final initials = name.split(' ').map((e) => e.isNotEmpty ? e[0] : '').take(2).join();
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: AppColors.primaryLight,
+                        child: Text(initials, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
+                      ),
+                      title: Text(name),
+                      subtitle: Text(isAvailable ? 'Available' : 'Unavailable'),
+                      trailing: ElevatedButton(
+                        onPressed: isAvailable ? () => Navigator.pop(context) : null,
+                        style: ElevatedButton.styleFrom(minimumSize: const Size(70, 32)),
+                        child: const Text('Assign'),
+                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
           ],
         ),
       ),

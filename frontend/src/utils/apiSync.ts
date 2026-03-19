@@ -47,7 +47,16 @@ export async function syncFromAPI(userRole: string): Promise<void> {
       contactPerson: l.contact_person || '',
       specialInstructions: l.special_instructions || '',
       autoAcceptAbove: 0,
-      photos: [],
+      // Map image URLs from the API response:
+      // `images` is an array of { id, url, is_primary } objects (preferred).
+      // `image_url` is a single primary URL (fallback).
+      photos: (() => {
+        if (l.images && l.images.length > 0) {
+          return l.images.map((img) => img.url).filter(Boolean);
+        }
+        if (l.image_url) return [l.image_url];
+        return [];
+      })(),
       bids: [],
     }));
     saveAll('listings', dsListings);

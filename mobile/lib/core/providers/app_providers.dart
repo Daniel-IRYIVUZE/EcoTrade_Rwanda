@@ -225,7 +225,6 @@ CollectionStatus _mapCollectionStatus(String s) {
       return CollectionStatus.scheduled;
     case 'accepted':
     case 'assigned':
-      return CollectionStatus.enRoute;
     case 'en_route':
     case 'arrived':
     case 'confirmed':
@@ -236,9 +235,31 @@ CollectionStatus _mapCollectionStatus(String s) {
       return CollectionStatus.verified;
     case 'completed':
       return CollectionStatus.completed;
+    case 'failed':
+    case 'cancelled':
+      return CollectionStatus.missed;
     default:
       return CollectionStatus.missed;
   }
+}
+
+/// Extracts photo URLs from a listing API response.
+/// Handles both `images` (array of {id, url, is_primary}) and `image_url` (single string).
+List<String> _extractListingPhotos(Map<String, dynamic> j) {
+  // Prefer the `images` array (full image objects from the backend)
+  final images = j['images'];
+  if (images is List && images.isNotEmpty) {
+    final urls = images
+        .whereType<Map>()
+        .map((img) => img['url'] as String? ?? '')
+        .where((url) => url.isNotEmpty)
+        .toList();
+    if (urls.isNotEmpty) return urls;
+  }
+  // Fall back to single image_url field
+  final imageUrl = j['image_url'] as String?;
+  if (imageUrl != null && imageUrl.isNotEmpty) return [imageUrl];
+  return [];
 }
 
 WasteListing _listingFromApi(Map<String, dynamic> j) {
@@ -249,10 +270,11 @@ WasteListing _listingFromApi(Map<String, dynamic> j) {
     wasteType: _mapWasteType(j['waste_type'] as String? ?? 'mixed'),
     volume: (j['volume'] as num? ?? 0).toDouble(),
     unit: j['unit'] as String? ?? 'kg',
-    quality: WasteQuality.a,
+    quality: _mapWasteQuality(j['quality'] as String? ?? ''),
+    photos: _extractListingPhotos(j),
     minBid: (j['min_bid'] as num? ?? j['minBid'] as num? ?? 0).toDouble(),
     status: _mapListingStatus(j['status'] as String? ?? 'open'),
-    location: j['address'] as String? ?? '',
+    location: j['address'] as String? ?? j['location'] as String? ?? '',
     latitude: (j['latitude'] as num?)?.toDouble(),
     longitude: (j['longitude'] as num?)?.toDouble(),
     createdAt: j['created_at'] != null
@@ -261,24 +283,41 @@ WasteListing _listingFromApi(Map<String, dynamic> j) {
   );
 }
 
+WasteQuality _mapWasteQuality(String s) {
+  switch (s.toLowerCase()) {
+    case 'a': return WasteQuality.a;
+    case 'b': return WasteQuality.b;
+    case 'c': return WasteQuality.c;
+    default:  return WasteQuality.a;
+  }
+}
+
 Collection _collectionFromApi(Map<String, dynamic> j) {
   return Collection(
     id: (j['id'] as int).toString(),
     listingId: (j['listing_id'] as int? ?? 0).toString(),
     businessName: j['hotel_name'] as String? ?? '',
     recyclerName: j['recycler_name'] as String? ?? '',
+    driverName: j['driver_name'] as String?,
     driverId: j['driver_id'] != null ? (j['driver_id'] as int).toString() : null,
-    wasteType: WasteType.mixed,
-    volume: (j['actual_volume'] as num? ?? 0).toDouble(),
+    wasteType: _mapWasteType(j['waste_type'] as String? ?? 'mixed'),
+    volume: (j['actual_volume'] as num? ?? j['volume'] as num? ?? 0).toDouble(),
     status: _mapCollectionStatus(j['status'] as String? ?? 'scheduled'),
     scheduledDate: j['scheduled_date'] != null
         ? DateTime.tryParse(j['scheduled_date'] as String) ?? DateTime.now()
         : DateTime.now(),
     scheduledTime: j['scheduled_time'] as String? ?? '09:00',
+    completedAt: j['completed_at'] != null
+        ? DateTime.tryParse(j['completed_at'] as String)
+        : null,
+    actualWeight: (j['actual_volume'] as num?)?.toDouble(),
+    notes: (j['notes'] as String? ?? j['driver_notes'] as String?)?.trim().isNotEmpty == true
+        ? (j['notes'] as String? ?? j['driver_notes'] as String?)
+        : null,
     location: (j['hotel_address'] as String?) ?? (j['location'] as String?) ?? '',
     destinationLat: (j['listing_lat'] as num?)?.toDouble() ?? (j['hotel_lat'] as num?)?.toDouble(),
     destinationLng: (j['listing_lng'] as num?)?.toDouble() ?? (j['hotel_lng'] as num?)?.toDouble(),
-    earnings: 0,
+    earnings: (j['earnings'] as num? ?? 0).toDouble(),
   );
 }
 
@@ -325,13 +364,24 @@ Bid _bidFromApi(Map<String, dynamic> j, {required String recyclerName}) {
     recyclerName: recyclerName,
     amount: (j['amount'] as num? ?? 0).toDouble(),
     note: j['notes'] as String?,
-    collectionPreference: (j['hotel_name'] as String?) ?? 'flexible',
+    collectionPreference: 'flexible',
     status: _mapBidStatus(j['status'] as String? ?? 'active'),
     createdAt: j['created_at'] != null
         ? DateTime.tryParse(j['created_at'] as String) ?? DateTime.now()
         : DateTime.now(),
   );
 }
+
+// Raw bid JSON provider — preserves enriched listing fields (hotel_name, waste_type, volume, unit)
+// returned by the /bids/mine endpoint.
+final _apiMyBidsRawProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  try {
+    final items = await ApiService.getMyBids();
+    return items.map((j) => j as Map<String, dynamic>).toList();
+  } catch (_) {
+    return [];
+  }
+});
 
 NotificationType _mapNotificationType(String s) {
   switch (s.toLowerCase()) {
@@ -485,6 +535,40 @@ final _apiNotificationsProvider = FutureProvider<List<AppNotification>>((ref) as
   }
 });
 
+// ── Role-specific Profile Providers ───────────────────────────────────────
+
+/// All drivers from /drivers/ — used in fleet management and driver assignment.
+final driversProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  try {
+    final items = await ApiService.getDrivers();
+    return items.map((j) => j as Map<String, dynamic>).toList();
+  } catch (_) {
+    return [];
+  }
+});
+
+/// Hotel profile data from /hotels/me — provides address, TIN, city, etc.
+final hotelProfileProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final user = ref.watch(authProvider).user;
+  if (user == null || user.role != UserRole.business) return {};
+  try {
+    return await ApiService.getMyHotel();
+  } catch (_) {
+    return {};
+  }
+});
+
+/// Recycler profile data from /recyclers/me — provides company name, TIN, city, etc.
+final recyclerProfileProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final user = ref.watch(authProvider).user;
+  if (user == null || user.role != UserRole.recycler) return {};
+  try {
+    return await ApiService.getMyRecycler();
+  } catch (_) {
+    return {};
+  }
+});
+
 // ── Listings Providers ─────────────────────────────────────────────────────
 
 final allListingsProvider = Provider<List<WasteListing>>(
@@ -514,23 +598,41 @@ final recyclerBidListingsProvider = Provider<List<WasteListing>>((ref) {
   final user = ref.watch(authProvider).user;
   if (user == null) return [];
   final bids = ref.watch(_apiMyBidsProvider).whenOrNull(data: (d) => d) ?? [];
-  final byListing = <String, List<Bid>>{};
-  for (final bid in bids) {
-    byListing.putIfAbsent(bid.listingId, () => []).add(bid);
+  final rawBids = ref.watch(_apiMyBidsRawProvider).whenOrNull(data: (d) => d) ?? [];
+
+  // Build per-listing metadata from the enriched raw JSON (hotel_name, waste_type, volume, unit)
+  // then attach the mapped Bid objects to each listing.
+  final listingMeta = <String, Map<String, dynamic>>{};
+  final listingBids = <String, List<Bid>>{};
+
+  for (int i = 0; i < bids.length; i++) {
+    final bid = bids[i];
+    final raw = i < rawBids.length ? rawBids[i] : <String, dynamic>{};
+    final key = bid.listingId;
+    listingMeta.putIfAbsent(key, () => {
+      'hotel_name': raw['hotel_name'] ?? '',
+      'waste_type': raw['waste_type'] ?? 'mixed',
+      'volume': raw['volume'] ?? 0,
+      'unit': raw['unit'] ?? 'kg',
+      'first_bid': bid,
+    });
+    listingBids.putIfAbsent(key, () => []).add(bid);
   }
-  return byListing.entries.map((entry) {
-    final first = entry.value.first;
+
+  return listingMeta.entries.map((entry) {
+    final meta = entry.value;
+    final first = meta['first_bid'] as Bid;
     return WasteListing(
       id: entry.key,
       businessId: '',
-      businessName: first.collectionPreference,
-      wasteType: WasteType.mixed,
-      volume: 0,
-      unit: 'kg',
+      businessName: meta['hotel_name'] as String? ?? '',
+      wasteType: _mapWasteType(meta['waste_type'] as String? ?? 'mixed'),
+      volume: (meta['volume'] as num? ?? 0).toDouble(),
+      unit: meta['unit'] as String? ?? 'kg',
       quality: WasteQuality.a,
       minBid: first.amount,
       status: ListingStatus.open,
-      bids: entry.value,
+      bids: listingBids[entry.key] ?? [],
       location: '',
       createdAt: first.createdAt,
     );
@@ -734,11 +836,14 @@ final recyclerStatsProvider = Provider<Map<String, dynamic>>((ref) {
   if (user == null) return {};
   final apiCollections = ref.watch(_apiMyCollectionsProvider).whenOrNull(data: (d) => d);
   final apiTransactions = ref.watch(_apiMyTransactionsProvider).whenOrNull(data: (d) => d);
+  final apiBids = ref.watch(_apiMyBidsProvider).whenOrNull(data: (d) => d);
   if (apiCollections != null) {
     final transactions = apiTransactions ?? [];
+    final bids = apiBids ?? [];
+    final activeBids = bids.where((b) => b.status == BidStatus.active).length;
     return {
-      'totalBids': 0,
-      'activeBids': 0,
+      'totalBids': bids.length,
+      'activeBids': activeBids,
       'wonBids': apiCollections.length,
       'totalEarnings': transactions.fold<double>(0, (s, t) => s + t.amount),
       'pendingCollections': apiCollections
@@ -952,4 +1057,33 @@ class BidsNotifier extends StateNotifier<List<Bid>> {
 final bidsNotifierProvider =
     StateNotifierProvider<BidsNotifier, List<Bid>>((ref) {
   return BidsNotifier(ref);
+});
+
+// ── Collections CRUD Notifier ─────────────────────────────────────────────
+
+class CollectionsNotifier extends StateNotifier<List<Collection>> {
+  CollectionsNotifier(this.ref) : super(const []);
+
+  final Ref ref;
+
+  /// Advances the collection to the next status in the backend workflow.
+  /// Refreshes collections data after success.
+  Future<Map<String, dynamic>> advanceStatus(
+    int collectionId, {
+    double? actualWeight,
+    String? notes,
+  }) async {
+    final result = await ApiService.advanceCollectionStatus(
+      collectionId,
+      actualWeight: actualWeight,
+      notes: notes,
+    );
+    ref.invalidate(_apiMyCollectionsProvider);
+    return result;
+  }
+}
+
+final collectionsNotifierProvider =
+    StateNotifierProvider<CollectionsNotifier, List<Collection>>((ref) {
+  return CollectionsNotifier(ref);
 });

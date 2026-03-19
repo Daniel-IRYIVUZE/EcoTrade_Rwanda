@@ -378,67 +378,97 @@ class _WasteListingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Responsive grid of images
-          if (listing.photos != null && listing.photos.isNotEmpty)
-            SizedBox(
-              height: 60,
-              child: GridView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1,
-                ),
-                itemCount: listing.photos.length,
-                itemBuilder: (context, idx) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      getAbsoluteImageUrl(listing.photos[idx]),
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: AppColors.primaryLight,
-                        width: 60,
-                        height: 60,
-                        child: Icon(
-                          listing.wasteType == WasteType.glass
-                              ? Icons.wine_bar_outlined
-                              : listing.wasteType == WasteType.paperCardboard
-                                  ? Icons.article_outlined
-                                  : Icons.delete_outline,
-                          color: AppColors.primary,
-                          size: 22,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          else
-            Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: context.cPrimaryLight,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                listing.wasteType == WasteType.glass
-                    ? Icons.wine_bar_outlined
-                    : listing.wasteType == WasteType.paperCardboard
-                        ? Icons.article_outlined
-                        : Icons.delete_outline,
-                color: AppColors.primary,
-                size: 22,
-              ),
+          _ListingThumb(listing: listing),
+          const SizedBox(height: 8),
+          Text(
+            listing.wasteType.label,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+              color: context.cText,
             ),
-          const SizedBox(height: 10),
-          // ...existing code...
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            '${listing.volume.toStringAsFixed(0)} ${listing.unit}',
+            style: TextStyle(fontSize: 11, color: context.cTextSec),
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              const Icon(Icons.gavel, size: 11, color: AppColors.primary),
+              const SizedBox(width: 3),
+              Text(
+                '${listing.activeBidCount} bids',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+/// Shared thumbnail widget — shows up to 4 photos in a horizontal scroll,
+/// or a category icon when the listing has no photos.
+class _ListingThumb extends StatelessWidget {
+  final WasteListing listing;
+  const _ListingThumb({required this.listing});
+
+  IconData get _icon {
+    switch (listing.wasteType) {
+      case WasteType.uco:            return Icons.water_drop_outlined;
+      case WasteType.glass:          return Icons.wine_bar_outlined;
+      case WasteType.paperCardboard: return Icons.article_outlined;
+      default:                       return Icons.delete_outline;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final urls = getAbsoluteImageUrls(listing.photos).take(4).toList();
+
+    if (urls.isEmpty) {
+      return Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: context.cPrimaryLight,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(_icon, color: AppColors.primary, size: 22),
+      );
+    }
+
+    return SizedBox(
+      height: 60,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: urls.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 6),
+        itemBuilder: (context, idx) => ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            urls[idx],
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              color: AppColors.primaryLight,
+              width: 60,
+              height: 60,
+              child: Icon(_icon, color: AppColors.primary, size: 22),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -678,64 +708,7 @@ class _ManageListingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Responsive grid of images
-          if (listing.photos != null && listing.photos.isNotEmpty)
-            SizedBox(
-              height: 60,
-              child: GridView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1,
-                ),
-                itemCount: listing.photos.length,
-                itemBuilder: (context, idx) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      getAbsoluteImageUrl(listing.photos[idx]),
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: AppColors.primaryLight,
-                        width: 60,
-                        height: 60,
-                        child: Icon(
-                          listing.wasteType == WasteType.glass
-                              ? Icons.wine_bar_outlined
-                              : listing.wasteType == WasteType.paperCardboard
-                                  ? Icons.article_outlined
-                                  : Icons.delete_outline,
-                          color: AppColors.primary,
-                          size: 22,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          else
-            Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: context.cPrimaryLight,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                listing.wasteType == WasteType.glass
-                    ? Icons.wine_bar_outlined
-                    : listing.wasteType == WasteType.paperCardboard
-                        ? Icons.article_outlined
-                        : Icons.delete_outline,
-                color: AppColors.primary,
-                size: 22,
-              ),
-            ),
+          _ListingThumb(listing: listing),
           const SizedBox(height: 10),
           Text(
             listing.wasteType.label,

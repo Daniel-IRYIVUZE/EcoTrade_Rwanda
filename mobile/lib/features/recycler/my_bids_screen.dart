@@ -37,6 +37,14 @@ class _MyBidsScreenState extends ConsumerState<MyBidsScreen>
     final wonBids = allBids.where((b) => b.status == BidStatus.won).toList();
     final lostBids = allBids.where((b) => b.status == BidStatus.lost).toList();
 
+    // Map bid ID → hotel/business name from enriched listing data
+    final bidToHotel = <String, String>{};
+    for (final listing in listings) {
+      for (final bid in listing.bids) {
+        bidToHotel[bid.id] = listing.businessName;
+      }
+    }
+
     return Scaffold(
       backgroundColor: context.cBg,
       appBar: AppBar(
@@ -56,9 +64,9 @@ class _MyBidsScreenState extends ConsumerState<MyBidsScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _BidListView(bids: activeBids, type: BidStatus.active),
-          _BidListView(bids: wonBids, type: BidStatus.won),
-          _LostBidsView(bids: lostBids),
+          _BidListView(bids: activeBids, type: BidStatus.active, bidToHotel: bidToHotel),
+          _BidListView(bids: wonBids, type: BidStatus.won, bidToHotel: bidToHotel),
+          _LostBidsView(bids: lostBids, bidToHotel: bidToHotel),
         ],
       ),
     );
@@ -68,7 +76,8 @@ class _MyBidsScreenState extends ConsumerState<MyBidsScreen>
 class _BidListView extends ConsumerWidget {
   final List<Bid> bids;
   final BidStatus type;
-  const _BidListView({required this.bids, required this.type});
+  final Map<String, String> bidToHotel;
+  const _BidListView({required this.bids, required this.type, required this.bidToHotel});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -95,6 +104,7 @@ class _BidListView extends ConsumerWidget {
       itemCount: bids.length,
       itemBuilder: (context, index) {
         final bid = bids[index];
+        final hotelName = bidToHotel[bid.id] ?? bid.recyclerName;
         final statusColor = type == BidStatus.won ? AppColors.primary : AppColors.info;
         final statusLabel = type == BidStatus.won ? 'Won' : 'Pending';
         return Container(
@@ -126,7 +136,7 @@ class _BidListView extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(bid.recyclerName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                        Text(hotelName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                         Text(bid.note ?? 'Bid submitted', style: const TextStyle(fontSize: 13, color: AppColors.textSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
                       ],
                     ),
@@ -276,7 +286,8 @@ class _BidListView extends ConsumerWidget {
 
 class _LostBidsView extends StatelessWidget {
   final List<Bid> bids;
-  const _LostBidsView({required this.bids});
+  final Map<String, String> bidToHotel;
+  const _LostBidsView({required this.bids, required this.bidToHotel});
 
   @override
   Widget build(BuildContext context) {
@@ -315,6 +326,7 @@ class _LostBidsView extends StatelessWidget {
           );
         }
         final bid = bids[index - 1];
+        final hotelName = bidToHotel[bid.id] ?? bid.recyclerName;
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
@@ -334,7 +346,7 @@ class _LostBidsView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(bid.recyclerName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                        Text(hotelName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                         Text(bid.note ?? '', style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
                       ],
                     ),

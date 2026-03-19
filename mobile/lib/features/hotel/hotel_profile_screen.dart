@@ -15,6 +15,27 @@ class HotelProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
+    final hotelProfile = ref.watch(hotelProfileProvider).whenOrNull(data: (d) => d) ?? {};
+
+    // Prefer API profile fields; fall back to auth user fields
+    final businessName = hotelProfile['hotel_name'] as String?
+        ?? hotelProfile['business_name'] as String?
+        ?? user?.displayName
+        ?? 'Hotel';
+    final tin = hotelProfile['tin_number'] as String?
+        ?? hotelProfile['tax_id'] as String?
+        ?? '—';
+    final address = hotelProfile['address'] as String?
+        ?? hotelProfile['location'] as String?
+        ?? hotelProfile['city'] as String?
+        ?? 'Kigali, Rwanda';
+    final phone = hotelProfile['phone'] as String?
+        ?? user?.phone
+        ?? 'N/A';
+    final email = hotelProfile['email'] as String?
+        ?? user?.email
+        ?? 'N/A';
+
     return Scaffold(
       backgroundColor: context.cBg,
       body: SingleChildScrollView(
@@ -44,7 +65,7 @@ class HotelProfileScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      user?.displayName ?? 'Hotel',
+                      businessName,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w800,
@@ -56,7 +77,7 @@ class HotelProfileScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Kigali City',
+                          address,
                           style: TextStyle(
                             color: Colors.white.withAlpha(200),
                             fontSize: 13,
@@ -68,7 +89,8 @@ class HotelProfileScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
                     IconButton(
                       icon: const Icon(Icons.edit_outlined, color: Colors.white),
-                      onPressed: () => _showEditProfileSheet(context),
+                      onPressed: () => _showEditProfileSheet(context,
+                          name: businessName, phone: phone, location: address),
                     ),
                   ],
                 ),
@@ -81,15 +103,15 @@ class HotelProfileScreen extends ConsumerWidget {
               level: _scoreLevel(user?.greenScore ?? 0),
             ).animate().slideY(begin: 0.2, duration: 300.ms).fadeIn(),
             const SizedBox(height: 20),
-            // Business Details
+            // Business Details — all fields from live API data
             _ProfileSection(
               title: 'Business Details',
               children: [
-                _ProfileRow(icon: Icons.business_outlined, label: 'Business Name', value: user?.displayName ?? 'N/A'),
-                _ProfileRow(icon: Icons.numbers_outlined, label: 'TIN Number', value: '119874652'),
-                _ProfileRow(icon: Icons.location_on_outlined, label: 'Location', value: 'KN 5 Rd, Kigali'),
-                _ProfileRow(icon: Icons.phone_outlined, label: 'Phone', value: user?.phone ?? 'N/A'),
-                _ProfileRow(icon: Icons.email_outlined, label: 'Email', value: user?.email ?? 'N/A'),
+                _ProfileRow(icon: Icons.business_outlined, label: 'Business Name', value: businessName),
+                _ProfileRow(icon: Icons.numbers_outlined, label: 'TIN Number', value: tin),
+                _ProfileRow(icon: Icons.location_on_outlined, label: 'Address', value: address),
+                _ProfileRow(icon: Icons.phone_outlined, label: 'Phone', value: phone),
+                _ProfileRow(icon: Icons.email_outlined, label: 'Email', value: email),
               ],
             ).animate().slideY(begin: 0.2, duration: 300.ms, delay: 80.ms).fadeIn(),
             const SizedBox(height: 16),

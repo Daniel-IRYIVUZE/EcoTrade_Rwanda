@@ -355,73 +355,7 @@ class _ListingCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Grid of images
-          if (listing.photos != null && listing.photos.isNotEmpty)
-            SizedBox(
-              height: 60,
-              child: GridView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1,
-                ),
-                itemCount: listing.photos.length,
-                itemBuilder: (context, idx) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      getAbsoluteImageUrl(listing.photos[idx]),
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: AppColors.primaryLight,
-                        width: 60,
-                        height: 60,
-                        child: Icon(
-                          listing.wasteType == WasteType.uco
-                              ? Icons.water_drop_outlined
-                              : listing.wasteType == WasteType.glass
-                                  ? Icons.wine_bar_outlined
-                                  : listing.wasteType == WasteType.paperCardboard
-                                      ? Icons.article_outlined
-                                      : Icons.delete_outline,
-                          color: AppColors.primary,
-                          size: 26,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            )
-          else
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(
-                getFirstImageUrl(listing.photos),
-                width: 48,
-                height: 48,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: AppColors.primaryLight,
-                  width: 48,
-                  height: 48,
-                  child: Icon(
-                    listing.wasteType == WasteType.uco
-                        ? Icons.water_drop_outlined
-                        : listing.wasteType == WasteType.glass
-                            ? Icons.wine_bar_outlined
-                            : listing.wasteType == WasteType.paperCardboard
-                                ? Icons.article_outlined
-                                : Icons.delete_outline,
-                    color: AppColors.primary,
-                    size: 26,
-                  ),
-                ),
-              ),
-            ),
+          _WasteImageRow(listing: listing),
           const SizedBox(width: 12),
           // Listing details
           Row(
@@ -470,6 +404,68 @@ class _ListingCard extends StatelessWidget {
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
     if (diff.inHours < 24) return '${diff.inHours}h ago';
     return '${diff.inDays}d ago';
+  }
+}
+
+/// Reusable row of photo thumbnails for a WasteListing.
+/// Shows up to [maxPhotos] 60×60 thumbnails (horizontal scroll) or a
+/// single icon-placeholder when there are no photos.
+class _WasteImageRow extends StatelessWidget {
+  final WasteListing listing;
+  final int maxPhotos;
+  const _WasteImageRow({required this.listing, this.maxPhotos = 4});
+
+  IconData get _icon {
+    switch (listing.wasteType) {
+      case WasteType.uco:           return Icons.water_drop_outlined;
+      case WasteType.glass:         return Icons.wine_bar_outlined;
+      case WasteType.paperCardboard: return Icons.article_outlined;
+      default:                      return Icons.delete_outline;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final urls = getAbsoluteImageUrls(listing.photos)
+        .take(maxPhotos)
+        .toList();
+
+    if (urls.isEmpty) {
+      return Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: AppColors.primaryLight,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(_icon, color: AppColors.primary, size: 26),
+      );
+    }
+
+    return SizedBox(
+      height: 60,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemCount: urls.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 6),
+        itemBuilder: (context, idx) => ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            urls[idx],
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(
+              color: AppColors.primaryLight,
+              width: 60,
+              height: 60,
+              child: Icon(_icon, color: AppColors.primary, size: 26),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

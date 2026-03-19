@@ -484,6 +484,21 @@ class ApiService {
   
   // ── Drivers ─────────────────────────────────────────────────────────────────
   
+  static Future<List<dynamic>> getDrivers({bool? availableOnly}) async {
+    final queryParams = <String, String>{};
+    if (availableOnly != null) queryParams['available_only'] = availableOnly.toString();
+    final response = await _request('GET', '/drivers/', queryParams: queryParams);
+    if (response is List) return response;
+    if (response is Map<String, dynamic>) {
+      return (response['items'] as List<dynamic>?) ?? <dynamic>[];
+    }
+    return <dynamic>[];
+  }
+
+  static Future<Map<String, dynamic>> getMyDriver() async {
+    return await _request('GET', '/drivers/me');
+  }
+
   static Future<Map<String, dynamic>> getDriverProfile(int userId) async {
     return await _request('GET', '/drivers/$userId');
   }
