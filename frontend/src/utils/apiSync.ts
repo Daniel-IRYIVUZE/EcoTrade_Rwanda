@@ -1,13 +1,12 @@
 // utils/apiSync.ts — Syncs real backend data into localStorage dataStore
 // Called on login when the backend is online. Falls back gracefully if offline.
-import { listingsAPI, collectionsAPI, transactionsAPI, usersAPI, routesAPI, bidsAPI, inventoryAPI } from '../services/api';
+import { listingsAPI, collectionsAPI, transactionsAPI, usersAPI, bidsAPI, inventoryAPI } from '../services/api';
 import { saveAll } from './dataStore';
 import type {
   WasteListing as DSListing,
   Collection as DSCollection,
   Transaction as DSTx,
   PlatformUser as DSUser,
-  DriverRoute as DSRoute,
 } from './dataStore';
 
 function toRole(r: string): DSUser['role'] {
@@ -135,39 +134,6 @@ export async function syncFromAPI(userRole: string): Promise<void> {
     } catch { /* offline */ }
   }
 
-  // Driver routes — only for driver role
-  if (userRole === 'driver') {
-    try {
-      const apiRoutes = await routesAPI.list({});
-      const dsRoutes: DSRoute[] = apiRoutes.map(r => ({
-        id: String(r.id),
-        driverId: String(r.driver_id),
-        date: r.date,
-        status: r.status as DSRoute['status'],
-        totalDistance: r.total_distance,
-        estimatedEarnings: r.estimated_earnings,
-        actualEarnings: r.actual_earnings,
-        startTime: r.start_time || '00:00',
-        endTime: r.end_time,
-        stops: (r.stops || []).map(s => ({
-          id: String(s.id),
-          businessName: s.hotel_name || '',
-          location: s.location || '',
-          wasteType: s.waste_type || '',
-          volume: s.volume || 0,
-          eta: s.eta || '',
-          status: s.status as 'pending' | 'arrived' | 'collecting' | 'completed' | 'skipped',
-          contactPerson: s.contact_person || '',
-          contactPhone: s.contact_phone || '',
-          specialInstructions: s.special_instructions || '',
-          actualWeight: s.actual_weight,
-          photos: [],
-          completedAt: s.completed_at,
-        })),
-      }));
-      saveAll('routes', dsRoutes);
-    } catch { /* offline */ }
-  }
 
   // Recycler-specific: sync own bids and inventory
   if (userRole === 'recycler') {

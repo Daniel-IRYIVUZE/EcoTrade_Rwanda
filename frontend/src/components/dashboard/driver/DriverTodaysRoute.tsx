@@ -1,5 +1,5 @@
 // components/dashboard/driver/DriverTodaysRoute.tsx
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { collectionsAPI, driversAPI, vehiclesAPI, type Collection, type CollectionTracking, type DriverProfile, type VehicleItem } from '../../../services/api';
 import { haversineKm, etaMinutes, formatDist } from '../../../utils/geo';
@@ -61,7 +61,9 @@ export default function DriverTodaysRoute() {
 
   useEffect(() => {
     load();
-  }, [load]);
+    // Only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     driversAPI.me().then(d => {
@@ -110,10 +112,12 @@ export default function DriverTodaysRoute() {
   // Initialize Leaflet map once
   useEffect(() => {
     if (!mapRef.current || leafletMapRef.current) return;
+    let cancelled = false;
     let L: typeof import('leaflet');
     const init = async () => {
       try {
         L = await import('leaflet');
+        if (cancelled || leafletMapRef.current) return;
         leafletRef.current = L;
         // Fix default icon paths
         const DefaultIcon = L.icon({
@@ -126,6 +130,7 @@ export default function DriverTodaysRoute() {
 
         const map = L.map(mapRef.current!, { zoomControl: true, scrollWheelZoom: false })
           .setView([-1.9441, 30.0619], 13);
+        if (cancelled) { map.remove(); return; }
         leafletMapRef.current = map;
 
         const tile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -140,6 +145,7 @@ export default function DriverTodaysRoute() {
     };
     init();
     return () => {
+      cancelled = true;
       if (leafletMapRef.current) {
         leafletMapRef.current.remove();
         leafletMapRef.current = null;
@@ -185,8 +191,8 @@ export default function DriverTodaysRoute() {
     tileLayerRef.current = L.tileLayer(cfg.url, { attribution: cfg.attribution, maxZoom: 19 }).addTo(map);
   }, [mapLayer, isMapReady]);
 
-  // Derived stop list — must be above the map useEffect so the closure is clean
-  const stops = collections.map((c, idx) => ({
+  // Derived stop list — memoized so getStopCoords stays stable between renders
+  const stops = useMemo(() => collections.map((c, idx) => ({
     id: c.id, hotel: c.hotel_name || `Collection #${c.id}`, address: c.location || 'Kigali', type: c.waste_type || 'Waste',
     quantity: c.volume ? `${c.volume} ${c.waste_type === 'UCO' ? 'L' : 'kg'}` : '—',
     time: c.scheduled_time || (c.scheduled_date ? new Date(c.scheduled_date).toLocaleDateString() : `Stop ${idx + 1}`),
@@ -195,7 +201,7 @@ export default function DriverTodaysRoute() {
     // carry coords so the map effect doesn't need to re-look them up
     _lat: c.listing_lat ?? c.hotel_lat ?? null as number | null,
     _lng: c.listing_lng ?? c.hotel_lng ?? null as number | null,
-  }));
+  })), [collections]);
 
   const getStopCoords = useCallback(() => {
     const stopCoords: Array<{ lat: number; lng: number; stop: typeof stops[0] }> = [];

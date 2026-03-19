@@ -246,7 +246,6 @@ function App() {
             <Route path="/business" element={<Navigate to="/dashboard/business" replace />} />
             <Route path="/recycler" element={<Navigate to="/dashboard/recycler" replace />} />
             <Route path="/driver" element={<Navigate to="/dashboard/driver" replace />} />
-            <Route path="/individual" element={<Navigate to="/dashboard/individual" replace />} />
             
             {/* 404 Not Found */}
             <Route path="*" element={<NotFoundPage />} />

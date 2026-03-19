@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Home, Users, Package, Truck, Settings, BarChart3, DollarSign,
-  Calendar, Map, FileText, ShoppingCart, Recycle, LogOut, ChevronLeft,
-  ChevronRight, Menu, X, ClipboardList, Trophy, MessageSquare, MapPin, Phone, Star, Eye,
+  Home, Users, Package, Truck, Settings, BarChart3, 
+  Calendar, Map, FileText, ShoppingCart,  LogOut, ChevronLeft,
+  ChevronRight, Menu, X, ClipboardList, Trophy,Star, Eye,
   CheckCircle, Warehouse, Route,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -34,15 +34,10 @@ const roleConfigs: Record<string, {
       { path: '/dashboard/admin', label: 'Dashboard Home', icon: <BarChart3 size={20} /> },
       { path: '/dashboard/admin/users', label: 'User Management', icon: <Users size={20} /> },
       { path: '/dashboard/admin/listings', label: 'Waste Listings', icon: <Package size={20} /> },
-      // { path: '/dashboard/admin/route-monitor', label: 'Route Monitor', icon: <Map size={20} /> },
-      { path: '/dashboard/admin/transactions', label: 'Transactions', icon: <DollarSign size={20} /> },
       { path: '/dashboard/admin/analytics', label: 'Analytics', icon: <BarChart3 size={20} /> },
-      // { path: '/dashboard/admin/verification', label: 'Verification Queue', icon: <Shield size={20} />},
-      // { path: '/dashboard/admin/audit-logs', label: 'Audit Logs', icon: <ClipboardList size={20} /> },
       { path: '/dashboard/admin/green-scores', label: 'Green Scores', icon: <Trophy size={20} /> },
       { path: '/dashboard/admin/blog', label: 'Blog Management', icon: <FileText size={20} /> },
       { path: '/dashboard/admin/reports', label: 'Reports', icon: <FileText size={20} /> },
-      // { path: '/dashboard/admin/support', label: 'Support Tickets', icon: <MessageSquare size={20} />},
       { path: '/dashboard/admin/settings', label: 'System Settings', icon: <Settings size={20} /> },
     ]
   },
@@ -52,14 +47,10 @@ const roleConfigs: Record<string, {
     navItems: [
       { path: '/dashboard/business', label: 'Dashboard', icon: <BarChart3 size={20} /> },
       { path: '/dashboard/business/listings', label: 'My Waste Listings', icon: <Package size={20} /> },
-      { path: '/dashboard/business/revenue', label: 'Revenue', icon: <DollarSign size={20} /> },
       { path: '/dashboard/business/greenscore', label: 'Green Score', icon: <Trophy size={20} /> },
       { path: '/dashboard/business/schedule', label: 'Collection Schedule', icon: <Calendar size={20} /> },
-      { path: '/dashboard/business/transactions', label: 'Transaction History', icon: <FileText size={20} /> },
       { path: '/dashboard/business/settings', label: 'Hotel Settings', icon: <Settings size={20} /> },
       { path: '/dashboard/business/reports', label: 'Reports & Certificates', icon: <Star size={20} /> },
-      { path: '/dashboard/business/messages', label: 'Messages', icon: <MessageSquare size={20} /> },
-      { path: '/dashboard/business/location', label: 'My Location', icon: <MapPin size={20} /> },
     ]
   },
   recycler: {
@@ -73,12 +64,9 @@ const roleConfigs: Record<string, {
       { path: '/dashboard/recycler/bids', label: 'My Bids', icon: <Eye size={20} /> },
       { path: '/dashboard/recycler/collections', label: 'Active Collections', icon: <Route size={20} /> },
       { path: '/dashboard/recycler/inventory', label: 'Inventory', icon: <Warehouse size={20} /> },
-      // { path: '/dashboard/recycler/revenue', label: 'Revenue', icon: <DollarSign size={20} /> },
       { path: '/dashboard/recycler/impact', label: 'Green Impact', icon: <Trophy size={20} /> },
       { path: '/dashboard/recycler/settings', label: 'Company Settings', icon: <Settings size={20} /> },
       { path: '/dashboard/recycler/reports', label: 'Reports', icon: <FileText size={20} /> },
-      // { path: '/dashboard/recycler/zones', label: 'Collection Zones', icon: <MapPin size={20} /> },
-      // { path: '/dashboard/recycler/messages', label: 'Messages', icon: <MessageSquare size={20} /> },
     ]
   },
   driver: {
@@ -88,22 +76,8 @@ const roleConfigs: Record<string, {
       { path: '/dashboard/driver', label: "Today's Route", icon: <Map size={20} /> },
       { path: '/dashboard/driver/assignments', label: 'My Assignments', icon: <ClipboardList size={20} /> },
       { path: '/dashboard/driver/completed', label: 'Completed Jobs', icon: <CheckCircle size={20} /> },
-      { path: '/dashboard/driver/earnings', label: 'My Earnings', icon: <DollarSign size={20} /> },
       { path: '/dashboard/driver/vehicle', label: 'My Vehicle', icon: <Truck size={20} /> },
       { path: '/dashboard/driver/settings', label: 'Settings', icon: <Settings size={20} /> },
-      { path: '/dashboard/driver/support', label: 'Support', icon: <Phone size={20} /> },
-    ]
-  },
-  individual: {
-    label: 'User Dashboard',
-    accent: '#00aac4',
-    navItems: [
-      { path: '/dashboard/individual', label: 'Overview', icon: <Home size={20} /> },
-      { path: '/dashboard/individual/marketplace', label: 'Marketplace', icon: <ShoppingCart size={20} /> },
-      { path: '/dashboard/individual/impact', label: 'My Impact', icon: <Recycle size={20} /> },
-      { path: '/dashboard/individual/orders', label: 'Orders', icon: <Package size={20} /> },
-      { path: '/dashboard/individual/financial', label: 'Financial', icon: <DollarSign size={20} /> },
-      { path: '/dashboard/individual/settings', label: 'Settings', icon: <Settings size={20} /> },
     ]
   }
 };
