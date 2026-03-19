@@ -1,3 +1,43 @@
+from fastapi import APIRouter, Request, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.auth.jwt import _decode_token, create_access_token, create_refresh_token
+from app.crud import crud_user
+from app.schemas import TokenResponse, UserRead
+
+router = APIRouter()
+
+@router.get("/login/token", response_model=TokenResponse)
+def login_with_token(token: str, request: Request, db: Session = Depends(get_db)):
+    """Login driver using secure token from email link."""
+    try:
+        payload = _decode_token(token)
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token.")
+    user_id = payload.get("sub")
+    email = payload.get("email")
+    role = payload.get("role")
+    login_token = payload.get("login_token")
+    if not user_id or not email or not login_token or role != "driver":
+        raise HTTPException(status_code=401, detail="Invalid token payload.")
+    user = crud_user.get_by_id(db, user_id)
+    if not user or user.email != email:
+        raise HTTPException(status_code=401, detail="User not found.")
+    if user.status.value == "suspended":
+        raise HTTPException(status_code=403, detail="Account suspended.")
+    access = create_access_token(subject=str(user.id), role=user.role.value)
+    refresh = create_refresh_token(subject=str(user.id))
+    crud_user.store_refresh_token(db, user_id=user.id, token=refresh)
+    crud_user.update_last_login(db, user_id=user.id)
+    must_change_password = bool(getattr(user, 'must_change_password', False))
+    return TokenResponse(
+        access_token=access,
+        refresh_token=refresh,
+        token_type="bearer",
+        role=user.role.value,
+        must_change_password=must_change_password,
+        user=UserRead.model_validate(user),
+    )
 """routes/auth.py — Authentication endpoints."""
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Request

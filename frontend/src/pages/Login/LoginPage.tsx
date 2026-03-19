@@ -1,6 +1,7 @@
 // pages/Login/LoginPage.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { authAPI } from '../../services/api';
 import { Home } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import LoginForm from '../../components/auth/LoginForm';
@@ -19,11 +20,14 @@ const roleToDashboard: Record<string, string> = {
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, mustChangePassword, clearMustChangePassword } = useAuth();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
   const [loginError, setLoginError] = useState('');
+  const [tokenLoginLoading, setTokenLoginLoading] = useState(false);
+  const [tokenLoginError, setTokenLoginError] = useState('');
+  const [showPwdReset, setShowPwdReset] = useState(false);
 
   const demoCredentials = [
     { role: 'Admin',      email: 'admin@ecotrade.rw',       password: 'Password123!' },
@@ -36,23 +40,16 @@ const LoginPage = () => {
     setLoginError('');
     try {
       await login(email, password);
-      
-        // Get the page user was trying to access (if any)
-        const from = (location.state as any)?.from || null;
-      
-        // Brief timeout to let state update propagate
+      const from = (location.state as any)?.from || null;
       setTimeout(() => {
         const storedUser = localStorage.getItem('ecotrade_user');
         if (storedUser) {
           const u = JSON.parse(storedUser);
-          
-            // If there's a "from" location and it's not login, redirect there
-            if (from && from !== '/login' && from !== '/signup') {
-              navigate(from, { replace: true });
-            } else {
-              // Otherwise go to role-specific dashboard
-              navigate(roleToDashboard[u.role] || '/dashboard', { replace: true });
-            }
+          if (from && from !== '/login' && from !== '/signup') {
+            navigate(from, { replace: true });
+          } else {
+            navigate(roleToDashboard[u.role] || '/dashboard', { replace: true });
+          }
         } else {
           navigate('/dashboard', { replace: true });
         }
@@ -62,6 +59,35 @@ const LoginPage = () => {
       throw err;
     }
   };
+
+  // Token-based login flow
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    if (token) {
+      setTokenLoginLoading(true);
+      authAPI
+        .loginWithToken(token)
+        .then((res) => {
+          // Store tokens
+          localStorage.setItem('ecotrade_token', res.access_token);
+          if (res.refresh_token) {
+            localStorage.setItem('ecotrade_refresh_token', res.refresh_token);
+          }
+          localStorage.setItem('ecotrade_user', JSON.stringify(res.user));
+          // If must_change_password, show reset popup
+          if (res.must_change_password) {
+            setShowPwdReset(true);
+          } else {
+            navigate(roleToDashboard[res.role] || '/dashboard', { replace: true });
+          }
+        })
+        .catch((err) => {
+          setTokenLoginError((err instanceof Error ? err.message : 'Token login failed'));
+        })
+        .finally(() => setTokenLoginLoading(false));
+    }
+  }, [location.search, navigate]);
 
   const ImagePanel = ({ side }: { side: 'left' | 'right' }) => (
     <div className={`hidden lg:flex lg:w-5/12 relative overflow-hidden ${side === 'right' ? 'order-last' : ''}`}>
@@ -109,7 +135,17 @@ const LoginPage = () => {
         </header>
         <div className="flex-1 flex items-center justify-center px-4 sm:px-8 lg:px-6 xl:px-10 py-6 lg:py-4 lg:overflow-y-auto bg-gray-50 dark:bg-gray-950">
           <div className="w-full max-w-md">
-            {!showSignup ? (
+            {tokenLoginLoading && (
+              <div className="mb-4 px-4 py-3 bg-cyan-50 border border-cyan-200 rounded-xl text-sm text-cyan-700">
+                Logging in with secure link...
+              </div>
+            )}
+            {tokenLoginError && (
+              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+                {tokenLoginError}
+              </div>
+            )}
+            {!showSignup && !tokenLoginLoading && !showPwdReset ? (
               <>
                 {loginError && (
                   <div className="mb-4 px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-400">
@@ -123,6 +159,11 @@ const LoginPage = () => {
                   demoCredentials={demoCredentials}
                 />
               </>
+            ) : showPwdReset ? (
+              <ForgotPasswordModal
+                onClose={() => { setShowPwdReset(false); clearMustChangePassword(); navigate('/dashboard/driver'); }}
+                onSubmit={(_email) => { setShowPwdReset(false); clearMustChangePassword(); navigate('/dashboard/driver'); }}
+              />
             ) : (
               <SignupWizard
                 onToggleMode={() => setShowSignup(false)}

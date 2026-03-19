@@ -217,7 +217,19 @@ def send_driver_assigned_notification_email(
 
 def send_driver_reminder_email(*, email: str, full_name: str, recycler_name: str) -> bool:
     """Send a reminder email to a driver who has not yet logged in to complete their account."""
+    from app.auth.jwt import create_access_token
+    from app.crud import crud_user
+    from app.database import get_db
+    import sqlalchemy.orm
+
     subject = "Action Required: Sign In to Complete Your EcoTrade Rwanda Driver Account"
+    # Generate a secure login token for the driver
+    db = next(get_db())
+    user = crud_user.get_by_email(db, email=email)
+    token = None
+    if user:
+        token = create_access_token(subject=str(user.id), role="driver", extra={"email": email, "login_token": True})
+    login_url = f"http://localhost:5173/login?token={token}" if token else "http://localhost:5173/login"
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -230,8 +242,8 @@ def send_driver_reminder_email(*, email: str, full_name: str, recycler_name: str
             <!-- Header -->
             <tr>
               <td style="background:linear-gradient(135deg,#dc2626,#b91c1c);padding:32px 40px;text-align:center;">
-                <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:700;">🌿 EcoTrade Rwanda</h1>
-                <p style="color:#fecaca;margin:8px 0 0;font-size:14px;">Driver Account – Action Required</p>
+                <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:700;"> EcoTrade Rwanda</h1>
+                <p style="color:#fecaca;margin:8px 0 0;font-size:14px;">Driver Account  Action Required</p>
               </td>
             </tr>
             <!-- Body -->
@@ -248,11 +260,11 @@ def send_driver_reminder_email(*, email: str, full_name: str, recycler_name: str
                 </p>
                 <!-- CTA -->
                 <div style="text-align:center;margin:32px 0;">
-                  <a href="http://localhost:5173/login"
+                  <a href="{login_url}"
                      style="display:inline-block;background:linear-gradient(135deg,#0891b2,#0e7490);
                             color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;
                             padding:14px 36px;border-radius:8px;">
-                    Sign In Now →
+                    Sign In Now 
                   </a>
                 </div>
                 <p style="color:#64748b;font-size:13px;line-height:1.6;margin:0;">
@@ -265,7 +277,7 @@ def send_driver_reminder_email(*, email: str, full_name: str, recycler_name: str
             <tr>
               <td style="background:#f8fafc;padding:16px 36px;border-top:1px solid #e2e8f0;">
                 <p style="color:#94a3b8;font-size:12px;margin:0;text-align:center;">
-                  © 2025 EcoTrade Rwanda
+                   2025 EcoTrade Rwanda
                 </p>
               </td>
             </tr>

@@ -513,6 +513,11 @@ export const authAPI = {
       body: JSON.stringify({ email, password }),
     }),
 
+  loginWithToken: (token: string) =>
+    request<LoginResponse>(`/auth/login/token?token=${encodeURIComponent(token)}`, {
+      method: 'GET',
+    }),
+
   refresh: (refreshToken: string) =>
     request<LoginResponse>('/auth/refresh', {
       method: 'POST',
