@@ -151,6 +151,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
 
     # ── Documents ────────────────────────────────────────────────────────────
+    def get_documents(self, db: Session, *, user_id: int) -> list[UserDocument]:
+        return db.query(UserDocument).filter(UserDocument.user_id == user_id).order_by(UserDocument.created_at.desc()).all()
+
     def add_document(self, db: Session, *, user_id: int, obj_in: "DocumentUpload") -> UserDocument:
         doc = UserDocument(
             user_id=user_id,

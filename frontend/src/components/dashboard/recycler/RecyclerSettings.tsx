@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { usersAPI, recyclersAPI } from '../../../services/api';
-import type { RecyclerProfile } from '../../../services/api';
-import { CheckCircle, AlertCircle, Loader2, Check } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { usersAPI, recyclersAPI, resolveMediaUrl } from '../../../services/api';
+import type { RecyclerProfile, UserDocument } from '../../../services/api';
+import { CheckCircle, AlertCircle, Loader2, Check, Upload, FileText, Clock, XCircle } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
 const WASTE_TYPES = [
@@ -16,8 +16,28 @@ const WASTE_TYPES = [
   { key: 'Mixed', label: 'Mixed Waste' },
 ];
 
+function DocStatusBadge({ status }: { status: string }) {
+  if (status === 'approved') return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+      <CheckCircle size={11} /> Approved
+    </span>
+  );
+  if (status === 'rejected') return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">
+      <XCircle size={11} /> Rejected
+    </span>
+  );
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
+      <Clock size={11} /> Pending Review
+    </span>
+  );
+}
+
 export default function RecyclerSettings() {
   const { updateUser } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [profile, setProfile] = useState<RecyclerProfile | null>(null);
   const [hasRecyclerProfile, setHasRecyclerProfile] = useState(false);
 
@@ -32,11 +52,26 @@ export default function RecyclerSettings() {
   const [website, setWebsite]                 = useState('');
   const [description, setDescription]         = useState('');
   const [storageCapacity, setStorageCapacity] = useState('');
+  const [tinNumber, setTinNumber]             = useState('');
   const [selectedWasteTypes, setSelectedWasteTypes] = useState<string[]>([]);
 
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errMsg, setErrMsg] = useState('');
+
+  const [documents, setDocuments] = useState<UserDocument[]>([]);
+  const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  const loadDocuments = useCallback(async () => {
+    try {
+      const docs = await usersAPI.getMyDocuments();
+      setDocuments(docs.filter(d => d.doc_type === 'rdb_certificate'));
+    } catch {
+      // silent
+    }
+  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -61,6 +96,7 @@ export default function RecyclerSettings() {
       setWebsite(r.website || '');
       setDescription(r.description || '');
       setStorageCapacity(String(r.storage_capacity || ''));
+      setTinNumber(r.tin_number || '');
       if (r.waste_types_handled) {
         try {
           const parsed = typeof r.waste_types_handled === 'string'
@@ -76,12 +112,32 @@ export default function RecyclerSettings() {
         }
       }
     }).catch(() => {});
-  }, [updateUser]);
+    loadDocuments();
+  }, [updateUser, loadDocuments]);
 
   const toggleWasteType = (key: string) =>
     setSelectedWasteTypes(prev =>
       prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key],
     );
+
+  const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingDoc(true);
+    setUploadError(null);
+    setUploadSuccess(false);
+    try {
+      await usersAPI.uploadDocumentFile(file, 'rdb_certificate');
+      setUploadSuccess(true);
+      setTimeout(() => setUploadSuccess(false), 3000);
+      await loadDocuments();
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed. Please try again.');
+    } finally {
+      setUploadingDoc(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -110,6 +166,7 @@ export default function RecyclerSettings() {
         description: description.trim() || undefined,
         waste_types_handled: selectedWasteTypes,
         storage_capacity: storageCapacity ? Number(storageCapacity) : undefined,
+        tin_number: tinNumber.trim() || undefined,
       };
 
       if (hasRecyclerProfile) {
@@ -187,6 +244,17 @@ export default function RecyclerSettings() {
             />
           </div>
           {field('Storage Capacity (kg)', storageCapacity, setStorageCapacity, 'number')}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">TIN Number</label>
+            <input
+              type="text"
+              value={tinNumber}
+              onChange={e => setTinNumber(e.target.value)}
+              placeholder="e.g. 123456789"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            />
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Rwanda Revenue Authority Tax Identification Number</p>
+          </div>
         </div>
       </div>
 
@@ -214,6 +282,83 @@ export default function RecyclerSettings() {
             </label>
           ))}
         </div>
+      </div>
+
+      {/* RDB Certificate */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+        <h2 className="text-base font-semibold border-b border-gray-100 dark:border-gray-700 pb-2 text-gray-900 dark:text-white">
+          RDB Certificate
+        </h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Upload your Rwanda Development Board business registration certificate (PDF or image). An admin will review and approve it.
+        </p>
+
+        {documents.length > 0 && (
+          <div className="space-y-2">
+            {documents.map(doc => (
+              <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-2 min-w-0">
+                  <FileText size={16} className="text-cyan-600 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{doc.file_name || 'RDB Certificate'}</p>
+                    <p className="text-xs text-gray-400">{new Date(doc.created_at).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-2">
+                  <DocStatusBadge status={doc.status} />
+                  {doc.file_url && (
+                    <a href={resolveMediaUrl(doc.file_url)} target="_blank" rel="noreferrer" className="text-xs text-cyan-600 hover:underline">View</a>
+                  )}
+                </div>
+              </div>
+            ))}
+            {documents.some(d => d.status === 'rejected') && (
+              <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                <AlertCircle size={14} className="text-red-500 mt-0.5 shrink-0" />
+                <p className="text-xs text-red-700 dark:text-red-300">
+                  Your certificate was rejected. Please upload a new valid document.
+                  {documents.find(d => d.status === 'rejected')?.notes && (
+                    <span className="block mt-1 font-medium">Reason: {documents.find(d => d.status === 'rejected')!.notes}</span>
+                  )}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {documents.length === 0 && (
+          <p className="text-sm text-gray-400 dark:text-gray-500 italic">No certificate uploaded yet.</p>
+        )}
+
+        <div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png,.webp"
+            className="hidden"
+            onChange={handleDocumentUpload}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingDoc}
+            className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-cyan-400 dark:border-cyan-600 rounded-lg text-sm text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition disabled:opacity-50"
+          >
+            {uploadingDoc ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
+            {uploadingDoc ? 'Uploading…' : 'Upload Certificate'}
+          </button>
+          <p className="mt-1 text-xs text-gray-400">Accepted: PDF, JPEG, PNG (max 10 MB)</p>
+        </div>
+
+        {uploadError && (
+          <div className="flex items-center gap-2 p-2 bg-red-50 dark:bg-red-900/20 rounded text-xs text-red-700 dark:text-red-300">
+            <AlertCircle size={12} /> {uploadError}
+          </div>
+        )}
+        {uploadSuccess && (
+          <div className="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 rounded text-xs text-green-700 dark:text-green-300">
+            <CheckCircle size={12} /> Certificate uploaded. Pending admin review.
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end">

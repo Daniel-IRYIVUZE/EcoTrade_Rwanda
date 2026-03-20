@@ -8,7 +8,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useAuth } from '../../context/AuthContext';
-import { authAPI } from '../../services/api';
+import { authAPI, hotelsAPI, recyclersAPI } from '../../services/api';
 
 // Fix default leaflet marker icons
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -119,7 +119,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
 
   // Step 3 — role details
   const [roleDetails, setRoleDetails] = useState({
-    businessName: '', businessAddress: '', operatingHours: '',
+    businessName: '', businessAddress: '', operatingHours: '', hotelTinNumber: '',
     companyName: '', tinNumber: '', recyclerLicense: '',
     vehicleType: [] as string[], vehiclePlate: '', driverLicense: '', yearsExp: '',
   });
@@ -330,6 +330,31 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
         role: backendRole,
       });
       await login(personal.email.trim(), personal.password);
+
+      // Create role-specific profile with collected data
+      try {
+        if (role === 'hotel') {
+          await hotelsAPI.create({
+            hotel_name: roleDetails.businessName.trim() || personal.fullName.trim(),
+            address: address.trim() || roleDetails.businessAddress.trim() || 'Kigali, Rwanda',
+            tin_number: roleDetails.hotelTinNumber.trim() || undefined,
+            latitude: markerPos[0],
+            longitude: markerPos[1],
+          });
+        } else if (role === 'recycler') {
+          await recyclersAPI.create({
+            company_name: roleDetails.companyName.trim() || personal.fullName.trim(),
+            address: address.trim() || 'Kigali, Rwanda',
+            tin_number: roleDetails.tinNumber.trim() || undefined,
+            waste_types_handled: wasteTypes.length > 0 ? wasteTypes : undefined,
+            latitude: markerPos[0],
+            longitude: markerPos[1],
+          });
+        }
+      } catch (_profileErr) {
+        // Profile creation failed silently — user can complete profile in settings
+      }
+
       setStep(6); // success
     } catch (err) {
       setSubmitError((err as Error).message || 'Registration failed. Please try again.');
@@ -523,6 +548,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
                 <>
                   <Field label="Business Name" name="businessName" value={roleDetails.businessName} onChange={handleRoleDetailsChange} placeholder="e.g. Hotel des Mille Collines" />
                   <Field label="Business Address" name="businessAddress" value={roleDetails.businessAddress} onChange={handleRoleDetailsChange} placeholder="e.g. KN 5 Rd, Kigali" />
+                  <Field label="TIN Number" name="hotelTinNumber" value={roleDetails.hotelTinNumber} onChange={handleRoleDetailsChange} placeholder="Tax Identification Number" hint="Rwanda Revenue Authority tax number" />
                   <Field label="Operating Hours" name="operatingHours" value={roleDetails.operatingHours} onChange={handleRoleDetailsChange} placeholder="e.g. Mon-Fri 06:00-22:00" />
                   <ChipPicker label="Waste Types Produced" options={hotelWasteOpts} selected={wasteTypes} onToggle={v => toggleChip(wasteTypes, setWasteTypes, v)} color="#d97706" />
                 </>

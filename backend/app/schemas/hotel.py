@@ -16,6 +16,7 @@ class HotelCreate(BaseModel):
     description: Optional[str] = None
     latitude:    Optional[float] = None
     longitude:   Optional[float] = None
+    tin_number:  Optional[str] = None
 
 
 class HotelUpdate(BaseModel):

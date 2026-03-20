@@ -113,11 +113,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         email: email,
         phone: phone,
         password: password,
-          role: (_selectedRole.isNotEmpty ? _selectedRole : 'hotel') == 'hotel'
-              ? 'business'
-              : _selectedRole,
-          businessName: businessName,
-        );
+        role: (_selectedRole.isNotEmpty ? _selectedRole : 'hotel') == 'hotel'
+            ? 'business'
+            : _selectedRole,
+        businessName: businessName,
+        address: _addressController.text.trim().isNotEmpty
+            ? _addressController.text.trim()
+            : (_selectedRole == 'hotel' && _hotelAddrController.text.trim().isNotEmpty
+                ? _hotelAddrController.text.trim()
+                : null),
+        latitude: _pickedLocation.latitude,
+        longitude: _pickedLocation.longitude,
+        tinNumber: _tinController.text.trim().isNotEmpty ? _tinController.text.trim() : null,
+        licenseNumber: _selectedRole == 'recycler' && _recyclerLicController.text.trim().isNotEmpty
+            ? _recyclerLicController.text.trim()
+            : null,
+        hotelName: _selectedRole == 'hotel' ? _hotelNameController.text.trim() : null,
+        companyName: _selectedRole == 'recycler' ? _companyNameController.text.trim() : null,
+      );
   }
 
   @override
@@ -676,6 +689,13 @@ class _StepRoleDetails extends StatelessWidget {
             label: 'Business Address',
             hint: 'e.g. KN 5 Rd, Kigali',
             prefixIcon: Icons.location_on_outlined),
+        const SizedBox(height: 14),
+        AppTextField(
+            controller: tinController,
+            label: 'TIN Number',
+            hint: 'Tax Identification Number',
+            prefixIcon: Icons.numbers_outlined,
+            keyboardType: TextInputType.number),
         const SizedBox(height: 14),
         const AppTextField(
             label: 'Operating Hours',

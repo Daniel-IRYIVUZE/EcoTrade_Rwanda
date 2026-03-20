@@ -8,6 +8,7 @@ from fastapi import UploadFile, HTTPException, status
 from app.config import settings
 
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+ALLOWED_DOCUMENT_TYPES = {"image/jpeg", "image/png", "image/webp", "application/pdf"}
 MAX_FILE_SIZE_MB = 10
 
 
@@ -37,6 +38,21 @@ def save_upload(file: UploadFile, subfolder: str = "general") -> str:
     with dest.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    return f"/uploads/{subfolder}/{filename}"
+
+
+def save_document_upload(file: UploadFile, subfolder: str = "documents") -> str:
+    """Save an uploaded document (image or PDF) and return its relative URL path."""
+    if file.content_type not in ALLOWED_DOCUMENT_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported file type: {file.content_type}. Allowed: JPEG, PNG, WebP, PDF.",
+        )
+    ext = Path(file.filename or "file").suffix or (".pdf" if file.content_type == "application/pdf" else ".jpg")
+    filename = f"{uuid.uuid4().hex}{ext}"
+    dest = _upload_dir(subfolder) / filename
+    with dest.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
     return f"/uploads/{subfolder}/{filename}"
 
 

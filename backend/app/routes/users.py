@@ -1,12 +1,12 @@
 """routes/users.py — User profile & document management."""
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query, status
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud import crud_user
 from app.auth.dependencies import get_current_active_user, require_admin
-from app.schemas.user import UserRead, UserUpdate, DocumentUpload
-from app.utils.file_upload import save_upload
-from app.models.user import User, UserRole, UserStatus
+from app.schemas.user import UserRead, UserUpdate, DocumentUpload, DocumentRead
+from app.utils.file_upload import save_upload, save_document_upload
+from app.models.user import User, UserRole, UserStatus, DocumentType
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -29,9 +29,39 @@ def upload_avatar(file: UploadFile = File(...), db: Session = Depends(get_db),
     return crud_user.update(db, db_obj=current_user, obj_in={"avatar_url": url})
 
 
-@router.post("/me/documents", status_code=201)
+@router.get("/me/documents", response_model=list[DocumentRead])
+def get_my_documents(current_user: User = Depends(get_current_active_user),
+                     db: Session = Depends(get_db)):
+    """Return the authenticated user's submitted documents."""
+    return crud_user.get_documents(db, user_id=current_user.id)
+
+
+@router.post("/me/documents", response_model=DocumentRead, status_code=201)
 def submit_document(payload: DocumentUpload, db: Session = Depends(get_db),
                     current_user: User = Depends(get_current_active_user)):
+    doc = crud_user.add_document(db, user_id=current_user.id, obj_in=payload)
+    return doc
+
+
+@router.post("/me/documents/upload", response_model=DocumentRead, status_code=201)
+def upload_document_file(
+    doc_type: str = Query(..., description="Document type, e.g. rdb_certificate"),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Upload a document file (PDF or image) and create a document record."""
+    try:
+        dtype = DocumentType(doc_type)
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Invalid doc_type: {doc_type}")
+
+    file_url = save_document_upload(file, subfolder="documents")
+    payload = DocumentUpload(
+        doc_type=dtype,
+        file_url=file_url,
+        file_name=file.filename,
+    )
     doc = crud_user.add_document(db, user_id=current_user.id, obj_in=payload)
     return doc
 

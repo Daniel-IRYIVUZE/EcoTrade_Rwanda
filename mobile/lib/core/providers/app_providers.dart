@@ -118,10 +118,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
     required String role,
     String? businessName,
+    String? address,
+    double? latitude,
+    double? longitude,
+    String? tinNumber,
+    String? licenseNumber,
+    String? hotelName,
+    String? companyName,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
-      // Try real API registration
+      // Register user account
       await ApiService.register({
         'full_name': name,
         'email': email,
@@ -129,10 +136,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         'password': password,
         'role': role,
       });
-      // After registration, log in to get tokens
+      // Log in to get tokens
       final loginResp = await ApiService.login(email, password);
       final userMap = loginResp['user'] as Map<String, dynamic>;
-      final user = AppUser(
+      var user = AppUser(
         id: (userMap['id'] as int).toString(),
         name: userMap['full_name'] as String? ?? name,
         email: userMap['email'] as String? ?? email,
@@ -142,6 +149,38 @@ class AuthNotifier extends StateNotifier<AuthState> {
         greenScore: 10,
         businessName: businessName,
       );
+
+      // Create role-specific profile
+      try {
+        final effectiveAddress = address?.isNotEmpty == true ? address! : 'Kigali, Rwanda';
+        if (role == 'business') {
+          final hotelData = await ApiService.createMyHotel({
+            'hotel_name': hotelName?.isNotEmpty == true ? hotelName! : businessName ?? name,
+            'address': effectiveAddress,
+            if (latitude != null) 'latitude': latitude,
+            if (longitude != null) 'longitude': longitude,
+            if (tinNumber?.isNotEmpty == true) 'tin_number': tinNumber,
+          });
+          user = user.copyWith(
+            businessName: hotelData['hotel_name'] as String?,
+          );
+        } else if (role == 'recycler') {
+          final recyclerData = await ApiService.createMyRecycler({
+            'company_name': companyName?.isNotEmpty == true ? companyName! : businessName ?? name,
+            'address': effectiveAddress,
+            if (latitude != null) 'latitude': latitude,
+            if (longitude != null) 'longitude': longitude,
+            if (tinNumber?.isNotEmpty == true) 'tin_number': tinNumber,
+            if (licenseNumber?.isNotEmpty == true) 'license_number': licenseNumber,
+          });
+          user = user.copyWith(
+            companyName: recyclerData['company_name'] as String?,
+          );
+        }
+      } catch (_) {
+        // Profile creation failed — user can complete it in settings
+      }
+
       await LocalStorageService.instance.saveUser(user);
       await LocalStorageService.instance.markOnboardingSeen();
       state = AuthState(user: user);

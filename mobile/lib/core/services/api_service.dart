@@ -216,23 +216,48 @@ class ApiService {
   static Future<Map<String, dynamic>> uploadAvatar(List<int> bytes, String filename) async {
     final uri = Uri.parse('$baseUrl/users/me/avatar');
     final request = http.MultipartRequest('POST', uri);
-    
+
     if (_accessToken != null) {
       request.headers['Authorization'] = 'Bearer $_accessToken';
     }
-    
+
     request.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
-    
+
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);
-    
+
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
     }
-    
+
     throw ApiException('Failed to upload avatar', statusCode: response.statusCode);
   }
-  
+
+  static Future<List<dynamic>> getMyDocuments() async {
+    final response = await _request('GET', '/users/me/documents');
+    if (response is List) return response;
+    return [];
+  }
+
+  static Future<Map<String, dynamic>> uploadDocumentFile({
+    required List<int> bytes,
+    required String filename,
+    required String docType,
+  }) async {
+    final uri = Uri.parse('$baseUrl/users/me/documents/upload?doc_type=${Uri.encodeQueryComponent(docType)}');
+    final request = http.MultipartRequest('POST', uri);
+    if (_accessToken != null) {
+      request.headers['Authorization'] = 'Bearer $_accessToken';
+    }
+    request.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return jsonDecode(response.body);
+    }
+    throw ApiException('Failed to upload document', statusCode: response.statusCode);
+  }
+
   // ── Listings ────────────────────────────────────────────────────────────────
   
   static Future<Map<String, dynamic>> getListings({
@@ -522,6 +547,10 @@ class ApiService {
   static Future<Map<String, dynamic>> updateMyHotel(Map<String, dynamic> data) async {
     return await _request('PATCH', '/hotels/me', body: data);
   }
+
+  static Future<Map<String, dynamic>> createMyHotel(Map<String, dynamic> data) async {
+    return await _request('POST', '/hotels/', body: data);
+  }
   
   // ── Recyclers ───────────────────────────────────────────────────────────────
   
@@ -539,6 +568,10 @@ class ApiService {
   
   static Future<Map<String, dynamic>> updateMyRecycler(Map<String, dynamic> data) async {
     return await _request('PATCH', '/recyclers/me', body: data);
+  }
+
+  static Future<Map<String, dynamic>> createMyRecycler(Map<String, dynamic> data) async {
+    return await _request('POST', '/recyclers/', body: data);
   }
   
   // ── Drivers ─────────────────────────────────────────────────────────────────

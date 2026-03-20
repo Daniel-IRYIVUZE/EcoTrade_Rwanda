@@ -550,6 +550,18 @@ export const authAPI = {
 
 // ─── Users ───────────────────────────────────────────────────────────────────
 
+export interface UserDocument {
+  id: number;
+  user_id: number;
+  doc_type: string;
+  file_url: string;
+  file_name?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  notes?: string;
+  reviewed_at?: string;
+  created_at: string;
+}
+
 export const usersAPI = {
   list: (params?: { role?: string; status?: string; skip?: number; limit?: number }) => {
     const q = new URLSearchParams(params as Record<string, string>).toString();
@@ -581,6 +593,21 @@ export const usersAPI = {
       method: 'POST',
       body: formData,
     }, true);
+  },
+
+  getMyDocuments: () => request<UserDocument[]>('/users/me/documents'),
+
+  submitDocument: (data: { doc_type: string; file_url: string; file_name?: string; notes?: string }) =>
+    request<UserDocument>('/users/me/documents', { method: 'POST', body: JSON.stringify(data) }),
+
+  uploadDocumentFile: (file: File, docType: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request<UserDocument>(
+      `/users/me/documents/upload?doc_type=${encodeURIComponent(docType)}`,
+      { method: 'POST', body: formData },
+      true,
+    );
   },
 };
 
@@ -1030,13 +1057,14 @@ export interface HotelProfile {
   total_waste_listed?: number;
   total_revenue?: number;
   rating?: number;
+  tin_number?: string;
   is_verified?: boolean;
   created_at: string;
 }
 
 export const hotelsAPI = {
   me: () => request<HotelProfile>('/hotels/me'),
-  create: (data: { hotel_name: string; address: string; city?: string; phone?: string; website?: string; description?: string }) =>
+  create: (data: { hotel_name: string; address: string; city?: string; phone?: string; website?: string; description?: string; tin_number?: string; latitude?: number; longitude?: number }) =>
     request<HotelProfile>('/hotels', { method: 'POST', body: JSON.stringify(data) }),
   list: (params?: { skip?: number; limit?: number }) => {
     const q = new URLSearchParams(params as Record<string, string>).toString();
@@ -1066,6 +1094,7 @@ export interface RecyclerProfile {
   total_spent?: number;
   rating?: number;
   active_bids?: number;
+  tin_number?: string;
   is_verified?: boolean;
   created_at: string;
 }
@@ -1081,6 +1110,9 @@ export const recyclersAPI = {
     description?: string;
     waste_types_handled?: string[];
     storage_capacity?: number;
+    tin_number?: string;
+    latitude?: number;
+    longitude?: number;
   }) => request<RecyclerProfile>('/recyclers', { method: 'POST', body: JSON.stringify(data) }),
   update: (data: {
     company_name?: string;
@@ -1091,6 +1123,7 @@ export const recyclersAPI = {
     description?: string;
     waste_types_handled?: string[];
     storage_capacity?: number;
+    tin_number?: string;
   }) => request<RecyclerProfile>('/recyclers/me', { method: 'PATCH', body: JSON.stringify(data) }),
   list: (params?: { skip?: number; limit?: number }) => {
     const q = new URLSearchParams(params as Record<string, string>).toString();

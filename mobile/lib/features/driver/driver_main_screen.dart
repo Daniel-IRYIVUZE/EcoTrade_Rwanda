@@ -6,7 +6,6 @@ import '../../core/theme/app_theme.dart';
 import '../../core/models/models.dart';
 import '../../core/router/app_router.dart';
 import '../../core/providers/app_providers.dart';
-import '../shared/widgets/shared_cards.dart';
 import '../shared/widgets/offline_banner.dart';
 import '../shared/live_tracking_screen.dart';
 import 'collection_screen.dart';
@@ -50,24 +49,6 @@ class _DriverMainScreenState extends ConsumerState<DriverMainScreen> {
 
     return Scaffold(
       backgroundColor: context.cBg,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          title: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text('Driver Dashboard'),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: IconButton(
-                icon: const Icon(Icons.notifications_outlined),
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
-      ),
       body: screens[_selectedIndex],
       bottomNavigationBar: Builder(builder: (ctx) => Container(
         decoration: BoxDecoration(
@@ -112,6 +93,7 @@ class _DriverHomeTab extends ConsumerWidget {
         .map((w) => w.isNotEmpty ? w[0].toUpperCase() : '').join();
     final totalVolume = (stats["totalVolume"] as double?) ?? 0.0;
     final totalEarnings = (stats["totalEarnings"] as double?) ?? 0.0;
+    final unread = ref.watch(unreadCountProvider);
 
     return Scaffold(
       backgroundColor: context.cBg,
@@ -168,7 +150,32 @@ class _DriverHomeTab extends ConsumerWidget {
                               Text('Online', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
                             ]),
                           ),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 8),
+                          // Notifications bell with unread badge
+                          Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () => context.push(AppRoutes.notifications),
+                                child: Container(
+                                  width: 40, height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
+                                ),
+                              ),
+                              if (unread > 0)
+                                Positioned(
+                                  right: 4, top: 4,
+                                  child: Container(
+                                    width: 8, height: 8,
+                                    decoration: const BoxDecoration(color: Color(0xFFFF5252), shape: BoxShape.circle),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(width: 8),
                           // Avatar with popup
                           PopupMenuButton<String>(
                             onSelected: (val) {

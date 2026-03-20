@@ -97,116 +97,152 @@ class _HotelHomeTab extends ConsumerWidget {
     final stats = ref.watch(businessStatsProvider);
     final listings = ref.watch(businessListingsProvider);
     final unread = ref.watch(unreadCountProvider);
-    final initials = (user?.displayName ?? 'H').substring(0, 1).toUpperCase();
+    final initials = (user?.displayName ?? 'H').trim().split(' ').take(2)
+        .map((w) => w.isNotEmpty ? w[0].toUpperCase() : '').join();
     final greeting = _greeting();
     return Scaffold(
       backgroundColor: context.cBg,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            backgroundColor: context.cSurf,
-            floating: true,
-            toolbarHeight: 72,
-            automaticallyImplyLeading: false,
-            flexibleSpace: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+          // ── Gradient header ───────────────────────────────────────
+          SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF0E7490), Color(0xFF0891B2), Color(0xFF06B6D4)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            '$greeting,',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w400,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(greeting, style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 13)),
+                                const SizedBox(height: 2),
+                                Text(
+                                  user?.displayName ?? 'Hotel',
+                                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            user?.displayName ?? 'Hotel',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                          const SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                              Icon(Icons.circle, color: Color(0xFF69F0AE), size: 8),
+                              SizedBox(width: 5),
+                              Text('Active', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+                            ]),
+                          ),
+                          const SizedBox(width: 8),
+                          Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: () => context.push(AppRoutes.notifications),
+                                child: Container(
+                                  width: 40, height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
+                                ),
+                              ),
+                              if (unread > 0)
+                                Positioned(
+                                  right: 4, top: 4,
+                                  child: Container(
+                                    width: 8, height: 8,
+                                    decoration: const BoxDecoration(color: Color(0xFFFF5252), shape: BoxShape.circle),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(width: 8),
+                          PopupMenuButton<String>(
+                            onSelected: (val) {
+                              if (val == 'profile') onGoToProfile?.call();
+                              if (val == 'logout') ref.read(authProvider.notifier).logout();
+                            },
+                            offset: const Offset(0, 48),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            tooltip: 'Account',
+                            itemBuilder: (_) => [
+                              const PopupMenuItem(value: 'profile', child: Row(children: [
+                                Icon(Icons.settings_outlined, size: 18),
+                                SizedBox(width: 10), Text('Settings & Profile'),
+                              ])),
+                              const PopupMenuDivider(),
+                              const PopupMenuItem(value: 'logout', child: Row(children: [
+                                Icon(Icons.logout, color: Colors.red, size: 18),
+                                SizedBox(width: 10), Text('Sign Out', style: TextStyle(color: Colors.red)),
+                              ])),
+                            ],
+                            child: CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Colors.white.withValues(alpha: 0.2),
+                              child: Text(initials, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14)),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    const Spacer(),
-                    Stack(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.notifications_outlined, color: AppColors.textPrimary),
-                          onPressed: () => context.push(AppRoutes.notifications),
+                      const SizedBox(height: 20),
+                      // Stats strip inside header
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                         ),
-                        if (unread > 0)
-                          Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                color: AppColors.error,
-                                shape: BoxShape.circle,
-                              ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _HotelHeaderStat(
+                              label: 'Green Score',
+                              value: '${user?.greenScore ?? 0}',
+                              icon: Icons.eco_outlined,
                             ),
-                          ),
-                      ],
-                    ),
-                    PopupMenuButton<String>(
-                      onSelected: (val) {
-                        if (val == 'profile') onGoToProfile?.call();
-                        if (val == 'logout') ref.read(authProvider.notifier).logout();
-                      },
-                      offset: const Offset(0, 44),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      tooltip: 'Account',
-                      itemBuilder: (_) => [
-                        const PopupMenuItem(
-                          value: 'profile',
-                          child: Row(children: [
-                            Icon(Icons.settings_outlined, size: 18),
-                            SizedBox(width: 10),
-                            Text('Settings & Profile'),
-                          ]),
-                        ),
-                        const PopupMenuDivider(),
-                        const PopupMenuItem(
-                          value: 'logout',
-                          child: Row(children: [
-                            Icon(Icons.logout, color: Colors.red, size: 18),
-                            SizedBox(width: 10),
-                            Text('Sign Out', style: TextStyle(color: Colors.red)),
-                          ]),
-                        ),
-                      ],
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: AppColors.primaryLight,
-                        child: Text(
-                          initials,
-                          style: const TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
-                          ),
+                            _HotelStatDivider(),
+                            _HotelHeaderStat(
+                              label: 'Listings',
+                              value: '${stats['activeListings'] ?? 0}',
+                              icon: Icons.inventory_2_outlined,
+                            ),
+                            _HotelStatDivider(),
+                            _HotelHeaderStat(
+                              label: 'Pending Bids',
+                              value: '${stats['pendingBids'] ?? 0}',
+                              icon: Icons.gavel_outlined,
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ).animate().fadeIn(duration: 350.ms),
           ),
 
           SliverPadding(
@@ -215,7 +251,7 @@ class _HotelHomeTab extends ConsumerWidget {
               delegate: SliverChildListDelegate([
                 // Offline banner
                 const OfflineBanner(),
-                if (true) const SizedBox(height: 4),
+                const SizedBox(height: 4),
 
                 // Green Score
                 GreenScoreCard(
@@ -309,6 +345,21 @@ class _HotelHomeTab extends ConsumerWidget {
                 // Upcoming collections link
                 const SectionHeader(title: 'Upcoming Pickups'),
                 const SizedBox(height: 12),
+
+                // CTA: List new waste
+                ElevatedButton.icon(
+                  onPressed: onGoToListings,
+                  icon: const Icon(Icons.add_circle_outline, size: 20),
+                  label: const Text('List New Waste'),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 56),
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    elevation: 2,
+                  ),
+                ).animate().slideY(begin: 0.2, duration: 350.ms, delay: 300.ms).fadeIn(),
               ]),
             ),
           ),
@@ -335,6 +386,35 @@ class _HotelHomeTab extends ConsumerWidget {
     if (score >= 75) return 'Eco Champion';
     if (score >= 55) return 'Eco Starter';
     return 'Eco Beginner';
+  }
+}
+
+// ─── Hotel header stat widget ─────────────────────────────────────────────────
+class _HotelHeaderStat extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  const _HotelHeaderStat({required this.label, required this.value, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 18),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 20)),
+        const SizedBox(height: 2),
+        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11)),
+      ],
+    );
+  }
+}
+
+class _HotelStatDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 36, width: 1, color: Colors.white.withValues(alpha: 0.25));
   }
 }
 
@@ -708,7 +788,21 @@ class _ManageListingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ListingThumb(listing: listing),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ListingThumb(listing: listing),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(statusLabel, style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
           const SizedBox(height: 10),
           Text(
             listing.wasteType.label,
@@ -740,26 +834,6 @@ class _ManageListingCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  const _InfoChip(
-      {required this.icon, required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 13, color: color),
-        const SizedBox(width: 4),
-        Text(label, style: TextStyle(fontSize: 12, color: color)),
-      ],
     );
   }
 }

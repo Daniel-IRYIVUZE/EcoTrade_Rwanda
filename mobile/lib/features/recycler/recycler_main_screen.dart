@@ -4,6 +4,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/services/api_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/models/models.dart';
@@ -82,82 +84,138 @@ class _RecyclerHomeTab extends ConsumerWidget {
     final stats = ref.watch(recyclerStatsProvider);
     final dn = user?.displayName ?? 'GR';
     final initials = (dn.length >= 2 ? dn.substring(0, 2) : dn).toUpperCase();
+    final greeting = _greeting();
     return Scaffold(
       backgroundColor: context.cBg,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            backgroundColor: context.cSurf,
-            floating: true,
-            toolbarHeight: 72,
-            automaticallyImplyLeading: false,
-            flexibleSpace: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+          // ── Gradient header ───────────────────────────────────────
+          SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF1A237E), Color(0xFF283593), Color(0xFF3949AB)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            _greeting(),
-                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(greeting, style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 13)),
+                                const SizedBox(height: 2),
+                                Text(
+                                  user?.displayName ?? 'GreenRecycle Ltd',
+                                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                                  maxLines: 1, overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            user?.displayName ?? 'GreenRecycle Ltd',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          const SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                            ),
+                            child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                              Icon(Icons.circle, color: Color(0xFF69F0AE), size: 8),
+                              SizedBox(width: 5),
+                              Text('Active', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+                            ]),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () => context.push(AppRoutes.notifications),
+                            child: Container(
+                              width: 40, height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          PopupMenuButton<String>(
+                            onSelected: (val) {
+                              if (val == 'profile') onGoToProfile?.call();
+                              if (val == 'logout') ref.read(authProvider.notifier).logout();
+                            },
+                            offset: const Offset(0, 48),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            tooltip: 'Account',
+                            itemBuilder: (_) => [
+                              const PopupMenuItem(value: 'profile', child: Row(children: [
+                                Icon(Icons.settings_outlined, size: 18),
+                                SizedBox(width: 10), Text('Settings & Profile'),
+                              ])),
+                              const PopupMenuDivider(),
+                              const PopupMenuItem(value: 'logout', child: Row(children: [
+                                Icon(Icons.logout, color: Colors.red, size: 18),
+                                SizedBox(width: 10), Text('Sign Out', style: TextStyle(color: Colors.red)),
+                              ])),
+                            ],
+                            child: CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Colors.white.withValues(alpha: 0.2),
+                              child: Text(initials, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14)),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: Icon(Icons.notifications_outlined, color: context.cText),
-                      onPressed: () => context.push(AppRoutes.notifications),
-                    ),
-                    PopupMenuButton<String>(
-                      onSelected: (val) {
-                        if (val == 'profile') onGoToProfile?.call();
-                        if (val == 'logout') ref.read(authProvider.notifier).logout();
-                      },
-                      offset: const Offset(0, 44),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      tooltip: 'Account',
-                      itemBuilder: (_) => [
-                        const PopupMenuItem(
-                          value: 'profile',
-                          child: Row(children: [
-                            Icon(Icons.settings_outlined, size: 18),
-                            SizedBox(width: 10),
-                            Text('Settings & Profile'),
-                          ]),
+                      const SizedBox(height: 20),
+                      // Stats strip inside header
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                         ),
-                        const PopupMenuDivider(),
-                        const PopupMenuItem(
-                          value: 'logout',
-                          child: Row(children: [
-                            Icon(Icons.logout, color: Colors.red, size: 18),
-                            SizedBox(width: 10),
-                            Text('Sign Out', style: TextStyle(color: Colors.red)),
-                          ]),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _RecyclerHeaderStat(
+                              label: 'Listings',
+                              value: '${listings.length}',
+                              icon: Icons.inventory_rounded,
+                            ),
+                            _RecyclerStatDivider(),
+                            _RecyclerHeaderStat(
+                              label: 'Active Bids',
+                              value: '${stats['activeBids'] ?? 0}',
+                              icon: Icons.gavel_outlined,
+                            ),
+                            _RecyclerStatDivider(),
+                            _RecyclerHeaderStat(
+                              label: 'Revenue',
+                              value: 'RWF ${_fmtK(stats['totalEarnings'] ?? 0)}',
+                              icon: Icons.trending_up,
+                            ),
+                          ],
                         ),
-                      ],
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: AppColors.primaryLight,
-                        child: Text(initials, style: const TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w700, fontSize: 12)),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ).animate().fadeIn(duration: 350.ms),
           ),
 
           SliverPadding(
@@ -285,6 +343,23 @@ class _RecyclerHomeTab extends ConsumerWidget {
                   onTap: onBrowseMarket,
                   photos: listing.photos,
                 )),
+
+                const SizedBox(height: 20),
+
+                // CTA: Browse marketplace
+                ElevatedButton.icon(
+                  onPressed: onBrowseMarket,
+                  icon: const Icon(Icons.map_outlined, size: 20),
+                  label: const Text('Browse Marketplace'),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 56),
+                    backgroundColor: const Color(0xFF3949AB),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    elevation: 2,
+                  ),
+                ).animate().slideY(begin: 0.2, duration: 350.ms, delay: 300.ms).fadeIn(),
               ]),
             ),
           ),
@@ -305,6 +380,35 @@ class _RecyclerHomeTab extends ConsumerWidget {
     if (n >= 1000000) return '${(n / 1000000).toStringAsFixed(1)}M';
     if (n >= 1000) return '${(n / 1000).toStringAsFixed(0)}K';
     return n.toStringAsFixed(0);
+  }
+}
+
+// ─── Recycler header stat widget ──────────────────────────────────────────────
+class _RecyclerHeaderStat extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  const _RecyclerHeaderStat({required this.label, required this.value, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: Colors.white.withValues(alpha: 0.8), size: 18),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18)),
+        const SizedBox(height: 2),
+        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11)),
+      ],
+    );
+  }
+}
+
+class _RecyclerStatDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(height: 36, width: 1, color: Colors.white.withValues(alpha: 0.25));
   }
 }
 
@@ -507,70 +611,86 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
     final recyclerData = recyclerAsync.valueOrNull ?? {};
     final tin = recyclerData['tin'] as String? ?? recyclerData['tin_number'] as String? ?? '—';
     final location = recyclerData['location'] as String? ?? recyclerData['address'] as String? ?? '—';
+    final companyName = recyclerData['company_name'] as String? ?? user?.displayName ?? 'GreenRecycle Ltd';
+
+    final initials = companyName.trim().split(' ').take(2)
+        .map((w) => w.isNotEmpty ? w[0].toUpperCase() : '').join();
 
     return Scaffold(
       backgroundColor: context.cBg,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            expandedHeight: 200,
-            pinned: true,
-            automaticallyImplyLeading: false,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit_outlined, color: Colors.white),
-                onPressed: () => _showEditProfileSheet(context,
-                    name: user?.displayName ?? '',
-                    phone: user?.phone ?? '',
-                    location: location == '—' ? '' : location),
+          // ── Full-bleed indigo gradient header ─────────────────────────
+          SliverToBoxAdapter(
+            child: Container(
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF1A237E), Color(0xFF283593), Color(0xFF3949AB)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
               ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
-                child: SafeArea(
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 28),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
+                      // Avatar
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 88, height: 88,
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 2),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 2.5),
                         ),
-                        child: const Center(
-                          child: Icon(Icons.recycling, size: 38, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        user?.displayName ?? 'GreenRecycle Ltd',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 20,
+                        child: Center(
+                          child: Text(
+                            initials.isNotEmpty ? initials : '♻️',
+                            style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w800, fontSize: 28),
+                          ),
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      Text(companyName,
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w800, fontSize: 22),
+                          textAlign: TextAlign.center),
                       const SizedBox(height: 4),
                       Text(
-                        location != '—' ? 'Recycler • $location' : 'Recycler',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 13,
+                        location == '—' ? 'Recycler · Rwanda' : location,
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 13),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      // Edit button
+                      OutlinedButton.icon(
+                        onPressed: () => _showEditProfileSheet(context,
+                            name: companyName,
+                            phone: user?.phone ?? '',
+                            location: location == '—' ? '' : location,
+                            tin: tin == '—' ? '' : tin),
+                        icon: const Icon(Icons.edit_outlined, color: Colors.white, size: 16),
+                        label: const Text('Edit Profile',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.white.withValues(alpha: 0.5)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
+            ).animate().fadeIn(duration: 350.ms),
           ),
 
           SliverPadding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
 
@@ -578,13 +698,20 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
                 _RecyclerProfileSection(
                   title: 'Company Details',
                   children: [
-                    _RecyclerProfileRow(icon: Icons.business_outlined, label: 'Company Name', value: user?.displayName ?? 'N/A'),
+                    _RecyclerProfileRow(icon: Icons.business_outlined, label: 'Company Name', value: companyName),
                     _RecyclerProfileRow(icon: Icons.numbers_outlined, label: 'TIN Number', value: tin),
                     _RecyclerProfileRow(icon: Icons.location_on_outlined, label: 'Location', value: location),
                     _RecyclerProfileRow(icon: Icons.phone_outlined, label: 'Phone', value: user?.phone ?? 'N/A'),
                     _RecyclerProfileRow(icon: Icons.email_outlined, label: 'Email', value: user?.email ?? 'N/A'),
                   ],
                 ).animate().slideY(begin: 0.2, duration: 300.ms).fadeIn(),
+
+                const SizedBox(height: 16),
+
+                // RDB Certificate
+                _RecyclerRdbSection(
+                  onUpload: () => _showRdbCertSheet(context),
+                ).animate().slideY(begin: 0.2, duration: 300.ms, delay: 60.ms).fadeIn(),
 
                 const SizedBox(height: 16),
 
@@ -660,11 +787,12 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
 
                 const SizedBox(height: 20),
 
-                // Logout
+                // Sign out
                 OutlinedButton.icon(
                   onPressed: () => _confirmSignOut(context, ref),
                   icon: const Icon(Icons.logout, color: AppColors.error),
-                  label: const Text('Sign Out', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
+                  label: const Text('Sign Out',
+                      style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w700)),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: AppColors.error),
                     minimumSize: const Size(double.infinity, 52),
@@ -676,6 +804,33 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showRdbCertSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => _RecyclerRdbUploadSheet(
+        onUploaded: () {
+          if (ctx.mounted) Navigator.pop(ctx);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Row(children: [
+                Icon(Icons.check_circle, color: Colors.white, size: 18),
+                SizedBox(width: 8),
+                Text('Certificate uploaded. Pending admin review.'),
+              ]),
+              backgroundColor: AppColors.primary,
+              behavior: SnackBarBehavior.floating,
+            ));
+          }
+        },
       ),
     );
   }
@@ -810,10 +965,12 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
     );
   }
 
-  void _showEditProfileSheet(BuildContext context, {String name = '', String phone = '', String location = ''}) {
+  void _showEditProfileSheet(BuildContext context,
+      {String name = '', String phone = '', String location = '', String tin = ''}) {
     final nameCtrl = TextEditingController(text: name);
     final phoneCtrl = TextEditingController(text: phone);
     final locationCtrl = TextEditingController(text: location);
+    final tinCtrl = TextEditingController(text: tin);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -826,92 +983,114 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
           bool loading = false;
           return Padding(
             padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(children: [
-                  const Text('Edit Profile', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
-                  const Spacer(),
-                  IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
-                ]),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: nameCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Company Name',
-                    prefixIcon: Icon(Icons.recycling_outlined),
-                    border: OutlineInputBorder(),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    const Text('Edit Profile',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+                    const Spacer(),
+                    IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
+                  ]),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: nameCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Company Name',
+                      prefixIcon: Icon(Icons.recycling_outlined),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: phoneCtrl,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone Number',
-                    prefixIcon: Icon(Icons.phone_outlined),
-                    border: OutlineInputBorder(),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: phoneCtrl,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      prefixIcon: Icon(Icons.phone_outlined),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: locationCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Location',
-                    prefixIcon: Icon(Icons.location_on_outlined),
-                    border: OutlineInputBorder(),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: locationCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Location / Address',
+                      prefixIcon: Icon(Icons.location_on_outlined),
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: loading
-                        ? null
-                        : () async {
-                            setSheet(() => loading = true);
-                            try {
-                              final futures = <Future>[];
-                              final profileData = <String, dynamic>{};
-                              if (nameCtrl.text.trim().isNotEmpty) profileData['full_name'] = nameCtrl.text.trim();
-                              if (phoneCtrl.text.trim().isNotEmpty) profileData['phone'] = phoneCtrl.text.trim();
-                              if (profileData.isNotEmpty) futures.add(ApiService.updateProfile(profileData));
-                              if (locationCtrl.text.trim().isNotEmpty) {
-                                futures.add(ApiService.updateMyRecycler({'location': locationCtrl.text.trim()}));
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: tinCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'TIN Number',
+                      hintText: 'e.g. 123456789',
+                      prefixIcon: Icon(Icons.numbers_outlined),
+                      border: OutlineInputBorder(),
+                      helperText: 'Rwanda Revenue Authority Tax ID',
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: loading
+                          ? null
+                          : () async {
+                              setSheet(() => loading = true);
+                              try {
+                                final profileData = <String, dynamic>{};
+                                if (nameCtrl.text.trim().isNotEmpty) profileData['full_name'] = nameCtrl.text.trim();
+                                if (phoneCtrl.text.trim().isNotEmpty) profileData['phone'] = phoneCtrl.text.trim();
+
+                                final recyclerData = <String, dynamic>{};
+                                if (nameCtrl.text.trim().isNotEmpty) recyclerData['company_name'] = nameCtrl.text.trim();
+                                if (locationCtrl.text.trim().isNotEmpty) recyclerData['address'] = locationCtrl.text.trim();
+                                if (tinCtrl.text.trim().isNotEmpty) recyclerData['tin_number'] = tinCtrl.text.trim();
+
+                                final futures = <Future>[];
+                                if (profileData.isNotEmpty) futures.add(ApiService.updateProfile(profileData));
+                                if (recyclerData.isNotEmpty) futures.add(ApiService.updateMyRecycler(recyclerData));
+
+                                await Future.wait(futures);
+                                ref.invalidate(recyclerProfileProvider);
+                                if (ctx.mounted) Navigator.pop(ctx);
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                    content: Row(children: [
+                                      Icon(Icons.check_circle, color: Colors.white, size: 18),
+                                      SizedBox(width: 8),
+                                      Text('Profile updated successfully'),
+                                    ]),
+                                    backgroundColor: AppColors.primary,
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
+                                }
+                              } catch (e) {
+                                setSheet(() => loading = false);
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text('Failed to update: $e'),
+                                    backgroundColor: AppColors.error,
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
+                                }
                               }
-                              await Future.wait(futures);
-                              ref.invalidate(recyclerProfileProvider);
-                              if (ctx.mounted) Navigator.pop(ctx);
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                  content: Row(children: [
-                                    Icon(Icons.check_circle, color: Colors.white, size: 18),
-                                    SizedBox(width: 8),
-                                    Text('Profile updated successfully'),
-                                  ]),
-                                  backgroundColor: AppColors.primary,
-                                  behavior: SnackBarBehavior.floating,
-                                ));
-                              }
-                            } catch (e) {
-                              setSheet(() => loading = false);
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text('Failed to update: $e'),
-                                  backgroundColor: AppColors.error,
-                                  behavior: SnackBarBehavior.floating,
-                                ));
-                              }
-                            }
-                          },
-                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 52)),
-                    child: loading
-                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.w700)),
+                            },
+                      style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 52)),
+                      child: loading
+                          ? const SizedBox(height: 20, width: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                          : const Text('Save Changes',
+                              style: TextStyle(fontWeight: FontWeight.w700)),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -1019,6 +1198,283 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
           height: MediaQuery.of(context).size.height * 0.92,
           child: TermsPrivacyScreen(initialTab: tab),
         ),
+      ),
+    );
+  }
+}
+
+// ─── RDB Certificate Section ──────────────────────────────────────────────────
+class _RecyclerRdbSection extends StatefulWidget {
+  final VoidCallback? onUpload;
+  const _RecyclerRdbSection({this.onUpload});
+
+  @override
+  State<_RecyclerRdbSection> createState() => _RecyclerRdbSectionState();
+}
+
+class _RecyclerRdbSectionState extends State<_RecyclerRdbSection> {
+  List<dynamic> _docs = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final docs = await ApiService.getMyDocuments();
+      if (mounted) {
+        setState(() {
+          _docs = docs.where((d) => d['doc_type'] == 'rdb_certificate').toList();
+          _loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Color _statusColor(String status) {
+    if (status == 'approved') return const Color(0xFF10B981);
+    if (status == 'rejected') return const Color(0xFFEF4444);
+    return const Color(0xFFF59E0B);
+  }
+
+  IconData _statusIcon(String status) {
+    if (status == 'approved') return Icons.check_circle_outline;
+    if (status == 'rejected') return Icons.cancel_outlined;
+    return Icons.hourglass_empty_outlined;
+  }
+
+  String _statusLabel(String status) {
+    if (status == 'approved') return 'Approved';
+    if (status == 'rejected') return 'Rejected';
+    return 'Pending Review';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.cSurf,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.cBorder),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Text('RDB Certificate',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700, fontSize: 15, color: context.cText)),
+                const Spacer(),
+                TextButton.icon(
+                  onPressed: () async {
+                    widget.onUpload?.call();
+                    await Future.delayed(const Duration(milliseconds: 800));
+                    _load();
+                  },
+                  icon: const Icon(Icons.upload_outlined, size: 16),
+                  label: const Text('Upload'),
+                  style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+                ),
+              ],
+            ),
+          ),
+          Divider(height: 1, color: context.cBorder),
+          if (_loading)
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Center(child: SizedBox(width: 20, height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2))),
+            )
+          else if (_docs.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Icon(Icons.upload_file_outlined, size: 36, color: context.cTextSec),
+                  const SizedBox(height: 8),
+                  Text('No certificate uploaded yet.',
+                      style: TextStyle(color: context.cTextSec, fontSize: 13)),
+                  const SizedBox(height: 4),
+                  Text('Upload your RDB registration certificate for verification.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: context.cTextSec, fontSize: 11)),
+                ],
+              ),
+            )
+          else
+            for (final doc in _docs) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36, height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryLight, borderRadius: BorderRadius.circular(8)),
+                      child: const Icon(Icons.insert_drive_file_outlined,
+                          color: AppColors.primary, size: 18),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(doc['file_name'] as String? ?? 'RDB Certificate',
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600, color: context.cText),
+                              maxLines: 1, overflow: TextOverflow.ellipsis),
+                          const SizedBox(height: 2),
+                          Row(children: [
+                            Icon(_statusIcon(doc['status'] as String? ?? 'pending'),
+                                size: 12, color: _statusColor(doc['status'] as String? ?? 'pending')),
+                            const SizedBox(width: 4),
+                            Text(_statusLabel(doc['status'] as String? ?? 'pending'),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: _statusColor(doc['status'] as String? ?? 'pending'),
+                                    fontWeight: FontWeight.w600)),
+                          ]),
+                        ],
+                      ),
+                    ),
+                    if ((doc['file_url'] as String?) != null)
+                      IconButton(
+                        icon: const Icon(Icons.open_in_new_outlined, size: 18),
+                        color: AppColors.primary,
+                        tooltip: 'View',
+                        onPressed: () async {
+                          final url = doc['file_url'] as String;
+                          final fullUrl = url.startsWith('http')
+                              ? url
+                              : '${ApiService.baseUrl.replaceAll('/api', '')}$url';
+                          final uri = Uri.tryParse(fullUrl);
+                          if (uri != null) await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        },
+                      ),
+                  ],
+                ),
+              ),
+              if (doc != _docs.last) Divider(height: 1, indent: 64, color: context.cBorder),
+            ],
+          if (_docs.any((d) => d['status'] == 'rejected'))
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEE2E2), borderRadius: BorderRadius.circular(8)),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, size: 14, color: Color(0xFFDC2626)),
+                  SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Certificate rejected. Please upload a new valid document.',
+                      style: TextStyle(fontSize: 11, color: Color(0xFFDC2626)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecyclerRdbUploadSheet extends StatefulWidget {
+  final VoidCallback? onUploaded;
+  const _RecyclerRdbUploadSheet({this.onUploaded});
+
+  @override
+  State<_RecyclerRdbUploadSheet> createState() => _RecyclerRdbUploadSheetState();
+}
+
+class _RecyclerRdbUploadSheetState extends State<_RecyclerRdbUploadSheet> {
+  bool _uploading = false;
+  String? _error;
+
+  Future<void> _pickAndUpload() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png', 'webp'],
+      withData: true,
+    );
+    if (result == null || result.files.isEmpty) return;
+    final file = result.files.first;
+    if (file.bytes == null) return;
+
+    setState(() { _uploading = true; _error = null; });
+    try {
+      await ApiService.uploadDocumentFile(
+        bytes: file.bytes!,
+        filename: file.name,
+        docType: 'rdb_certificate',
+      );
+      widget.onUploaded?.call();
+    } catch (e) {
+      setState(() => _error = e.toString());
+    } finally {
+      if (mounted) setState(() => _uploading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            const Text('Upload RDB Certificate',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+            const Spacer(),
+            IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+          ]),
+          const SizedBox(height: 8),
+          const Text(
+            'Upload your Rwanda Development Board business registration certificate. Accepted: PDF, JPEG, PNG (max 10 MB). An admin will review and approve it.',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+          ),
+          const SizedBox(height: 24),
+          if (_error != null)
+            Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: const Color(0xFFFEE2E2), borderRadius: BorderRadius.circular(8)),
+              child: Row(children: [
+                const Icon(Icons.error_outline, size: 14, color: Color(0xFFDC2626)),
+                const SizedBox(width: 6),
+                Expanded(child: Text(_error!,
+                    style: const TextStyle(fontSize: 12, color: Color(0xFFDC2626)))),
+              ]),
+            ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _uploading ? null : _pickAndUpload,
+              icon: _uploading
+                  ? const SizedBox(width: 18, height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Icon(Icons.upload_outlined),
+              label: Text(_uploading ? 'Uploading…' : 'Choose File & Upload'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 52),
+                textStyle: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

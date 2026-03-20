@@ -1,20 +1,57 @@
 // components/dashboard/business/BusinessSettings.tsx
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { usersAPI, hotelsAPI } from '../../../services/api';
-import { CheckCircle } from 'lucide-react';
+import type { UserDocument } from '../../../services/api';
+import { CheckCircle, Upload, FileText, Clock, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import { resolveMediaUrl } from '../../../services/api';
+
+function DocStatusBadge({ status }: { status: string }) {
+  if (status === 'approved') return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+      <CheckCircle size={11} /> Approved
+    </span>
+  );
+  if (status === 'rejected') return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">
+      <XCircle size={11} /> Rejected
+    </span>
+  );
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400">
+      <Clock size={11} /> Pending Review
+    </span>
+  );
+}
 
 export default function BusinessSettings() {
   const { updateUser } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [hotelName, setHotelName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [contactPerson, setContactPerson] = useState('');
+  const [tinNumber, setTinNumber] = useState('');
   const [hasHotelProfile, setHasHotelProfile] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [documents, setDocuments] = useState<UserDocument[]>([]);
+  const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  const loadDocuments = useCallback(async () => {
+    try {
+      const docs = await usersAPI.getMyDocuments();
+      setDocuments(docs.filter(d => d.doc_type === 'rdb_certificate'));
+    } catch {
+      // silent
+    }
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -23,7 +60,7 @@ export default function BusinessSettings() {
           usersAPI.me().catch(() => null),
           hotelsAPI.me().catch(() => null),
         ]);
-        
+
         if (u) {
           setContactPerson(u.full_name || '');
           setEmail(u.email || '');
@@ -34,6 +71,7 @@ export default function BusinessSettings() {
           setHotelName(h.hotel_name || '');
           setAddress(h.address || '');
           setPhone(h.phone || (u?.phone || ''));
+          setTinNumber(h.tin_number || '');
           updateUser({ businessName: h.hotel_name });
         }
         if (u?.full_name) {
@@ -43,9 +81,10 @@ export default function BusinessSettings() {
         console.error('Error loading hotel settings:', err);
       }
     };
-    
+
     loadData();
-  }, [updateUser]);
+    loadDocuments();
+  }, [updateUser, loadDocuments]);
 
   const handleSave = useCallback(async () => {
     setLoading(true);
@@ -56,24 +95,22 @@ export default function BusinessSettings() {
       const hotelAddress = address.trim();
       const phoneValue = phone.trim();
 
-      if (!contact) {
-        throw new Error('Contact person is required.');
-      }
-      if (!hotel) {
-        throw new Error('Hotel name is required.');
-      }
-      if (!hotelAddress) {
-        throw new Error('Address is required.');
-      }
-      
-      // Save contact person and phone to user profile
+      if (!contact) throw new Error('Contact person is required.');
+      if (!hotel) throw new Error('Hotel name is required.');
+      if (!hotelAddress) throw new Error('Address is required.');
+
       await usersAPI.updateMe({
         full_name: contact,
         phone: phoneValue || undefined,
         email: email.trim() || undefined,
       });
-      
-      const hotelPayload = { hotel_name: hotel, address: hotelAddress, phone: phoneValue || undefined };
+
+      const hotelPayload = {
+        hotel_name: hotel,
+        address: hotelAddress,
+        phone: phoneValue || undefined,
+        tin_number: tinNumber.trim() || undefined,
+      };
 
       if (hasHotelProfile) {
         await hotelsAPI.update(hotelPayload);
@@ -81,41 +118,185 @@ export default function BusinessSettings() {
         await hotelsAPI.create(hotelPayload);
         setHasHotelProfile(true);
       }
-      
-      // Update auth context cache
+
       updateUser({ businessName: hotel, name: contact, phone: phoneValue, email });
-      
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to save settings';
-      setError(errorMsg);
+      setError(err instanceof Error ? err.message : 'Failed to save settings');
     } finally {
       setLoading(false);
     }
-  }, [contactPerson, phone, hotelName, address, email, hasHotelProfile, updateUser]);
+  }, [contactPerson, phone, hotelName, address, email, tinNumber, hasHotelProfile, updateUser]);
+
+  const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingDoc(true);
+    setUploadError(null);
+    setUploadSuccess(false);
+    try {
+      await usersAPI.uploadDocumentFile(file, 'rdb_certificate');
+      setUploadSuccess(true);
+      setTimeout(() => setUploadSuccess(false), 3000);
+      await loadDocuments();
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Upload failed. Please try again.');
+    } finally {
+      setUploadingDoc(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between"><h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hotel Settings</h1>{saved && <span className="text-green-600 dark:text-green-400 text-sm flex items-center gap-1"><CheckCircle size={16} /> Saved successfully</span>}</div>
-      {error && <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"><p className="text-sm text-red-700 dark:text-red-300">{error}</p></div>}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Hotel Settings</h1>
+        {saved && (
+          <span className="text-green-600 dark:text-green-400 text-sm flex items-center gap-1">
+            <CheckCircle size={16} /> Saved successfully
+          </span>
+        )}
+      </div>
+
+      {error && (
+        <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Hotel Profile */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 space-y-4">
           <h2 className="text-lg font-semibold border-b pb-2">Hotel Profile</h2>
-          <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hotel Name</label><input value={hotelName} onChange={e => setHotelName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>
-          <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label><input value={email} onChange={e => setEmail(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>
-          <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label><input value={phone} onChange={e => setPhone(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>
-          <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label><input value={address} onChange={e => setAddress(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>
-          <div><label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact Person</label><input value={contactPerson} onChange={e => setContactPerson(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" /></div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 space-y-4">
-          <h2 className="text-lg font-semibold border-b pb-2">Sync Status</h2>
-          <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg text-sm text-gray-600 dark:text-gray-300">
-            Changes saved here update your account and hotel profile in the database and are reflected anywhere this profile data is used.
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hotel Name</label>
+            <input value={hotelName} onChange={e => setHotelName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <input value={email} onChange={e => setEmail(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
+            <input value={phone} onChange={e => setPhone(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
+            <input value={address} onChange={e => setAddress(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact Person</label>
+            <input value={contactPerson} onChange={e => setContactPerson(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">TIN Number</label>
+            <input
+              value={tinNumber}
+              onChange={e => setTinNumber(e.target.value)}
+              placeholder="e.g. 123456789"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            />
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Rwanda Revenue Authority Tax Identification Number</p>
           </div>
         </div>
+
+        {/* RDB Certificate */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+          <h2 className="text-lg font-semibold border-b pb-2">RDB Certificate</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Upload your Rwanda Development Board business registration certificate (PDF or image). An admin will review and approve it.
+          </p>
+
+          {/* Existing documents */}
+          {documents.length > 0 && (
+            <div className="space-y-2">
+              {documents.map(doc => (
+                <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <FileText size={16} className="text-cyan-600 shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
+                        {doc.file_name || 'RDB Certificate'}
+                      </p>
+                      <p className="text-xs text-gray-400">{new Date(doc.created_at).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <DocStatusBadge status={doc.status} />
+                    {doc.file_url && (
+                      <a
+                        href={resolveMediaUrl(doc.file_url)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-cyan-600 hover:underline"
+                      >
+                        View
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {documents.some(d => d.status === 'rejected') && (
+                <div className="flex items-start gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                  <AlertCircle size={14} className="text-red-500 mt-0.5 shrink-0" />
+                  <p className="text-xs text-red-700 dark:text-red-300">
+                    Your certificate was rejected. Please upload a new valid document.
+                    {documents.find(d => d.status === 'rejected')?.notes && (
+                      <span className="block mt-1 font-medium">Reason: {documents.find(d => d.status === 'rejected')!.notes}</span>
+                    )}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {documents.length === 0 && (
+            <p className="text-sm text-gray-400 dark:text-gray-500 italic">No certificate uploaded yet.</p>
+          )}
+
+          {/* Upload button */}
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png,.webp"
+              className="hidden"
+              onChange={handleDocumentUpload}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingDoc}
+              className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-cyan-400 dark:border-cyan-600 rounded-lg text-sm text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition disabled:opacity-50"
+            >
+              {uploadingDoc ? <Loader2 size={15} className="animate-spin" /> : <Upload size={15} />}
+              {uploadingDoc ? 'Uploading…' : 'Upload Certificate'}
+            </button>
+            <p className="mt-1 text-xs text-gray-400">Accepted: PDF, JPEG, PNG (max 10 MB)</p>
+          </div>
+
+          {uploadError && (
+            <div className="flex items-center gap-2 p-2 bg-red-50 dark:bg-red-900/20 rounded text-xs text-red-700 dark:text-red-300">
+              <AlertCircle size={12} /> {uploadError}
+            </div>
+          )}
+          {uploadSuccess && (
+            <div className="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 rounded text-xs text-green-700 dark:text-green-300">
+              <CheckCircle size={12} /> Certificate uploaded. Pending admin review.
+            </div>
+          )}
+        </div>
       </div>
-      <div className="flex justify-end"><button onClick={handleSave} disabled={loading} className={`px-6 py-2 rounded-lg text-sm font-medium transition ${loading ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-cyan-600 text-white hover:bg-cyan-700'}`}>{loading ? 'Saving...' : 'Save Settings'}</button></div>
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className={`px-6 py-2 rounded-lg text-sm font-medium transition ${loading ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-cyan-600 text-white hover:bg-cyan-700'}`}
+        >
+          {loading ? 'Saving...' : 'Save Settings'}
+        </button>
+      </div>
     </div>
   );
 }

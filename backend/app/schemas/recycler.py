@@ -17,6 +17,7 @@ class RecyclerCreate(BaseModel):
     storage_capacity: Optional[float] = None
     latitude:        Optional[float] = None
     longitude:       Optional[float] = None
+    tin_number:      Optional[str] = None
 
 
 class RecyclerUpdate(BaseModel):
