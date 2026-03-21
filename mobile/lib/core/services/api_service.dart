@@ -356,7 +356,7 @@ class ApiService {
   }
   
   static Future<Map<String, dynamic>> increaseBid(int bidId, double newAmount) async {
-    return await _request('PATCH', '/bids/$bidId/increase', body: {'new_amount': newAmount});
+    return await _request('PATCH', '/bids/$bidId/increase', body: {'amount': newAmount});
   }
   
   // ── Collections ─────────────────────────────────────────────────────────────

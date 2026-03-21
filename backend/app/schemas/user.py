@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Optional
 import re
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, model_validator
 from app.models.user import UserRole, UserStatus, DocumentType, DocumentStatus
 
 
@@ -94,7 +94,44 @@ class UserRead(BaseModel):
     created_at:       datetime
     must_change_password: bool = False
 
+    # Embedded profile data — eliminates extra API calls on login/session restore
+    hotel_profile:    Optional[dict] = None
+    recycler_profile: Optional[dict] = None
+    green_score:      Optional[dict] = None
+
     model_config = {"from_attributes": True}
+
+    @model_validator(mode="after")
+    def _embed_profiles(self) -> "UserRead":
+        # This validator runs after the model is built from ORM attributes.
+        # We access the original ORM object via __pydantic_extra__ isn't reliable,
+        # so profiles are populated by the custom class method below.
+        return self
+
+    @classmethod
+    def model_validate(cls, obj, **kwargs):  # type: ignore[override]
+        instance = super().model_validate(obj, **kwargs)
+        # Embed hotel profile
+        hotel = getattr(obj, "hotel", None)
+        if hotel:
+            instance.hotel_profile = {
+                "business_name": getattr(hotel, "hotel_name", None) or getattr(hotel, "business_name", None),
+            }
+        # Embed recycler profile
+        recycler = getattr(obj, "recycler", None)
+        if recycler:
+            instance.recycler_profile = {
+                "company_name": getattr(recycler, "company_name", None),
+            }
+        # Embed latest green score
+        green_scores = getattr(obj, "green_scores", None)
+        if green_scores:
+            try:
+                latest = max(green_scores, key=lambda g: g.created_at)
+                instance.green_score = {"total_score": getattr(latest, "total_score", 0)}
+            except (ValueError, AttributeError):
+                pass
+        return instance
 
 
 class UserListRead(BaseModel):

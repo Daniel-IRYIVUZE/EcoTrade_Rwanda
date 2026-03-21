@@ -34,19 +34,23 @@ export default function RecyclerOverview() {
     Promise.all([
       bidsAPI.mine({ limit: 50 }).catch(() => [] as Bid[]),
       listingsAPI.list({ status: 'open', limit: 200 }).catch(() => [] as WasteListing[]),
-    ]).then(([allBids, listings]) => {
+      recyclersAPI.me().catch(() => null),
+      transactionsAPI.mine({ limit: 200 }).catch(() => [] as Transaction[]),
+      collectionsAPI.list({ limit: 200 }).catch(() => [] as Collection[]),
+      inventoryAPI.mine().catch(() => [] as InventoryItem[]),
+      driversAPI.myRecycler().catch(() => [] as DriverProfile[]),
+    ]).then(([allBids, listings, profile, txns, colls, inv, drvs]) => {
       const active = allBids.filter(b => b.status === 'active').slice(0, 6).map(b => {
         const l = listings.find(ls => ls.id === b.listing_id);
         return { ...b, hotel: l?.hotel_name || `Listing #${b.listing_id}`, type: l?.waste_type || '—', quantity: l ? `${l.volume} ${l.unit}` : '—', myBid: `RWF ${(b.amount ?? 0).toLocaleString()}` };
       });
       setLiveBids(active);
+      if (profile) setRecyclerProfile(profile);
+      setTransactions(txns);
+      setCollections(colls);
+      setInventoryItems(inv);
+      setDrivers(drvs);
     });
-
-    recyclersAPI.me().then(setRecyclerProfile).catch(() => {});
-    transactionsAPI.mine({ limit: 200 }).then(setTransactions).catch(() => {});
-    collectionsAPI.list({ limit: 200 }).then(setCollections).catch(() => {});
-    inventoryAPI.mine().then(setInventoryItems).catch(() => {});
-    driversAPI.list({ limit: 50 }).then(setDrivers).catch(() => {});
   }, []);
 
   useEffect(() => { load(); }, [load]);

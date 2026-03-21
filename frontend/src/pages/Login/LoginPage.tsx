@@ -41,19 +41,17 @@ const LoginPage = () => {
     try {
       await login(email, password);
       const from = (location.state as any)?.from || null;
-      setTimeout(() => {
-        const storedUser = localStorage.getItem('ecotrade_user');
-        if (storedUser) {
-          const u = JSON.parse(storedUser);
-          if (from && from !== '/login' && from !== '/signup') {
-            navigate(from, { replace: true });
-          } else {
-            navigate(roleToDashboard[u.role] || '/dashboard', { replace: true });
-          }
+      const storedUser = localStorage.getItem('ecotrade_user');
+      if (storedUser) {
+        const u = JSON.parse(storedUser);
+        if (from && from !== '/login' && from !== '/signup') {
+          navigate(from, { replace: true });
         } else {
-          navigate('/dashboard', { replace: true });
+          navigate(roleToDashboard[u.role] || '/dashboard', { replace: true });
         }
-      }, 50);
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err) {
       setLoginError((err as Error).message || 'Login failed. Please check your credentials.');
       throw err;

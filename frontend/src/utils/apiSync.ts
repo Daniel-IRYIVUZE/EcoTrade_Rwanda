@@ -16,12 +16,25 @@ function toRole(r: string): DSUser['role'] {
 
 /** Fetch data from the API and write it into the localStorage dataStore. */
 export async function syncFromAPI(userRole: string): Promise<void> {
-  try {
-    // ── Listings — business users only see their own listings ────────────────
-    const apiListings = userRole === 'business'
-      ? await listingsAPI.mine()
-      : await listingsAPI.list({ limit: 100 });
-    const dsListings: DSListing[] = apiListings.map(l => ({
+  // Fire all requests in parallel — no sequential awaits
+  const [listingsResult, collectionsResult, txResult, usersResult, bidsResult, invResult] =
+    await Promise.allSettled([
+      // Listings
+      userRole === 'business' ? listingsAPI.mine() : listingsAPI.list({ limit: 100 }),
+      // Collections
+      collectionsAPI.list({ limit: 100 }),
+      // Transactions
+      userRole === 'admin' ? transactionsAPI.list({ limit: 100 }) : transactionsAPI.mine({ limit: 100 }),
+      // Users (admin only — others get null)
+      userRole === 'admin' ? usersAPI.list({ limit: 200 }) : Promise.resolve(null),
+      // Recycler bids (recycler only)
+      userRole === 'recycler' ? bidsAPI.mine({ limit: 100 }) : Promise.resolve(null),
+      // Recycler inventory (recycler only)
+      userRole === 'recycler' ? inventoryAPI.mine() : Promise.resolve(null),
+    ]);
+
+  if (listingsResult.status === 'fulfilled' && listingsResult.value) {
+    const dsListings: DSListing[] = listingsResult.value.map(l => ({
       id: String(l.id),
       businessId: String(l.hotel_id),
       businessName: l.hotel_name,
@@ -46,25 +59,18 @@ export async function syncFromAPI(userRole: string): Promise<void> {
       contactPerson: l.contact_person || '',
       specialInstructions: l.special_instructions || '',
       autoAcceptAbove: 0,
-      // Map image URLs from the API response:
-      // `images` is an array of { id, url, is_primary } objects (preferred).
-      // `image_url` is a single primary URL (fallback).
       photos: (() => {
-        if (l.images && l.images.length > 0) {
-          return l.images.map((img) => img.url).filter(Boolean);
-        }
+        if (l.images && l.images.length > 0) return l.images.map((img) => img.url).filter(Boolean);
         if (l.image_url) return [l.image_url];
         return [];
       })(),
       bids: [],
     }));
     saveAll('listings', dsListings);
-  } catch { /* offline */ }
+  }
 
-  try {
-    // ── Collections ──────────────────────────────────────────────────────────
-    const apiCols = await collectionsAPI.list({ limit: 100 });
-    const dsCols: DSCollection[] = apiCols.map(c => ({
+  if (collectionsResult.status === 'fulfilled' && collectionsResult.value) {
+    const dsCols: DSCollection[] = collectionsResult.value.map(c => ({
       id: String(c.id),
       listingId: c.listing_id ? String(c.listing_id) : '',
       businessName: c.hotel_name || '',
@@ -87,14 +93,10 @@ export async function syncFromAPI(userRole: string): Promise<void> {
       createdAt: c.created_at,
     }));
     saveAll('collections', dsCols);
-  } catch { /* offline */ }
+  }
 
-  try {
-    // ── Transactions — use /mine for non-admin roles ─────────────────────────
-    const apiTxs = userRole === 'admin'
-      ? await transactionsAPI.list({ limit: 100 })
-      : await transactionsAPI.mine({ limit: 100 });
-    const dsTxs: DSTx[] = apiTxs.map(t => ({
+  if (txResult.status === 'fulfilled' && txResult.value) {
+    const dsTxs: DSTx[] = txResult.value.map(t => ({
       id: String(t.id),
       listingId: t.listing_id ? String(t.listing_id) : '',
       from: t.from_user || '',
@@ -108,44 +110,34 @@ export async function syncFromAPI(userRole: string): Promise<void> {
       receipt: t.receipt,
     }));
     saveAll('transactions', dsTxs);
-  } catch { /* offline */ }
-
-  // Users endpoint is admin-only
-  if (userRole === 'admin') {
-    try {
-      const apiUsers = await usersAPI.list({ limit: 200 });
-      const dsUsers: DSUser[] = apiUsers.map(u => ({
-        id: String(u.id),
-        name: u.full_name,
-        email: u.email,
-        phone: u.phone || '',
-        role: toRole(u.role),
-        status: u.status as DSUser['status'],
-        verified: u.is_verified,
-        createdAt: u.created_at,
-        location: '',
-        joinDate: u.created_at,
-        lastActive: new Date().toISOString(),
-        avatar: '/images/default-avatar.svg',
-        businessName: u.hotel_profile?.business_name,
-        companyName: u.recycler_profile?.company_name,
-      }));
-      saveAll('users', dsUsers);
-    } catch { /* offline */ }
   }
 
+  if (usersResult.status === 'fulfilled' && usersResult.value) {
+    const dsUsers: DSUser[] = usersResult.value.map(u => ({
+      id: String(u.id),
+      name: u.full_name,
+      email: u.email,
+      phone: u.phone || '',
+      role: toRole(u.role),
+      status: u.status as DSUser['status'],
+      verified: u.is_verified,
+      createdAt: u.created_at,
+      location: '',
+      joinDate: u.created_at,
+      lastActive: new Date().toISOString(),
+      avatar: '/images/default-avatar.svg',
+      businessName: u.hotel_profile?.business_name,
+      companyName: u.recycler_profile?.company_name,
+    }));
+    saveAll('users', dsUsers);
+  }
 
-  // Recycler-specific: sync own bids and inventory
-  if (userRole === 'recycler') {
-    try {
-      const apiBids = await bidsAPI.mine({ limit: 100 });
-      saveAll('recycler_bids', apiBids);
-    } catch { /* offline */ }
+  if (bidsResult.status === 'fulfilled' && bidsResult.value) {
+    saveAll('recycler_bids', bidsResult.value);
+  }
 
-    try {
-      const apiInv = await inventoryAPI.mine();
-      saveAll('recycler_inventory', apiInv);
-    } catch { /* offline */ }
+  if (invResult.status === 'fulfilled' && invResult.value) {
+    saveAll('recycler_inventory', invResult.value);
   }
 
   window.dispatchEvent(new Event('ecotrade_data_change'));

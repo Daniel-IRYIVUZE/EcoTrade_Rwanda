@@ -73,17 +73,20 @@ function apiUserToUser(apiUser: {
 }
 
 async function enrichUserWithRoleProfile(user: User): Promise<User> {
+  // Skip the extra API round-trip when login/me response already embedded profile data
+  if (user.role === 'business' && user.businessName) return user;
+  if (user.role === 'recycler' && user.companyName) return user;
+  if (user.role === 'driver' && user.name) return user;
+
   try {
     if (user.role === 'business') {
       const hotel = await hotelsAPI.me();
       return { ...user, businessName: hotel.hotel_name || user.businessName };
     }
-
     if (user.role === 'recycler') {
       const recycler = await recyclersAPI.me();
       return { ...user, companyName: recycler.company_name || user.companyName };
     }
-
     if (user.role === 'driver') {
       const driver = await driversAPI.me();
       return { ...user, name: driver.name || user.name };
