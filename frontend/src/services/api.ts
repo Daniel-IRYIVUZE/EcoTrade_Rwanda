@@ -1242,6 +1242,11 @@ export const driversAPI = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+  linkExisting: (email: string) =>
+    request<DriverProfile>('/drivers/link-existing', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
   delete: (driverId: number) =>
     request<void>(`/drivers/${driverId}`, { method: 'DELETE' }),
   assignVehicle: (driverId: number, vehicleId: number | null) =>

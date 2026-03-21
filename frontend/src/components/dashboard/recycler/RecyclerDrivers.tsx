@@ -71,9 +71,11 @@ function AddDriverModal({
   onClose: () => void;
   onCreated: () => void;
 }) {
+  const [tab, setTab] = useState<'new' | 'link'>('new');
   const [form, setForm] = useState({
     full_name: '', email: '', phone: '', license_number: '', vehicle_id: '',
   });
+  const [linkEmail, setLinkEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -81,7 +83,9 @@ function AddDriverModal({
   const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
-  const submit = async (e: React.FormEvent) => {
+  const switchTab = (t: 'new' | 'link') => { setTab(t); setError(''); setSuccess(''); };
+
+  const submitNew = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.full_name.trim() || !form.email.trim()) {
       setError('Name and email are required.'); return;
@@ -104,15 +108,45 @@ function AddDriverModal({
     }
   };
 
+  const submitLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!linkEmail.trim()) { setError('Email is required.'); return; }
+    setLoading(true); setError('');
+    try {
+      await driversAPI.linkExisting(linkEmail.trim());
+      setSuccess('Driver successfully linked to your organisation!');
+      setTimeout(() => { onCreated(); onClose(); }, 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to link driver.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-up" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add New Driver</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">An email with temporary login credentials will be sent.</p>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Add Driver</h2>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"><X size={18} /></button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-700 rounded-xl mb-5">
+          <button
+            onClick={() => switchTab('new')}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${tab === 'new' ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+          >
+            Create New Account
+          </button>
+          <button
+            onClick={() => switchTab('link')}
+            className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${tab === 'link' ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+          >
+            Link Existing Driver
+          </button>
         </div>
 
         {success ? (
@@ -120,8 +154,9 @@ function AddDriverModal({
             <CheckCircle size={18} className="flex-shrink-0 mt-0.5" />
             <span className="text-sm">{success}</span>
           </div>
-        ) : (
-          <form onSubmit={submit} className="space-y-4">
+        ) : tab === 'new' ? (
+          <form onSubmit={submitNew} className="space-y-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 -mt-2">An email with temporary login credentials will be sent.</p>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name *</label>
               <input name="full_name" value={form.full_name} onChange={handle} required
@@ -173,6 +208,41 @@ function AddDriverModal({
               <button type="submit" disabled={loading}
                 className="flex-1 px-4 py-2.5 bg-cyan-600 text-white rounded-xl text-sm font-medium hover:bg-cyan-700 disabled:opacity-40 transition-colors flex items-center justify-center gap-2">
                 {loading ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Creating…</> : <><UserPlus size={15} /> Create Driver</>}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={submitLink} className="space-y-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 -mt-2">
+              Enter the email of a driver who already has an account. They will be linked to your organisation.
+            </p>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Driver's Email Address *</label>
+              <input
+                type="email"
+                value={linkEmail}
+                onChange={e => setLinkEmail(e.target.value)}
+                required
+                autoFocus
+                className="w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-cyan-500 focus:outline-none"
+                placeholder="driver@example.com"
+              />
+            </div>
+
+            {error && (
+              <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                <AlertCircle size={14} />{error}
+              </p>
+            )}
+
+            <div className="flex gap-3 pt-2">
+              <button type="button" onClick={onClose}
+                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                Cancel
+              </button>
+              <button type="submit" disabled={loading}
+                className="flex-1 px-4 py-2.5 bg-cyan-600 text-white rounded-xl text-sm font-medium hover:bg-cyan-700 disabled:opacity-40 transition-colors flex items-center justify-center gap-2">
+                {loading ? <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Linking…</> : <><UserCheck size={15} /> Link Driver</>}
               </button>
             </div>
           </form>

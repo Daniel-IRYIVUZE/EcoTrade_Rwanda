@@ -188,7 +188,7 @@ export default function RecyclerFleet() {
   const load = () => {
     setLoadMessage('');
     Promise.all([
-      driversAPI.list({ limit: 100 }).catch(() => [] as DriverProfile[]),
+      driversAPI.myRecycler().catch(() => [] as DriverProfile[]),
       vehiclesAPI.list().catch((e: unknown) => {
         setLoadMessage(e instanceof Error ? e.message : 'Failed to load fleet vehicles.');
         return [] as VehicleItem[];
@@ -236,8 +236,8 @@ export default function RecyclerFleet() {
     });
   }, [viewDriver, collections]);
 
-  // Only show drivers belonging to this recycler
-  const myDrivers = recycler ? drivers.filter(d => d.recycler_id === recycler.id) : drivers;
+  // driversAPI.myRecycler() already returns only this recycler's drivers
+  const myDrivers = drivers;
 
   const vehicleDriverMap = new Map<number, DriverProfile>();
   myDrivers.forEach(d => {

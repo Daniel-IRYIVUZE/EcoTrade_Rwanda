@@ -153,7 +153,7 @@ def assign_vehicle_to_driver(driver_id: int, payload: dict, db: Session = Depend
     if not recycler:
         raise HTTPException(404, "Recycler profile not found.")
     driver = crud_driver.get(db, driver_id)
-    if not driver or driver.recycler_id != recycler.id:
+    if not driver or (driver.recycler_id is not None and driver.recycler_id != recycler.id):
         raise HTTPException(404, "Driver not found in your organisation.")
     vehicle_id = payload.get("vehicle_id")
     if vehicle_id is not None:
@@ -163,6 +163,9 @@ def assign_vehicle_to_driver(driver_id: int, payload: dict, db: Session = Depend
         driver.vehicle_id = vehicle_id
     else:
         driver.vehicle_id = None  # unassign
+    # Stamp recycler_id so the driver is permanently linked to this org
+    if driver.recycler_id is None:
+        driver.recycler_id = recycler.id
     db.commit()
     db.refresh(driver)
     return _enrich(driver, db)
@@ -439,6 +442,44 @@ def update_location(
     return _enrich(driver, db)
 
 
+# ── Recycler: link an existing driver (self-registered) to their org ─────────
+
+@router.post("/link-existing", response_model=DriverRead, status_code=200,
+             dependencies=[Depends(require_role(UserRole.recycler, UserRole.admin))])
+def link_existing_driver(
+    payload: dict,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Recycler links an existing driver account (self-registered) to their organisation by email."""
+    from app.crud import crud_recycler as _crud_recycler
+
+    recycler = _crud_recycler.get_by_user(db, current_user.id)
+    if not recycler:
+        raise HTTPException(404, "Recycler profile not found.")
+
+    email = (payload.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(400, "email is required.")
+
+    user = crud_user.get_by_email(db, email)
+    if not user:
+        raise HTTPException(404, "No account found with that email address.")
+    if user.role.value != "driver":
+        raise HTTPException(400, "That account is not a driver account.")
+
+    driver = crud_driver.get_by_user(db, user.id)
+    if not driver:
+        raise HTTPException(404, "No driver profile found for that account.")
+    if driver.recycler_id and driver.recycler_id != recycler.id:
+        raise HTTPException(409, "This driver already belongs to another organisation.")
+
+    driver.recycler_id = recycler.id
+    db.commit()
+    db.refresh(driver)
+    return _enrich(driver, db)
+
+
 # ── Recycler: list their own drivers ─────────────────────────────────────────
 
 @router.get("/my-recycler", response_model=list[DriverRead],
@@ -447,10 +488,40 @@ def get_my_recycler_drivers(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    """Recycler: get all drivers belonging to their organisation."""
+    """Recycler: get all drivers belonging to their organisation.
+
+    Also catches drivers whose vehicle belongs to this recycler but whose
+    recycler_id was never set (e.g. self-registered drivers) and auto-fixes them.
+    """
     from app.crud import crud_recycler as _crud_recycler
     recycler = _crud_recycler.get_by_user(db, current_user.id)
     if not recycler:
         raise HTTPException(404, "Recycler profile not found.")
-    drivers = crud_driver.get_by_recycler(db, recycler.id)
-    return [_enrich(d, db) for d in drivers]
+
+    # Directly linked drivers
+    direct = crud_driver.get_by_recycler(db, recycler.id)
+
+    # Drivers whose vehicle belongs to this recycler but recycler_id is unset
+    recycler_vehicle_ids = [
+        v.id for v in db.query(Vehicle).filter(Vehicle.recycler_id == recycler.id).all()
+    ]
+    via_vehicle: list[Driver] = []
+    if recycler_vehicle_ids:
+        via_vehicle = (
+            db.query(Driver)
+            .filter(Driver.vehicle_id.in_(recycler_vehicle_ids), Driver.recycler_id.is_(None))
+            .all()
+        )
+        # Auto-fix: stamp recycler_id so they appear correctly from now on
+        for d in via_vehicle:
+            d.recycler_id = recycler.id
+        if via_vehicle:
+            db.commit()
+            for d in via_vehicle:
+                db.refresh(d)
+
+    merged = {d.id: d for d in direct}
+    for d in via_vehicle:
+        merged[d.id] = d
+
+    return [_enrich(d, db) for d in merged.values()]
