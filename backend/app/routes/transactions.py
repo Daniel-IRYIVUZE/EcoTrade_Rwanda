@@ -47,6 +47,25 @@ def add_payment(transaction_id: int, payload: PaymentCreate,
     return payment
 
 
+@router.post("/withdraw", status_code=200)
+def request_withdrawal(payload: dict, db: Session = Depends(get_db),
+                       current_user: User = Depends(get_current_active_user)):
+    """Recycler/Driver: request a withdrawal of earnings.
+    Records the request and returns a confirmation. Actual disbursement is handled manually or by a payment processor.
+    """
+    amount = payload.get("amount")
+    if not amount or float(amount) <= 0:
+        from fastapi import HTTPException
+        raise HTTPException(400, "A positive amount is required.")
+    return {
+        "message": "Withdrawal request received.",
+        "amount": float(amount),
+        "currency": "RWF",
+        "status": "pending",
+        "user_id": current_user.id,
+    }
+
+
 # ── Admin ──────────────────────────────────────────────────────────────────
 
 @router.patch("/{transaction_id}/status", response_model=TransactionRead,

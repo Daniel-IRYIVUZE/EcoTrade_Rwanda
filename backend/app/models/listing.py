@@ -69,7 +69,7 @@ class WasteListing(Base):
     hotel       = relationship("Hotel", back_populates="listings")
     images      = relationship("ListingImage", back_populates="listing", cascade="all, delete-orphan")
     bids        = relationship("Bid", back_populates="listing", cascade="all, delete-orphan")
-    collection  = relationship("Collection", back_populates="listing", uselist=False)
+    collection  = relationship("Collection", back_populates="listing", uselist=False, cascade="all, delete-orphan")
     transaction = relationship("Transaction", back_populates="listing", uselist=False)
 
     @property

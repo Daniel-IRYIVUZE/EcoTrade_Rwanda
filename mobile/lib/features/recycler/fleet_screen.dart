@@ -23,12 +23,14 @@ class _FleetScreenState extends ConsumerState<FleetScreen> {
   final _nameCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _vehicleCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
 
   @override
   void dispose() {
     _nameCtrl.dispose();
     _phoneCtrl.dispose();
     _vehicleCtrl.dispose();
+    _emailCtrl.dispose();
     super.dispose();
   }
 
@@ -238,6 +240,16 @@ class _FleetScreenState extends ConsumerState<FleetScreen> {
                 ),
                 const SizedBox(height: 12),
                 TextField(
+                  controller: _emailCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Driver Email',
+                    prefixIcon: Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 12),
+                TextField(
                   controller: _phoneCtrl,
                   decoration: const InputDecoration(
                     labelText: 'Phone Number',
@@ -263,11 +275,12 @@ class _FleetScreenState extends ConsumerState<FleetScreen> {
                       ? null
                       : () async {
                           final name = _nameCtrl.text.trim();
+                          final email = _emailCtrl.text.trim();
                           final phone = _phoneCtrl.text.trim();
-                          if (name.isEmpty || phone.isEmpty) {
+                          if (name.isEmpty || email.isEmpty || phone.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Please fill in name and phone'),
+                                content: Text('Please fill in name, email and phone'),
                                 backgroundColor: AppColors.error,
                                 behavior: SnackBarBehavior.floating,
                               ),
@@ -278,11 +291,13 @@ class _FleetScreenState extends ConsumerState<FleetScreen> {
                           try {
                             await ApiService.inviteDriver(
                               name: name,
+                              email: email,
                               phone: phone,
                               vehiclePlate: _vehicleCtrl.text.trim(),
                             );
                             ref.invalidate(driversProvider);
                             _nameCtrl.clear();
+                            _emailCtrl.clear();
                             _phoneCtrl.clear();
                             _vehicleCtrl.clear();
                             if (ctx.mounted) Navigator.pop(ctx);

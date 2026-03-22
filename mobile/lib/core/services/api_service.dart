@@ -481,12 +481,13 @@ class ApiService {
     int transactionId, {
     required String method,
     required double amount,
-    required String reference,
+    String? phoneNumber,
   }) async {
     return await _request('POST', '/transactions/$transactionId/pay', body: {
+      'transaction_id': transactionId,
       'method': method,
       'amount': amount,
-      'reference': reference,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
     });
   }
   
@@ -621,17 +622,19 @@ class ApiService {
   }
 
   static Future<void> rejectBid(int bidId) async {
-    await _request('POST', '/bids/$bidId/reject');
+    await _request('POST', '/bids/$bidId/withdraw');
   }
 
   static Future<Map<String, dynamic>> inviteDriver({
     required String name,
     required String phone,
+    required String email,
     String? vehiclePlate,
   }) async {
-    return await _request('POST', '/drivers/invite', body: {
+    return await _request('POST', '/drivers/register', body: {
       'full_name': name,
       'phone': phone,
+      'email': email,
       if (vehiclePlate != null && vehiclePlate.isNotEmpty) 'plate_number': vehiclePlate,
     });
   }
@@ -647,7 +650,7 @@ class ApiService {
   }
   
   static Future<Map<String, dynamic>> updateInventoryQuantity(int itemId, double quantity) async {
-    return await _request('POST', '/inventory/$itemId/adjust', body: {'quantity': quantity});
+    return await _request('PATCH', '/inventory/$itemId/adjust', body: {'delta': quantity});
   }
   
   // ── Reviews ─────────────────────────────────────────────────────────────────
