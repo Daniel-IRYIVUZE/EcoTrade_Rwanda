@@ -691,11 +691,6 @@ class _ManageListingsView extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: onAdd,
-        icon: const Icon(Icons.add),
-        label: const Text('', style: TextStyle(fontWeight: FontWeight.w700)),
-      ),
       body: listings.isEmpty
           ? _EmptyManageState(onAdd: onAdd)
           : ListView.builder(
