@@ -322,7 +322,6 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
                           title: const Text('Dark Mode', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                           value: isDark,
                           onChanged: (_) => ref.read(themeProvider.notifier).toggle(),
-                          activeThumbColor: AppColors.primary,
                           dense: true,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         );
