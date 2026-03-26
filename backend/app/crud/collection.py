@@ -3,7 +3,16 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from app.crud.base import CRUDBase
 from app.models.collection import Collection, CollectionStatus, CollectionProof
+from app.models.driver import Driver, DriverStatus
 from app.schemas.collection import CollectionCreate, CollectionUpdate
+
+_ACTIVE_STATUSES = {
+    CollectionStatus.scheduled,
+    CollectionStatus.en_route,
+    CollectionStatus.arrived,
+    CollectionStatus.collected,
+    CollectionStatus.verified,
+}
 
 
 class CRUDCollection(CRUDBase[Collection, CollectionCreate, CollectionUpdate]):
@@ -80,6 +89,28 @@ class CRUDCollection(CRUDBase[Collection, CollectionCreate, CollectionUpdate]):
             pass  # verified is intermediate state
         elif new_status == CollectionStatus.completed:
             collection.completed_at = now
+
+        # Sync driver status to reflect their active state
+        if collection.driver_id:
+            driver = db.query(Driver).filter(Driver.id == collection.driver_id).first()
+            if driver:
+                if new_status == CollectionStatus.en_route:
+                    # Driver has started a journey — mark on_route
+                    driver.status = DriverStatus.on_route
+                elif new_status in (CollectionStatus.completed, CollectionStatus.failed,
+                                    CollectionStatus.cancelled):
+                    # Check if driver has any other active collections
+                    other_active = (
+                        db.query(Collection)
+                        .filter(
+                            Collection.driver_id == collection.driver_id,
+                            Collection.id != collection.id,
+                            Collection.status.in_(_ACTIVE_STATUSES),
+                        )
+                        .first()
+                    )
+                    if not other_active:
+                        driver.status = DriverStatus.available
 
         db.commit()
         db.refresh(collection)

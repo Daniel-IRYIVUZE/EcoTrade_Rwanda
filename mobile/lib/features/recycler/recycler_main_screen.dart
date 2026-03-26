@@ -1191,7 +1191,7 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
 // ─── RDB Certificate Section ──────────────────────────────────────────────────
 class _RecyclerRdbSection extends StatefulWidget {
   final VoidCallback? onUpload;
-  const _RecyclerRdbSection({this.onUpload});
+  const _RecyclerRdbSection({super.key, this.onUpload});
 
   @override
   State<_RecyclerRdbSection> createState() => _RecyclerRdbSectionState();

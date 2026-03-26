@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/models/models.dart';
 import '../../core/providers/app_providers.dart';
+import '../../core/services/api_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../shared/live_tracking_screen.dart';
 
@@ -138,7 +139,22 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                 ],
               ),
               trailing: ElevatedButton.icon(
-                onPressed: () => setState(() => _selected = c),
+                onPressed: () async {
+                  // Advance scheduled → en_route when driver starts navigating
+                  if (c.status == CollectionStatus.scheduled) {
+                    final id = int.tryParse(c.id);
+                    if (id != null) {
+                      try {
+                        await ApiService.post(
+                          '/collections/$id/advance',
+                          body: {'status': 'en_route'},
+                        );
+                        ref.invalidate(driverCollectionsProvider);
+                      } catch (_) {}
+                    }
+                  }
+                  if (mounted) setState(() => _selected = c);
+                },
                 icon: const Icon(Icons.navigation, size: 16),
                 label: const Text('Go'),
                 style: ElevatedButton.styleFrom(

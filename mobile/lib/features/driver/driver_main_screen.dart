@@ -322,7 +322,26 @@ class _DriverHomeTab extends ConsumerWidget {
 
               // Start navigation button
               ElevatedButton.icon(
-                onPressed: () => context.push(AppRoutes.driverNavigation),
+                onPressed: () async {
+                  // Mark the first scheduled collection as en_route
+                  final collections = ref.read(driverCollectionsProvider);
+                  final firstScheduled = collections
+                      .where((c) => c.status == CollectionStatus.scheduled)
+                      .firstOrNull;
+                  if (firstScheduled != null) {
+                    final id = int.tryParse(firstScheduled.id);
+                    if (id != null) {
+                      try {
+                        await ApiService.post(
+                          '/collections/$id/advance',
+                          body: {'status': 'en_route'},
+                        );
+                        ref.invalidate(driverCollectionsProvider);
+                      } catch (_) {}
+                    }
+                  }
+                  if (context.mounted) context.push(AppRoutes.driverNavigation);
+                },
                 icon: const Icon(Icons.navigation_rounded, size: 20),
                 label: const Text('Start Navigation'),
                 style: ElevatedButton.styleFrom(
