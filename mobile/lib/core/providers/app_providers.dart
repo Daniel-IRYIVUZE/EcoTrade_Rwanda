@@ -1229,15 +1229,38 @@ class ListingsNotifier extends StateNotifier<List<WasteListing>> {
       throw Exception('Invalid listing id');
     }
     await ApiService.deleteListing(listingId);
-    // Clear the Hive offline cache so the deleted listing doesn't reappear
-    // when the app is used offline after this deletion.
+
+    // Remove from Hive cache and any geospatial cache
     try {
       final box = await Hive.openBox<String>('app_cache');
       await box.delete('cached_open_listings');
+      await box.delete('geo_listingId'); // Remove geospatial cache if exists
     } catch (_) {}
+
+    // Remove from in-memory state if needed
+    state = state.where((l) => l.id != id).toList();
+
+    // Invalidate all providers to force a fresh fetch
     ref.invalidate(_apiMyListingsProvider);
     ref.invalidate(_apiMyListingsWithBidsProvider);
     ref.invalidate(_apiOpenListingsProvider);
+
+    // Optionally, trigger a fresh fetch from backend
+    await syncListingsFromBackend();
+  }
+
+  /// Utility to force a fresh fetch of listings from backend and update cache
+  Future<void> syncListingsFromBackend() async {
+    try {
+      final listings = await ApiService.getMyListings();
+      // Update Hive cache
+      final box = await Hive.openBox<String>('app_cache');
+      await box.put('cached_open_listings', jsonEncode(listings));
+      // Update in-memory state
+      state = listings.map((l) => WasteListing.fromJson(l)).toList();
+    } catch (e) {
+      // Optionally handle error (show toast, etc.)
+    }
   }
 
   /// Re-fetches all listing providers — call after image uploads complete
