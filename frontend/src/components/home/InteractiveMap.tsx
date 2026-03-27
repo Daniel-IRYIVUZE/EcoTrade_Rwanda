@@ -19,7 +19,8 @@ const InteractiveMap = () => {
   }, []);
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    const container = mapRef.current;
+    if (!container) return; // Guard: only proceed if ref is attached
 
     // Re-init map when data changes (first load or data arrives)
     if (leafletMapRef.current) {
@@ -34,7 +35,7 @@ const InteractiveMap = () => {
         const L = await import('leaflet');
 
         // Kigali center
-        map = L.map(mapRef.current, {
+        map = L.map(container, {
           center: [-1.9441, 30.0619],
           zoom: 13,
           zoomControl: false,
