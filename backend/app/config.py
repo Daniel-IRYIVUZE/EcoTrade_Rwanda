@@ -24,23 +24,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 60
 
     # ── CORS ──────────────────────────────────────────────────────────────────
-    ALLOWED_ORIGINS: list[str] = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-        "http://localhost:5176",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5175",
-        "https://ecotrade-rwanda.com",
-        "*.ecotrade-rwanda.com",
-        "https://*.ecotrade-rwanda.com",
-        "https://ecotrade-rwanda.netlify.app",
-        "https://*.ecotrade-rwanda.netlify.app",
-        "http://ecotrade-rwanda.netlify.app",
-        "http://*.ecotrade-rwanda.netlify.app",
-        
-    ]
+    ALLOWED_ORIGINS: list[str] = ["*"]
 
     # ── File uploads ──────────────────────────────────────────────────────────
     UPLOAD_DIR: str = "uploads"
