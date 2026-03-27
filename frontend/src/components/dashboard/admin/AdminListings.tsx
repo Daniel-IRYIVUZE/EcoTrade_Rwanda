@@ -5,7 +5,7 @@ import {
   Package, Edit2, Download, Star,
 } from 'lucide-react';
 import { adminAPI, listingsAPI, resolveMediaUrl, type WasteListing, type ListingImage } from '../../../services/api';
-import { downloadCSV } from '../../../utils/dataStore';
+import { downloadCSV, saveAll } from '../../../utils/dataStore';
 
 const MAX_LISTING_IMAGES = 5;
 
@@ -285,10 +285,11 @@ export default function AdminListings() {
     }
   };
 
-  const handleDelete = async () => { 
+  const handleDelete = async () => {
     if (selected) {
       try {
         await adminAPI.deleteListing(selected.id);
+        saveAll('listings', []);
         setModal(null);
         setFlashType('success');
         setFlash('Listing deleted from database successfully.');

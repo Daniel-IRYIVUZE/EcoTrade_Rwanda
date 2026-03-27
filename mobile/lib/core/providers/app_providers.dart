@@ -107,11 +107,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
           final hotelData = await ApiService.getMyHotel();
           user = user.copyWith(
             businessName: hotelData['hotel_name'] as String?,
+            greenScore: (hotelData['green_score'] as num?)?.toInt() ?? 0,
           );
         } else if (user.role == UserRole.recycler) {
           final recyclerData = await ApiService.getMyRecycler();
           user = user.copyWith(
             companyName: recyclerData['company_name'] as String?,
+            greenScore: (recyclerData['green_score'] as num?)?.toInt() ?? 0,
+          );
+        } else if (user.role == UserRole.driver) {
+          final driverData = await ApiService.getMyDriver();
+          user = user.copyWith(
+            rating: (driverData['rating'] as num?)?.toDouble() ?? 0.0,
           );
         }
       } catch (_) {
@@ -172,7 +179,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         phone: userMap['phone'] as String? ?? phone,
         role: _mapRole(userMap['role'] as String? ?? role),
         verified: userMap['is_verified'] as bool? ?? false,
-        greenScore: 10,
+        greenScore: 0,
         businessName: businessName,
       );
 
@@ -189,6 +196,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           });
           user = user.copyWith(
             businessName: hotelData['hotel_name'] as String?,
+            greenScore: (hotelData['green_score'] as num?)?.toInt() ?? 0,
           );
         } else if (role == 'recycler') {
           final recyclerData = await ApiService.createMyRecycler({
@@ -201,6 +209,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           });
           user = user.copyWith(
             companyName: recyclerData['company_name'] as String?,
+            greenScore: (recyclerData['green_score'] as num?)?.toInt() ?? 0,
           );
         }
       } catch (_) {
@@ -532,6 +541,28 @@ String _wasteTypeToApi(WasteType type) {
 
 // ── Private API FutureProviders ───────────────────────────────────────────
 
+// How long Hive offline cache entries remain valid.
+const _kHiveCacheTtlHours = 24;
+
+/// Wraps raw data in a timestamped envelope before writing to Hive.
+String _hiveEncode(dynamic data) =>
+    jsonEncode({'ts': DateTime.now().millisecondsSinceEpoch, 'data': data});
+
+/// Returns the cached payload if it exists and is still fresh, otherwise null.
+dynamic _hiveDecode(String? raw) {
+  if (raw == null) return null;
+  try {
+    final envelope = jsonDecode(raw) as Map<String, dynamic>;
+    final ts = envelope['ts'] as int?;
+    if (ts == null) return envelope; // legacy entry without ts — use as-is once
+    final ageHours = (DateTime.now().millisecondsSinceEpoch - ts) / 3600000;
+    if (ageHours > _kHiveCacheTtlHours) return null; // expired
+    return envelope['data'];
+  } catch (_) {
+    return null;
+  }
+}
+
 final _apiOpenListingsProvider = FutureProvider<List<WasteListing>>((ref) async {
   const cacheKey = 'cached_open_listings';
   try {
@@ -541,16 +572,15 @@ final _apiOpenListingsProvider = FutureProvider<List<WasteListing>>((ref) async 
     // Persist to Hive cache for offline access
     try {
       final box = await Hive.openBox<String>('app_cache');
-      await box.put(cacheKey, jsonEncode(items));
+      await box.put(cacheKey, _hiveEncode(items));
     } catch (_) {}
     return mapped;
   } catch (_) {
-    // Return cached listings when offline
+    // Return cached listings when offline (if still fresh)
     try {
       final box = await Hive.openBox<String>('app_cache');
-      final raw = box.get(cacheKey);
-      if (raw != null) {
-        final items = jsonDecode(raw) as List;
+      final items = _hiveDecode(box.get(cacheKey)) as List?;
+      if (items != null) {
         return items.map((j) => _listingFromApi(j as Map<String, dynamic>)).toList();
       }
     } catch (_) {}
@@ -630,16 +660,15 @@ final _apiMyCollectionsProvider = FutureProvider<List<Collection>>((ref) async {
     // Persist to Hive cache so we can read offline
     try {
       final box = await Hive.openBox<String>('app_cache');
-      await box.put(cacheKey, jsonEncode(items));
+      await box.put(cacheKey, _hiveEncode(items));
     } catch (_) {}
     return mapped;
   } catch (_) {
-    // Try returning cached data when offline
+    // Try returning cached data when offline (if still fresh)
     try {
       final box = await Hive.openBox<String>('app_cache');
-      final raw = box.get(cacheKey);
-      if (raw != null) {
-        final items = jsonDecode(raw) as List;
+      final items = _hiveDecode(box.get(cacheKey)) as List?;
+      if (items != null) {
         return items.map((j) => _collectionFromApi(j as Map<String, dynamic>)).toList();
       }
     } catch (_) {}
@@ -664,6 +693,27 @@ final _apiNotificationsProvider = FutureProvider<List<AppNotification>>((ref) as
         .toList();
   } catch (_) {
     return <AppNotification>[];
+  }
+});
+
+// ── Public Contact Info Provider ───────────────────────────────────────────
+
+/// Support contact details (email, phone, platform name) fetched from the backend.
+/// Falls back to defaults so the support screen always renders.
+final contactInfoProvider = FutureProvider<Map<String, String>>((ref) async {
+  try {
+    final data = await ApiService.getContactInfo();
+    return {
+      'supportEmail': (data['supportEmail'] as String?) ?? 'support@ecotrade.rw',
+      'supportPhone': (data['supportPhone'] as String?) ?? '+250 780 162 164',
+      'platformName': (data['platformName'] as String?) ?? 'EcoTrade Rwanda',
+    };
+  } catch (_) {
+    return {
+      'supportEmail': 'support@ecotrade.rw',
+      'supportPhone': '+250 780 162 164',
+      'platformName': 'EcoTrade Rwanda',
+    };
   }
 });
 
@@ -1177,6 +1227,12 @@ class ListingsNotifier extends StateNotifier<List<WasteListing>> {
       throw Exception('Invalid listing id');
     }
     await ApiService.deleteListing(listingId);
+    // Clear the Hive offline cache so the deleted listing doesn't reappear
+    // when the app is used offline after this deletion.
+    try {
+      final box = await Hive.openBox<String>('app_cache');
+      await box.delete('cached_open_listings');
+    } catch (_) {}
     ref.invalidate(_apiMyListingsProvider);
     ref.invalidate(_apiMyListingsWithBidsProvider);
     ref.invalidate(_apiOpenListingsProvider);
@@ -1378,3 +1434,52 @@ final collectionsNotifierProvider =
     StateNotifierProvider<CollectionsNotifier, List<Collection>>((ref) {
   return CollectionsNotifier(ref);
 });
+
+// ── Messages Provider ─────────────────────────────────────────────────────
+
+/// Fetches the current user's conversations from the backend.
+/// Returns raw JSON maps so callers can render sender name, subject, etc.
+final messagesProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  try {
+    final items = await ApiService.getConversations();
+    return items.map((j) => j as Map<String, dynamic>).toList();
+  } catch (_) {
+    return [];
+  }
+});
+
+// ── Support Tickets Provider ──────────────────────────────────────────────
+
+class SupportTicketsNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+  SupportTicketsNotifier(this.ref) : super(const []) {
+    _load();
+  }
+
+  final Ref ref;
+
+  Future<void> _load() async {
+    try {
+      final items = await ApiService.getSupportTickets();
+      state = items.map((j) => j as Map<String, dynamic>).toList();
+    } catch (_) {}
+  }
+
+  Future<void> refresh() => _load();
+
+  Future<Map<String, dynamic>> submit({
+    required String subject,
+    required String message,
+  }) async {
+    final result = await ApiService.createSupportTicket(
+      subject: subject,
+      message: message,
+    );
+    await _load();
+    return result;
+  }
+}
+
+final supportTicketsNotifierProvider =
+    StateNotifierProvider<SupportTicketsNotifier, List<Map<String, dynamic>>>(
+  (ref) => SupportTicketsNotifier(ref),
+);

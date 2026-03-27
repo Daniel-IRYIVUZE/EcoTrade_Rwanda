@@ -1,15 +1,42 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/providers/app_providers.dart';
 import 'widgets/eco_dialogs.dart';
 
-class SupportScreen extends StatelessWidget {
+// App version from pubspec
+const _kAppVersion = '1.0.0+1';
+
+Future<String> _getOrCreateDeviceId() async {
+  final prefs = await SharedPreferences.getInstance();
+  var id = prefs.getString('ecotrade_device_id');
+  if (id == null) {
+    final rng = Random.secure();
+    id = 'ECO-${List.generate(8, (_) => rng.nextInt(16).toRadixString(16).toUpperCase()).join()}';
+    await prefs.setString('ecotrade_device_id', id);
+  }
+  return id;
+}
+
+class SupportScreen extends ConsumerWidget {
   const SupportScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contactAsync = ref.watch(contactInfoProvider);
+    final contact = contactAsync.valueOrNull ?? {
+      'supportEmail': 'support@ecotrade.rw',
+      'supportPhone': '+250 780 162 164',
+      'platformName': 'EcoTrade Rwanda',
+    };
+    final supportEmail = contact['supportEmail']!;
+    final supportPhone = contact['supportPhone']!;
+    final phoneRaw = supportPhone.replaceAll(RegExp(r'[^0-9]'), '');
     return Scaffold(
       backgroundColor: context.cBg,
       appBar: AppBar(
@@ -88,23 +115,22 @@ class SupportScreen extends StatelessWidget {
             icon: Icons.phone_outlined,
             color: AppColors.success,
             title: 'Call Support',
-            subtitle: '+250 780 162 164',
-            onTap: () => _launch(context, 'tel:+250780162164'),
+            subtitle: supportPhone,
+            onTap: () => _launch(context, 'tel:$phoneRaw'),
           ).animate(delay: 100.ms).fadeIn().slideY(begin: 0.1),
           _ContactTile(
             icon: Icons.email_outlined,
             color: AppColors.info,
             title: 'Email Us',
-            subtitle: 'danieliryivuze4@gmail.com',
-            onTap: () => _launch(context, 'mailto:danieliryivuze4@gmail.com'),
+            subtitle: supportEmail,
+            onTap: () => _launch(context, 'mailto:$supportEmail'),
           ).animate(delay: 150.ms).fadeIn().slideY(begin: 0.1),
           _ContactTile(
             icon: Icons.message_outlined,
             color: const Color(0xFF25D366),
             title: 'WhatsApp',
             subtitle: 'Message us on WhatsApp',
-            onTap: () =>
-                _launch(context, 'https://wa.me/250780162164'),
+            onTap: () => _launch(context, 'https://wa.me/$phoneRaw'),
           ).animate(delay: 200.ms).fadeIn().slideY(begin: 0.1),
 
           const SizedBox(height: 24),
@@ -119,7 +145,7 @@ class SupportScreen extends StatelessWidget {
                   icon: Icons.bug_report_outlined,
                   label: 'Report a Bug',
                   color: AppColors.error,
-                  onTap: () => _showReportBugDialog(context),
+                  onTap: () => _showReportBugDialog(context, ref),
                 ),
               ),
               const SizedBox(width: 10),
@@ -128,7 +154,7 @@ class SupportScreen extends StatelessWidget {
                   icon: Icons.lightbulb_outline,
                   label: 'Suggest Feature',
                   color: AppColors.accent,
-                  onTap: () => _showFeatureRequestDialog(context),
+                  onTap: () => _showFeatureRequestDialog(context, ref),
                 ),
               ),
               const SizedBox(width: 10),
@@ -185,62 +211,67 @@ class SupportScreen extends StatelessWidget {
           const SizedBox(height: 24),
 
           // App info
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: context.cSurf,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: context.cBorder),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('App Version',
-                        style: TextStyle(
-                            fontSize: 13, color: context.cTextSec)),
-                    Text('1.0.0 (Build 42)',
-                        style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: context.cText)),
-                  ],
+          FutureBuilder<String>(
+            future: _getOrCreateDeviceId(),
+            builder: (context, snap) {
+              final deviceId = snap.data ?? '…';
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: context.cSurf,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: context.cBorder),
                 ),
-                const Divider(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    Text('Device ID',
-                        style: TextStyle(
-                            fontSize: 13, color: context.cTextSec)),
-                    GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(
-                            const ClipboardData(text: 'ECO-DEVICE-001'));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Device ID copied'),
-                              duration: Duration(seconds: 2)),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Text('ECO-DEVICE-001',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: context.cText)),
-                          const SizedBox(width: 6),
-                          Icon(Icons.copy_outlined,
-                              size: 14, color: context.cTextTer),
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('App Version',
+                            style: TextStyle(
+                                fontSize: 13, color: context.cTextSec)),
+                        Text(_kAppVersion,
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: context.cText)),
+                      ],
+                    ),
+                    const Divider(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Device ID',
+                            style: TextStyle(
+                                fontSize: 13, color: context.cTextSec)),
+                        GestureDetector(
+                          onTap: () {
+                            Clipboard.setData(ClipboardData(text: deviceId));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Device ID copied'),
+                                  duration: Duration(seconds: 2)),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Text(deviceId,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.cText)),
+                              const SizedBox(width: 6),
+                              Icon(Icons.copy_outlined,
+                                  size: 14, color: context.cTextTer),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              );
+            },
           ).animate(delay: 700.ms).fadeIn(),
 
           const SizedBox(height: 30),
@@ -260,7 +291,7 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  void _showReportBugDialog(BuildContext context) {
+  void _showReportBugDialog(BuildContext context, WidgetRef ref) {
     final ctrl = TextEditingController();
     EcoDialogs.showInputDialog(
       context: context,
@@ -271,12 +302,25 @@ class SupportScreen extends StatelessWidget {
       controller: ctrl,
       confirmLabel: 'Submit Report',
       onConfirm: () {
-        EcoDialogs.showSuccessSnack(context, 'Bug report submitted. Thank you!');
+        final msg = ctrl.text.trim();
+        if (msg.isEmpty) return;
+        ref.read(supportTicketsNotifierProvider.notifier).submit(
+          subject: 'Bug Report',
+          message: msg,
+        ).then((_) {
+          if (context.mounted) {
+            EcoDialogs.showSuccessSnack(context, 'Bug report submitted. Thank you!');
+          }
+        }).catchError((_) {
+          if (context.mounted) {
+            EcoDialogs.showErrorSnack(context, 'Failed to submit report. Please try again.');
+          }
+        });
       },
     );
   }
 
-  void _showFeatureRequestDialog(BuildContext context) {
+  void _showFeatureRequestDialog(BuildContext context, WidgetRef ref) {
     final ctrl = TextEditingController();
     EcoDialogs.showInputDialog(
       context: context,
@@ -287,7 +331,20 @@ class SupportScreen extends StatelessWidget {
       controller: ctrl,
       confirmLabel: 'Submit Suggestion',
       onConfirm: () {
-        EcoDialogs.showSuccessSnack(context, 'Feature suggestion received!');
+        final msg = ctrl.text.trim();
+        if (msg.isEmpty) return;
+        ref.read(supportTicketsNotifierProvider.notifier).submit(
+          subject: 'Feature Request',
+          message: msg,
+        ).then((_) {
+          if (context.mounted) {
+            EcoDialogs.showSuccessSnack(context, 'Feature suggestion received!');
+          }
+        }).catchError((_) {
+          if (context.mounted) {
+            EcoDialogs.showErrorSnack(context, 'Failed to submit suggestion. Please try again.');
+          }
+        });
       },
     );
   }

@@ -23,8 +23,8 @@ class ApiService {
     if (envBase.isNotEmpty) return envBase;
 
     // Always use local backend for all platforms during development
-    return 'https://api.ecotrade-rwanda.com/api';
-    // return 'http://127.0.0.1:8000/api';
+    // return 'https://api.ecotrade-rwanda.com/api';
+    return 'http://127.0.0.1:8000/api';
   }
   
   static String? _accessToken;
@@ -820,6 +820,31 @@ class ApiService {
   /// Toggle featured status (admin only)
   static Future<Map<String, dynamic>> toggleBlogFeatured(int id) async {
     return await _request('POST', '/blog/$id/toggle-featured');
+  }
+
+  // ── Support Tickets ────────────────────────────────────────────────────────
+
+  /// Fetch support tickets for the current user (or all tickets if admin).
+  static Future<List<dynamic>> getSupportTickets({int limit = 50}) async {
+    return await _request('GET', '/support/', queryParams: {'limit': limit.toString()}) as List<dynamic>;
+  }
+
+  /// Submit a support ticket from an authenticated user.
+  static Future<Map<String, dynamic>> createSupportTicket({
+    required String subject,
+    required String message,
+  }) async {
+    return await _request('POST', '/support/', body: {
+      'subject': subject,
+      'message': message,
+    });
+  }
+
+  // ── Public Contact Info ────────────────────────────────────────────────────
+
+  /// Fetches support contact info (email, phone, platform name) — no auth required.
+  static Future<Map<String, dynamic>> getContactInfo() async {
+    return await _request('GET', '/support/contact-info');
   }
 
   // ── Platform Settings (Admin) ─────────────────────────────────────────────

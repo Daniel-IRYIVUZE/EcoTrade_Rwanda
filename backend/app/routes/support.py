@@ -1,4 +1,5 @@
 ﻿"""routes/support.py — Support ticket endpoints."""
+import json
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
@@ -11,6 +12,7 @@ from app.schemas.support import (
     TicketResponseCreate,
 )
 from app.models.user import User, UserRole
+from app.models.system_settings import SystemSettings
 from app.services.email_service import (
     send_support_ticket_created_email,
     send_support_ticket_response_email,
@@ -18,6 +20,26 @@ from app.services.email_service import (
 from app.config import settings
 
 router = APIRouter(prefix="/support", tags=["Support"])
+
+_CONTACT_KEYS = {"supportEmail", "supportPhone", "platformName"}
+_CONTACT_DEFAULTS = {
+    "supportEmail": "support@ecotrade.rw",
+    "supportPhone": "+250 780 162 164",
+    "platformName": "EcoTrade Rwanda",
+}
+
+
+@router.get("/contact-info")
+def get_contact_info(db: Session = Depends(get_db)) -> dict:
+    """Public — returns support contact details for the mobile app (no auth required)."""
+    result = _CONTACT_DEFAULTS.copy()
+    rows = db.query(SystemSettings).filter(SystemSettings.key.in_(_CONTACT_KEYS)).all()
+    for row in rows:
+        try:
+            result[row.key] = json.loads(row.value)
+        except Exception:
+            result[row.key] = row.value
+    return result
 
 
 class PublicContactPayload(BaseModel):

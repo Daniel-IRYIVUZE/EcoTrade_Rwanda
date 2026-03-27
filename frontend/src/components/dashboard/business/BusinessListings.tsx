@@ -1,7 +1,7 @@
 // components/dashboard/business/BusinessListings.tsx
 import { useState, useEffect } from 'react';
 import { listingsAPI, resolveMediaUrl, type WasteListing, type Bid, type ListingImage } from '../../../services/api';
-import { downloadCSV } from '../../../utils/dataStore';
+import { downloadCSV, saveAll } from '../../../utils/dataStore';
 import { Package, CheckCircle, Clock, Eye, PlusCircle, Download, Search, Trash2, X, Edit2, Image as ImageIcon, Star, Check } from 'lucide-react';
 import StatCard from '../StatCard';
 import DataTable from '../DataTable';
@@ -124,6 +124,7 @@ export default function BusinessListings() {
     if (confirm('Delete this listing?')) {
       try {
         await listingsAPI.delete(id);
+        saveAll('listings', []);
         setFlashType('success');
         setFlash('Listing deleted successfully from database.');
         setTimeout(() => setFlash(null), 2500);

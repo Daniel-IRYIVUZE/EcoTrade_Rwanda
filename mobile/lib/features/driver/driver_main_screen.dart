@@ -39,7 +39,10 @@ class _DriverMainScreenState extends ConsumerState<DriverMainScreen> {
     final driverCollections = ref.watch(driverCollectionsProvider);
     final mapTarget = _firstStartedCollection(driverCollections);
     final screens = [
-      _DriverHomeTab(onGoToProfile: () => setState(() => _selectedIndex = 3)),
+      _DriverHomeTab(
+        onGoToProfile: () => setState(() => _selectedIndex = 3),
+        onGoToNavigate: () => setState(() => _selectedIndex = 1),
+      ),
       mapTarget == null
           ? const Scaffold(
               body: Center(child: Text('No collections available for tracking.')),
@@ -77,7 +80,8 @@ class _DriverMainScreenState extends ConsumerState<DriverMainScreen> {
 // ─── Driver Home Tab ──────────────────────────────────────────────────────────
 class _DriverHomeTab extends ConsumerWidget {
   final VoidCallback? onGoToProfile;
-  const _DriverHomeTab({this.onGoToProfile});
+  final VoidCallback? onGoToNavigate;
+  const _DriverHomeTab({this.onGoToProfile, this.onGoToNavigate});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -279,7 +283,7 @@ class _DriverHomeTab extends ConsumerWidget {
               const SizedBox(height: 10),
 
               if (nextStop != null)
-                _NextStopCard(stop: nextStop).animate().slideY(begin: 0.2, duration: 350.ms, delay: 160.ms).fadeIn()
+                _NextStopCard(stop: nextStop, onNavigate: onGoToNavigate).animate().slideY(begin: 0.2, duration: 350.ms, delay: 160.ms).fadeIn()
               else
                 _EmptyStopsCard(allDone: totalCount > 0 && doneCount == totalCount)
                     .animate().fadeIn(duration: 300.ms, delay: 160.ms),
@@ -340,7 +344,7 @@ class _DriverHomeTab extends ConsumerWidget {
                       } catch (_) {}
                     }
                   }
-                  if (context.mounted) context.push(AppRoutes.driverNavigation);
+                  onGoToNavigate?.call();
                 },
                 icon: const Icon(Icons.navigation_rounded, size: 20),
                 label: const Text('Start Navigation'),
@@ -514,7 +518,8 @@ class _EmptyStopsCard extends StatelessWidget {
 
 class _NextStopCard extends StatelessWidget {
   final RouteStop stop;
-  const _NextStopCard({required this.stop});
+  final VoidCallback? onNavigate;
+  const _NextStopCard({required this.stop, this.onNavigate});
 
   @override
   Widget build(BuildContext context) {
@@ -584,7 +589,7 @@ class _NextStopCard extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () => context.push(AppRoutes.driverNavigation),
+                  onPressed: onNavigate,
                   icon: const Icon(Icons.navigation, size: 16),
                   label: const Text('Navigate'),
                   style: ElevatedButton.styleFrom(minimumSize: const Size(0, 42)),

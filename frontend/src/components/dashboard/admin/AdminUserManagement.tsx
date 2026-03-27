@@ -228,7 +228,7 @@ export default function AdminUserManagement() {
             <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { label: 'Full Name *',  key: 'full_name', placeholder: 'John Doe' },
+                  { label: 'Full Name *',  key: 'full_name', placeholder: 'John Karekezi' },
                   { label: 'Email *',      key: 'email',     placeholder: 'user@ecotrade.rw' },
                   { label: 'Phone',        key: 'phone',     placeholder: '+250 788 ...' },
                 ].map(({ label, key, placeholder }) => (
