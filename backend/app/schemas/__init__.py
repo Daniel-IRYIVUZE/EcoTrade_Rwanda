@@ -10,7 +10,6 @@ from app.schemas.driver import DriverCreate, DriverUpdate, DriverRead, VehicleCr
 from app.schemas.listing import ListingCreate, ListingUpdate, ListingRead, ListingListRead
 from app.schemas.bid import BidCreate, BidUpdate, BidRead
 from app.schemas.collection import CollectionCreate, CollectionUpdate, CollectionRead, ProofCreate
-from app.schemas.route import RouteCreate, RouteRead, RouteStopRead
 from app.schemas.transaction import TransactionRead, PaymentCreate, PaymentRead
 from app.schemas.notification import NotificationRead
 from app.schemas.message import MessageCreate, MessageRead, ConversationRead
@@ -30,7 +29,6 @@ __all__ = [
     "ListingCreate", "ListingUpdate", "ListingRead", "ListingListRead",
     "BidCreate", "BidUpdate", "BidRead",
     "CollectionCreate", "CollectionUpdate", "CollectionRead", "ProofCreate",
-    "RouteCreate", "RouteRead", "RouteStopRead",
     "TransactionRead", "PaymentCreate", "PaymentRead",
     "NotificationRead",
     "MessageCreate", "MessageRead", "ConversationRead",

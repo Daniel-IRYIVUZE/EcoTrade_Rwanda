@@ -54,15 +54,6 @@ def _get_or_create_recycler_profile(db: Session, current_user: User):
     )
 
 
-@router.post("/", response_model=DriverRead, status_code=201,
-             dependencies=[Depends(require_driver_role)])
-def create_driver(payload: DriverCreate, db: Session = Depends(get_db),
-                  current_user: User = Depends(get_current_active_user)):
-    if crud_driver.get_by_user(db, current_user.id):
-        raise HTTPException(409, "Driver profile already exists.")
-    return crud_driver.create(db, obj_in=payload, user_id=current_user.id)
-
-
 @router.get("/me", response_model=DriverRead,
             dependencies=[Depends(require_driver_role)])
 def my_driver(db: Session = Depends(get_db),
@@ -285,16 +276,6 @@ def clear_driver_assignments(driver_id: int, db: Session = Depends(get_db),
 
 
 # ── Vehicles ─────────────────────────────────────────────────────────────────
-
-@router.post("/me/vehicles", response_model=VehicleRead, status_code=201,
-             dependencies=[Depends(require_driver_role)])
-def add_vehicle(payload: VehicleCreate, db: Session = Depends(get_db),
-                current_user: User = Depends(get_current_active_user)):
-    driver = crud_driver.get_by_user(db, current_user.id)
-    if not driver:
-        raise HTTPException(404, "No driver profile found.")
-    return crud_vehicle.create(db, obj_in=payload, driver_id=driver.id)
-
 
 @router.get("/me/vehicles", response_model=list[VehicleRead],
             dependencies=[Depends(require_driver_role)])

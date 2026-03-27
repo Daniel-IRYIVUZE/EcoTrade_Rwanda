@@ -11,7 +11,6 @@ from app.models.user import User, UserRole
 from app.models.listing import ListingStatus, WasteListing
 from app.models.system_settings import SystemSettings
 from app.schemas.listing import ListingRead, ListingUpdate
-from app.services.green_score_service import leaderboard
 from app.utils.file_upload import save_upload
 
 router = APIRouter(prefix="/admin", tags=["Admin"],
@@ -134,11 +133,6 @@ def audit_logs(limit: int = 200, db: Session = Depends(get_db)):
         }
         for log in logs
     ]
-
-
-@router.get("/green-leaderboard")
-def green_leaderboard(limit: int = 10, db: Session = Depends(get_db)):
-    return leaderboard(db, limit=limit)
 
 
 @router.get("/settings")

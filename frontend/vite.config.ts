@@ -1,24 +1,53 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { fileURLToPath } from 'url'
+import { dirname, resolve } from 'path'
+import { tmpdir } from 'os'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const r = (p: string) => resolve(__dirname, 'node_modules', p)
+
+// Place Vite's dep cache in the OS temp dir so Windows Defender does not
+// hold a lock during the deps_temp → deps atomic rename (EPERM on Windows).
+const CACHE_DIR = resolve(tmpdir(), 'ecotrade-vite-cache')
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
     react(),
   ],
+
+  cacheDir: CACHE_DIR,
+
   resolve: {
-    // Force a single copy of React — prevents "Invalid hook call" when
-    // packages like antd or recharts pull in React via CJS require()
-    dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
+    // Use REGEX aliases (exact match) so 'react' does not accidentally
+    // prefix-match 'react/jsx-runtime' and produce a broken path.
+    alias: [
+      { find: /^react\/jsx-dev-runtime$/, replacement: r('react/jsx-dev-runtime.js') },
+      { find: /^react\/jsx-runtime$/,     replacement: r('react/jsx-runtime.js') },
+      { find: /^react-dom\/client$/,      replacement: r('react-dom/client.js') },
+      { find: /^react-dom\/server$/,      replacement: r('react-dom/server.js') },
+      { find: /^react-dom$/,              replacement: r('react-dom/index.js') },
+      { find: /^react$/,                  replacement: r('react/index.js') },
+    ],
+    dedupe: ['react', 'react-dom'],
   },
-  server: {
-    hmr: {
-      protocol: 'ws',
-      host: 'localhost',
-      port: 5173,
-    },
+
+  optimizeDeps: {
+    // Pre-bundle React + antd ecosystem so every CJS require('react') inside
+    // @rc-component/*, @ant-design/cssinjs, etc. uses the same instance.
+    // NOTE: sub-path exports (react/jsx-runtime) cannot go here in Vite 6 —
+    // they are handled by the alias above instead.
+    include: [
+      'react',
+      'react-dom',
+      'antd',
+      '@ant-design/icons',
+      '@ant-design/cssinjs',
+    ],
   },
+
   build: {
     target: 'esnext',
     minify: 'esbuild',

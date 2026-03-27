@@ -1,14 +1,22 @@
-from fastapi import APIRouter, Request, Depends, HTTPException
+"""routes/auth.py — Authentication endpoints."""
+from datetime import datetime, timezone
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.auth.jwt import _decode_token, create_access_token, create_refresh_token
-from app.crud import crud_user
-from app.schemas import TokenResponse, UserRead
+from app.crud import crud_user, crud_audit_log
+from app.auth.jwt import create_access_token, create_refresh_token, verify_refresh_token, _decode_token
+from app.auth.dependencies import get_current_active_user
+from app.schemas.user import (
+    UserCreate, UserRead, TokenResponse,
+)
+from app.models.user import User
 
-router = APIRouter()
+router = APIRouter(prefix="/auth", tags=["Auth"])
+
 
 @router.get("/login/token", response_model=TokenResponse)
-def login_with_token(token: str, request: Request, db: Session = Depends(get_db)):
+def login_with_token(token: str, db: Session = Depends(get_db)):
     """Login driver using secure token from email link."""
     try:
         payload = _decode_token(token)
@@ -20,7 +28,7 @@ def login_with_token(token: str, request: Request, db: Session = Depends(get_db)
     login_token = payload.get("login_token")
     if not user_id or not email or not login_token or role != "driver":
         raise HTTPException(status_code=401, detail="Invalid token payload.")
-    user = crud_user.get_by_id(db, user_id)
+    user = crud_user.get(db, int(user_id))
     if not user or user.email != email:
         raise HTTPException(status_code=401, detail="User not found.")
     if user.status.value == "suspended":
@@ -29,32 +37,14 @@ def login_with_token(token: str, request: Request, db: Session = Depends(get_db)
     refresh = create_refresh_token(subject=str(user.id))
     crud_user.store_refresh_token(db, user_id=user.id, token=refresh)
     crud_user.update_last_login(db, user_id=user.id)
-    must_change_password = bool(getattr(user, 'must_change_password', False))
     return TokenResponse(
         access_token=access,
         refresh_token=refresh,
         token_type="bearer",
         role=user.role.value,
-        must_change_password=must_change_password,
+        must_change_password=bool(getattr(user, 'must_change_password', False)),
         user=UserRead.model_validate(user),
     )
-"""routes/auth.py — Authentication endpoints."""
-from datetime import datetime, timezone
-from fastapi import APIRouter, Depends, HTTPException, status, Request
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
-from app.database import get_db
-from app.crud import crud_user, crud_audit_log
-from app.auth.jwt import create_access_token, create_refresh_token, verify_refresh_token
-from app.auth.dependencies import get_current_active_user
-from app.auth.password import hash_password
-from app.schemas.user import (
-    UserCreate, UserRead, TokenResponse,
-    PasswordResetRequest, PasswordResetConfirm,
-)
-from app.models.user import User
-
-router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.get("/check-availability")
@@ -192,24 +182,6 @@ def logout(current_user: User = Depends(get_current_active_user),
            db: Session = Depends(get_db)):
     crud_user.store_refresh_token(db, user_id=current_user.id, token=None)
 
-
-@router.post("/forgot-password", status_code=200)
-def forgot_password(payload: PasswordResetRequest, db: Session = Depends(get_db)):
-    user = crud_user.get_by_email(db, payload.email)
-    if user:
-        import secrets
-        token = secrets.token_urlsafe(32)
-        crud_user.set_reset_token(db, user_id=user.id, token=token)
-        # TODO: send email with reset link containing `token`
-    return {"message": "If that email exists, a reset link has been sent."}
-
-
-@router.post("/reset-password", status_code=200)
-def reset_password(payload: PasswordResetConfirm, db: Session = Depends(get_db)):
-    ok = crud_user.reset_password(db, token=payload.token, new_password=payload.new_password)
-    if not ok:
-        raise HTTPException(status_code=400, detail="Invalid or expired token.")
-    return {"message": "Password reset successful."}
 
 
 @router.post("/change-password", status_code=200)

@@ -100,25 +100,10 @@ def list_users(role: str | None = None, skip: int = 0, limit: int = 20,
     return crud_user.get_multi(db, skip=skip, limit=limit)
 
 
-@router.get("/search", response_model=list[UserRead],
-            dependencies=[Depends(require_admin)])
-def search_users(q: str, db: Session = Depends(get_db)):
-    return crud_user.search(db, query=q)
-
-
 @router.get("/{user_id}", response_model=UserRead,
             dependencies=[Depends(require_admin)])
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = crud_user.get(db, user_id)
-    if not user:
-        raise HTTPException(404, "User not found.")
-    return user
-
-
-@router.patch("/{user_id}/status", response_model=UserRead,
-              dependencies=[Depends(require_admin)])
-def update_user_status(user_id: int, payload: dict, db: Session = Depends(get_db)):
-    user = crud_user.admin_update(db, user_id=user_id, data=payload)
     if not user:
         raise HTTPException(404, "User not found.")
     return user
@@ -167,11 +152,3 @@ def suspend_user(user_id: int, db: Session = Depends(get_db)):
     return user
 
 
-@router.patch("/{user_id}/documents/{doc_id}", dependencies=[Depends(require_admin)])
-def review_document(user_id: int, doc_id: int, payload: dict,
-                    db: Session = Depends(get_db)):
-    doc = crud_user.review_document(db, doc_id=doc_id, status=payload["status"],
-                                    notes=payload.get("notes"))
-    if not doc:
-        raise HTTPException(404, "Document not found.")
-    return doc

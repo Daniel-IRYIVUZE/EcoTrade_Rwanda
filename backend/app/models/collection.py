@@ -30,7 +30,6 @@ class Collection(Base):
     recycler_id       = Column(Integer, ForeignKey("recyclers.id"), nullable=True)
     driver_id         = Column(Integer, ForeignKey("drivers.id"), nullable=True)
     vehicle_id        = Column(Integer, ForeignKey("vehicles.id"), nullable=True)
-    route_id          = Column(Integer, ForeignKey("routes.id"), nullable=True)
     status            = Column(SAEnum(CollectionStatus), default=CollectionStatus.scheduled)
     scheduled_date    = Column(DateTime(timezone=True), nullable=True)
     scheduled_time    = Column(String(10), nullable=True)

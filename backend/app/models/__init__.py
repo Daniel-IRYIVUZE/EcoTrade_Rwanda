@@ -6,7 +6,6 @@ from app.models.driver import Driver, Vehicle
 from app.models.listing import WasteListing, ListingImage
 from app.models.bid import Bid
 from app.models.collection import Collection, CollectionProof
-from app.models.route import Route, RouteStop
 from app.models.transaction import Transaction, Payment
 from app.models.notification import Notification
 from app.models.message import Message, Conversation
@@ -25,7 +24,6 @@ __all__ = [
     "WasteListing", "ListingImage",
     "Bid",
     "Collection", "CollectionProof",
-    "Route", "RouteStop",
     "Transaction", "Payment",
     "Notification",
     "Message", "Conversation",

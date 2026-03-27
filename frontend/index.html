@@ -13,6 +13,26 @@
     <title>EcoTrade Rwanda — Transform Waste into Revenue</title>
   </head>
   <body>
+    <!-- Inline script runs synchronously before any ES module is fetched.
+         In development the service worker must NOT be active: it caches
+         Vite's JS bundles and serves them on every reload, which breaks
+         HMR, the WebSocket connection, and causes duplicate-React errors.
+         This block unregisters every SW before main.tsx is even requested,
+         breaking the chicken-and-egg where the SW intercepts main.tsx
+         before the unregistration code inside it can execute. -->
+    <script>
+      if ('serviceWorker' in navigator && location.hostname === 'localhost') {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs.forEach(function(r) { r.unregister(); });
+        });
+        // Also clear every SW-managed cache so stale bundles are gone.
+        if ('caches' in window) {
+          caches.keys().then(function(keys) {
+            keys.forEach(function(k) { caches.delete(k); });
+          });
+        }
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

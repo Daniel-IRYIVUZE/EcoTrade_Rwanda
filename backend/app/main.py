@@ -17,7 +17,6 @@ import app.models.driver        # noqa: F401
 import app.models.listing       # noqa: F401
 import app.models.bid           # noqa: F401
 import app.models.collection    # noqa: F401
-import app.models.route         # noqa: F401
 import app.models.transaction   # noqa: F401
 import app.models.notification  # noqa: F401
 import app.models.message       # noqa: F401

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud import crud_transaction, crud_hotel, crud_recycler
-from app.auth.dependencies import get_current_active_user, require_admin, require_role
+from app.auth.dependencies import get_current_active_user, require_admin
 from app.schemas.transaction import TransactionCreate, TransactionRead, PaymentCreate
 from app.models.user import User, UserRole
 from app.services.notification_service import notify_payment_received
@@ -100,9 +100,3 @@ def list_all_transactions(skip: int = 0, limit: int = 50,
     return crud_transaction.get_multi(db, skip=skip, limit=limit)
 
 
-@router.get("/stats/revenue", dependencies=[Depends(require_admin)])
-def revenue_stats(db: Session = Depends(get_db)):
-    return {
-        "total_revenue": crud_transaction.revenue_total(db),
-        "total_platform_fees": crud_transaction.platform_fees_total(db),
-    }

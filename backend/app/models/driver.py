@@ -71,4 +71,4 @@ class Driver(Base):
     vehicle     = relationship("Vehicle", back_populates="driver")
     recycler    = relationship("Recycler", foreign_keys=[recycler_id])
     collections = relationship("Collection", back_populates="driver")
-    routes      = relationship("Route", back_populates="driver")
+

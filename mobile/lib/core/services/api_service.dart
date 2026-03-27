@@ -23,8 +23,8 @@ class ApiService {
     if (envBase.isNotEmpty) return envBase;
 
     // Always use local backend for all platforms during development
-    return 'https://api.ecotrade-rwanda.com/api';
-    // return 'http://127.0.0.1:8000/api';
+    // return 'https://api.ecotrade-rwanda.com/api';
+    return 'http://127.0.0.1:8000/api';
   }
   
   static String? _accessToken;
@@ -550,9 +550,14 @@ class ApiService {
   }
   
   static Future<List<dynamic>> getMessages(int conversationId) async {
-    return await _request('GET', '/messages/$conversationId') as List<dynamic>;
+    final response = await _request('GET', '/messages/conversations/$conversationId');
+    if (response is List) return response;
+    if (response is Map<String, dynamic>) {
+      return (response['items'] as List<dynamic>?) ?? <dynamic>[];
+    }
+    return <dynamic>[];
   }
-  
+
   static Future<Map<String, dynamic>> sendMessage({
     required int recipientId,
     required String content,
@@ -562,9 +567,9 @@ class ApiService {
       'content': content,
     });
   }
-  
+
   static Future<void> markConversationRead(int conversationId) async {
-    await _request('POST', '/messages/$conversationId/read');
+    await _request('POST', '/messages/conversations/$conversationId/read');
   }
   
   // ── Hotels ──────────────────────────────────────────────────────────────────
@@ -578,7 +583,7 @@ class ApiService {
   }
   
   static Future<Map<String, dynamic>> updateHotelProfile(int userId, Map<String, dynamic> data) async {
-    return await _request('PATCH', '/hotels/$userId', body: data);
+    return await _request('PATCH', '/hotels/me', body: data);
   }
   
   static Future<Map<String, dynamic>> updateMyHotel(Map<String, dynamic> data) async {
@@ -600,7 +605,7 @@ class ApiService {
   }
   
   static Future<Map<String, dynamic>> updateRecyclerProfile(int userId, Map<String, dynamic> data) async {
-    return await _request('PATCH', '/recyclers/$userId', body: data);
+    return await _request('PATCH', '/recyclers/me', body: data);
   }
   
   static Future<Map<String, dynamic>> updateMyRecycler(Map<String, dynamic> data) async {
@@ -629,11 +634,11 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> getDriverProfile(int userId) async {
-    return await _request('GET', '/drivers/$userId');
+    return await _request('GET', '/drivers/details/$userId');
   }
-  
+
   static Future<Map<String, dynamic>> updateDriverProfile(int userId, Map<String, dynamic> data) async {
-    return await _request('PATCH', '/drivers/$userId', body: data);
+    return await _request('PATCH', '/drivers/me', body: data);
   }
 
   static Future<Map<String, dynamic>> updateMyDriver(Map<String, dynamic> data) async {
