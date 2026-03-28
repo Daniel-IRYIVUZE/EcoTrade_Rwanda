@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -1219,7 +1220,7 @@ class _ManageListingCard extends StatelessWidget {
                   // ── QR Code section ───────────────────────────────────
                   if (listing.qrToken != null) ...[
                     const SizedBox(height: 14),
-                    _QrCodeSection(qrToken: listing.qrToken!),
+                    _QrCodeSection(listing: listing),
                   ],
 
                   const SizedBox(height: 14),
@@ -1276,14 +1277,24 @@ class _ManageListingCard extends StatelessWidget {
 
 // ─── QR Code Section (embedded in listing card) ───────────────────────────────
 class _QrCodeSection extends StatelessWidget {
-  final String qrToken;
-  const _QrCodeSection({required this.qrToken});
+  final WasteListing listing;
+  const _QrCodeSection({required this.listing});
+
+  /// Build a JSON payload containing both the lookup token and human-readable metadata.
+  String get _qrPayload => jsonEncode({
+    't': listing.qrToken,                         // backend lookup key
+    'l': int.tryParse(listing.id) ?? listing.id,  // listing ID
+    'h': listing.businessName,                    // hotel/business name
+    'w': listing.wasteType.label,                 // waste type
+    'v': listing.volume,                          // volume
+    'u': listing.unit,                            // unit (kg / liters)
+  });
 
   void _showFullDialog(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) => _QrFullDialog(qrToken: qrToken),
+      builder: (_) => _QrFullDialog(listing: listing),
     );
   }
 
@@ -1316,7 +1327,7 @@ class _QrCodeSection extends StatelessWidget {
                 ),
               ),
               child: QrImageView(
-                data: qrToken,
+                data: _qrPayload,
                 version: QrVersions.auto,
                 size: 60,
                 backgroundColor: Colors.white,
@@ -1380,8 +1391,17 @@ class _QrCodeSection extends StatelessWidget {
 
 // ─── Full-Screen QR Dialog ────────────────────────────────────────────────────
 class _QrFullDialog extends StatelessWidget {
-  final String qrToken;
-  const _QrFullDialog({required this.qrToken});
+  final WasteListing listing;
+  const _QrFullDialog({required this.listing});
+
+  String get _qrPayload => jsonEncode({
+    't': listing.qrToken,
+    'l': int.tryParse(listing.id) ?? listing.id,
+    'h': listing.businessName,
+    'w': listing.wasteType.label,
+    'v': listing.volume,
+    'u': listing.unit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1464,7 +1484,7 @@ class _QrFullDialog extends StatelessWidget {
                   ],
                 ),
                 child: QrImageView(
-                  data: qrToken,
+                  data: _qrPayload,
                   version: QrVersions.auto,
                   size: qrSize - 24,
                   backgroundColor: Colors.white,
@@ -1489,15 +1509,14 @@ class _QrFullDialog extends StatelessWidget {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        qrToken,
+                        '${listing.wasteType.label} · ${listing.volume.toStringAsFixed(0)} ${listing.unit} · ${listing.businessName}',
                         style: TextStyle(
                           fontSize: 11,
                           color: context.cTextSec,
-                          fontFamily: 'monospace',
                           letterSpacing: 0.3,
                         ),
                         overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                        maxLines: 2,
                       ),
                     ),
                   ],

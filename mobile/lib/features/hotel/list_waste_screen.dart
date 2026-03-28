@@ -66,7 +66,9 @@ class _ListWasteScreenState extends ConsumerState<ListWasteScreen> {
   double get _unitPrice => double.tryParse(_unitPriceCtrl.text) ?? 0;
   double get _totalMinPrice => _qty * _unitPrice;
 
-  bool get _canStep2 => _wasteType != null && _qty > 0 && _images.isNotEmpty;
+  // In edit mode the existing server-side photos count as "images present"
+  bool get _canStep2 => _wasteType != null && _qty > 0 &&
+      (_images.isNotEmpty || (widget.existingListing?.photos.isNotEmpty ?? false));
   bool get _canStep3 => _unitPrice > 0 && _pickupDate != null;
 
   // ── Init ───────────────────────────────────────────────────────────────────
@@ -367,6 +369,7 @@ class _ListWasteScreenState extends ConsumerState<ListWasteScreen> {
                               onUnit: (u) => setState(() => _unit = u),
                               descriptionCtrl: _descriptionCtrl,
                               images: _images,
+                              existingPhotoUrls: widget.existingListing?.photos ?? const [],
                               onPickCamera: _pickImages,
                               onRemoveImage: _removeImage,
                             )
@@ -672,6 +675,7 @@ class _Step1 extends StatelessWidget {
   final ValueChanged<String> onUnit;
   final TextEditingController descriptionCtrl;
   final List<XFile> images;
+  final List<String> existingPhotoUrls;
   final VoidCallback onPickCamera;
   final ValueChanged<int> onRemoveImage;
 
@@ -683,6 +687,7 @@ class _Step1 extends StatelessWidget {
     required this.onUnit,
     required this.descriptionCtrl,
     required this.images,
+    this.existingPhotoUrls = const [],
     required this.onPickCamera,
     required this.onRemoveImage,
   });
@@ -763,7 +768,7 @@ class _Step1 extends StatelessWidget {
           children: [
             _Label('Images * (max $_maxImages)'),
             Text(
-              '${images.length}/$_maxImages',
+              '${existingPhotoUrls.length + images.length}/$_maxImages',
               style: const TextStyle(
                   fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.primary),
             ),
@@ -775,12 +780,63 @@ class _Step1 extends StatelessWidget {
         _ImagePickBtn(
           icon: Icons.add_photo_alternate_outlined,
           label: 'Add Photos',
-          onTap: images.length < _maxImages ? onPickCamera : null,
+          onTap: (existingPhotoUrls.length + images.length) < _maxImages ? onPickCamera : null,
         ),
 
-        // Image previews
+        // Existing server-side photos (edit mode)
+        if (existingPhotoUrls.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text('Current Photos', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.cTextSec)),
+          const SizedBox(height: 6),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: existingPhotoUrls.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            itemBuilder: (ctx, idx) {
+              final url = existingPhotoUrls[idx];
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      url,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: AppColors.primaryLight,
+                        child: const Icon(Icons.image_not_supported, size: 24, color: AppColors.primary),
+                      ),
+                    ),
+                    if (idx == 0)
+                      Positioned(
+                        bottom: 4, left: 4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text('Cover', style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w700)),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+
+        // New image previews
         if (images.isNotEmpty) ...[
           const SizedBox(height: 12),
+          if (existingPhotoUrls.isNotEmpty)
+            Text('New Photos', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: context.cTextSec)),
+          const SizedBox(height: 6),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -792,11 +848,11 @@ class _Step1 extends StatelessWidget {
             ),
             itemBuilder: (ctx, idx) => _ImagePreviewTile(
               file: images[idx],
-              isPrimary: idx == 0,
+              isPrimary: existingPhotoUrls.isEmpty && idx == 0,
               onRemove: () => onRemoveImage(idx),
             ),
           ),
-        ] else ...[
+        ] else if (existingPhotoUrls.isEmpty) ...[
           const SizedBox(height: 8),
           Text(
             'Add at least 1 photo of the waste',

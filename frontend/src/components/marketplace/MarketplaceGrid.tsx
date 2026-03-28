@@ -4,12 +4,13 @@ import { useState } from 'react';
 
 interface MarketplaceGridProps {
   listings: any[];
+  myBidListingIds?: Set<number>;
   onListingClick: (listing: any) => void;
   onBidClick: (listing: any) => void;
   onClearFilters: () => void;
 }
 
-const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters }: MarketplaceGridProps) => {
+const MarketplaceGrid = ({ listings, myBidListingIds, onListingClick, onBidClick, onClearFilters }: MarketplaceGridProps) => {
   const [savedListings, setSavedListings] = useState<number[]>([]);
 
   const toggleSave = (id: number) => {
@@ -151,6 +152,15 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
 
             {/* Actions — pushed to bottom */}
             <div className="flex gap-2 mt-auto pt-1">
+              {myBidListingIds?.has(listing.id) ? (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onBidClick(listing); }}
+                  className="flex-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-3 py-2 rounded-xl text-xs font-semibold border border-amber-300 dark:border-amber-700 cursor-default"
+                  title="You already have an active bid — go to My Bids to increase it"
+                >
+                  ✓ Bid Placed
+                </button>
+              ) : (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -160,6 +170,7 @@ const MarketplaceGrid = ({ listings, onListingClick, onBidClick, onClearFilters 
               >
                 Place Bid
               </button>
+              )}
               <button
                 onClick={(e) => {
                   e.stopPropagation();

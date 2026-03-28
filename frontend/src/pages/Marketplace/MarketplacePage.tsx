@@ -10,7 +10,7 @@ import QuickBidModal from '../../components/marketplace/QuickBidModal';
 import ListingDetailModal from '../../components/marketplace/ListingDetailModal';
 import ViewToggle from '../../components/marketplace/ViewToggle';
 import MarketplaceSidebar from '../../components/marketplace/MarketplaceSidebar';
-import { listingsAPI, type WasteListing } from '../../services/api';
+import { listingsAPI, bidsAPI, type WasteListing } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { syncFromAPI } from '../../utils/apiSync';
 import { getAbsoluteImageUrl } from '../../utils/imageUrl';
@@ -140,6 +140,7 @@ const MarketplacePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [listings, setListings] = useState<ListingViewModel[]>([]);
+  const [myBidListingIds, setMyBidListingIds] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [filters, setFilters] = useState({
     wasteTypes: [] as string[],
@@ -191,6 +192,19 @@ const MarketplacePage = () => {
       );
 
       setListings(withBids);
+
+      // Load the current user's bids so we can block duplicate bidding in the UI
+      if (user?.role === 'recycler') {
+        try {
+          const myBids = await bidsAPI.mine({ limit: 200 });
+          const activeListingIds = new Set(
+            myBids.filter(b => b.status === 'active').map(b => b.listing_id as number)
+          );
+          setMyBidListingIds(activeListingIds);
+        } catch {
+          // Non-critical: backend still enforces via 409
+        }
+      }
     } catch (error) {
       console.error('Failed to load marketplace listings:', error);
       showToast(
@@ -308,6 +322,10 @@ const MarketplacePage = () => {
       showToast('Please login to place a bid.', 'error');
       return;
     }
+    if (myBidListingIds.has(listing.id)) {
+      showToast('You already have an active bid on this listing. Go to My Bids to increase it.', 'error');
+      return;
+    }
     setSelectedListingForBid(listing);
     setShowBidModal(true);
   };
@@ -317,6 +335,7 @@ const MarketplacePage = () => {
 
     try {
       await listingsAPI.placeBid(selectedListingForBid.id, { amount });
+      setMyBidListingIds(prev => new Set([...prev, selectedListingForBid.id]));
       showToast(`Total bid price of RWF ${amount.toLocaleString()} placed successfully.`);
       
       // Reload marketplace listings
@@ -419,6 +438,7 @@ const MarketplacePage = () => {
               ) : viewMode === 'grid' ? (
                 <MarketplaceGrid
                   listings={filteredListings}
+                  myBidListingIds={myBidListingIds}
                   onListingClick={handleListingClick}
                   onBidClick={handleBidClick}
                   onClearFilters={handleClearFilters}

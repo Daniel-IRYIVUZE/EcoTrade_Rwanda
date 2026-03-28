@@ -38,6 +38,18 @@ def create_listing(payload: ListingCreate, db: Session = Depends(get_db),
             ),
             user_id=current_user.id,
         )
+    # Prevent duplicate open listings of the same waste type
+    duplicate = db.query(WasteListing).filter(
+        WasteListing.hotel_id == hotel.id,
+        WasteListing.waste_type == payload.waste_type,
+        WasteListing.status == ListingStatus.open,
+    ).first()
+    if duplicate:
+        raise HTTPException(
+            409,
+            f"You already have an active '{payload.waste_type.value}' listing (ID {duplicate.id}). "
+            "Please close or update it before creating another."
+        )
     listing = crud_listing.create(db, obj_in=payload, hotel_id=hotel.id)
     # Use hotel coordinates; fall back to Kigali city centre so every listing
     # appears on the map even when the hotel profile has no GPS coordinates.
@@ -177,8 +189,21 @@ def delete_image(listing_id: int, image_id: int,
              dependencies=[Depends(require_role(UserRole.driver, UserRole.admin))])
 def scan_qr_code(payload: dict, db: Session = Depends(get_db),
                  current_user: User = Depends(get_current_active_user)):
-    """Driver scans a listing QR code — verifies assignment and marks collection as collected."""
-    token = (payload.get("token") or "").strip()
+    """Driver scans a listing QR code — verifies assignment and marks collection as collected.
+
+    Accepts both plain-token QR data (legacy) and JSON-encoded QR data
+    produced by the new rich-QR format: {"t": "<token>", "l": <listing_id>, ...}
+    """
+    import json as _json
+    raw = (payload.get("token") or "").strip()
+    if not raw:
+        raise HTTPException(400, "token is required.")
+    # Support JSON-encoded QR (new format) as well as plain token (legacy)
+    try:
+        qr_data = _json.loads(raw)
+        token = str(qr_data.get("t") or qr_data.get("token") or raw).strip()
+    except (_json.JSONDecodeError, ValueError):
+        token = raw
     if not token:
         raise HTTPException(400, "token is required.")
 
@@ -195,7 +220,7 @@ def scan_qr_code(payload: dict, db: Session = Depends(get_db),
     if not driver:
         raise HTTPException(403, "Driver profile not found.")
     if collection.driver_id != driver.id:
-        raise HTTPException(403, "This collection is not assigned to you.")
+        raise HTTPException(403, "This QR code belongs to a different driver's collection. You are not authorised to scan it.")
 
     # If already at or past 'collected', just return current state
     terminal = {CollectionStatus.collected, CollectionStatus.verified, CollectionStatus.completed}

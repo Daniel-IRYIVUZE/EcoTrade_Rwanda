@@ -63,15 +63,30 @@ export default function BusinessListings() {
     return () => objectUrls.forEach((url) => URL.revokeObjectURL(url));
   }, [newImageFiles]);
 
+  // Build rich JSON QR payload — the token is the backend lookup key,
+  // the rest is human-readable metadata embedded in the code itself.
+  const buildQrPayload = (listing: WasteListing, token: string): string => {
+    return JSON.stringify({
+      t: token,                          // backend lookup token
+      l: listing.id,                     // listing ID
+      h: listing.hotel_name || '',       // hotel/business name
+      w: listing.waste_type || '',       // waste type
+      v: listing.volume || 0,            // volume
+      u: listing.unit || 'kg',           // unit
+    });
+  };
+
   // Generate QR code whenever the viewed listing changes and has a token
   useEffect(() => {
     setQrDataUrl(null);
     if (!viewListing?.qr_token) return;
     let cancelled = false;
-    qrToDataURL(viewListing.qr_token, { width: 220, margin: 2, color: { dark: '#0e7490', light: '#ffffff' } })
+    const payload = buildQrPayload(viewListing, viewListing.qr_token);
+    qrToDataURL(payload, { width: 220, margin: 2, color: { dark: '#0e7490', light: '#ffffff' } })
       .then(url => { if (!cancelled) setQrDataUrl(url); })
       .catch(() => {});
     return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewListing?.qr_token]);
 
   // Generate QR for the quick-view modal (triggered from table row)
@@ -79,10 +94,14 @@ export default function BusinessListings() {
     setQrModalDataUrl(null);
     if (!qrModalToken) return;
     let cancelled = false;
-    qrToDataURL(qrModalToken, { width: 260, margin: 2, color: { dark: '#0e7490', light: '#ffffff' } })
+    // For the quick-view modal we only have the token; find the matching listing
+    const matchListing = listings.find(l => l.qr_token === qrModalToken);
+    const payload = matchListing ? buildQrPayload(matchListing, qrModalToken) : qrModalToken;
+    qrToDataURL(payload, { width: 260, margin: 2, color: { dark: '#0e7490', light: '#ffffff' } })
       .then(url => { if (!cancelled) setQrModalDataUrl(url); })
       .catch(() => {});
     return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qrModalToken]);
 
   const loadListings = () => listingsAPI.mine().then(setListings).catch(() => {});

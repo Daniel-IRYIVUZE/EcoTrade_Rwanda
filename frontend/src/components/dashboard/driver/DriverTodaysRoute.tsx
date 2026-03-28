@@ -1,17 +1,20 @@
 // components/dashboard/driver/DriverTodaysRoute.tsx
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import { collectionsAPI, driversAPI, vehiclesAPI, type Collection, type CollectionTracking, type DriverProfile, type VehicleItem } from '../../../services/api';
+import { collectionsAPI, driversAPI, vehiclesAPI, listingsAPI, type Collection, type CollectionTracking, type DriverProfile, type VehicleItem } from '../../../services/api';
 import { haversineKm, etaMinutes, formatDist } from '../../../utils/geo';
 import {
   Map, CheckCircle, Phone, Clock, Navigation,
   Package, MapPin, Star, ChevronRight, Locate, AlertCircle,
   Maximize2, Minimize2, Eye, EyeOff, ListChecks, Moon, Globe, Check, FileText,
+  QrCode, Camera, X, Upload,
 } from 'lucide-react';
 import StatCard from '../StatCard';
 import PageHeader from '../../ui/PageHeader';
 import StatusBadge from '../../ui/StatusBadge';
 import 'leaflet/dist/leaflet.css';
+
+type QrStop = { id: number | string; hotel: string; type: string; quantity: string; address?: string; _dsId?: number };
 
 const KIGALI_CENTER: [number, number] = [-1.9441, 30.0619];
 const KIGALI_OFFSETS: [number, number][] = [
@@ -41,6 +44,21 @@ export default function DriverTodaysRoute() {
   const driverMarkerRef = useRef<any>(null);
   const hotelMarkersRef = useRef<any[]>([]);
   const routeAbortRef = useRef<AbortController | null>(null);
+
+  // ── QR Scan flow state ──────────────────────────────────────────────────────
+  const [qrModalStop, setQrModalStop] = useState<{ collectionId: number; stop: QrStop } | null>(null);
+  const [qrError, setQrError] = useState<string | null>(null);
+  const [qrCameraReady, setQrCameraReady] = useState(false);
+  const [confirmStep, setConfirmStep] = useState<{ collectionId: number; stop: QrStop } | null>(null);
+  const [actualWeight, setActualWeight] = useState('');
+  const [driverNotes, setDriverNotes] = useState('');
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [proofPreview, setProofPreview] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const rafRef = useRef<number>(0);
+  const detectorRef = useRef<any>(null);
 
   const load = useCallback(() => {
     // Fetch collections for this driver — only active/pending, never completed
@@ -357,6 +375,131 @@ export default function DriverTodaysRoute() {
     setTimeout(() => setFlash(null), 3000);
   };
 
+  // ── QR Scan helpers ─────────────────────────────────────────────────────────
+  const stopCamera = () => {
+    cancelAnimationFrame(rafRef.current);
+    streamRef.current?.getTracks().forEach(t => t.stop());
+    streamRef.current = null;
+    setQrCameraReady(false);
+  };
+
+  const closeQrModal = () => {
+    stopCamera();
+    setQrModalStop(null);
+    setQrError(null);
+  };
+
+  const handleQrDetected = async (raw: string, collectionId: number, stop: QrStop) => {
+    stopCamera();
+    let token = raw;
+    try {
+      const parsed = JSON.parse(raw) as Record<string, unknown>;
+      token = String(parsed.t ?? parsed.token ?? raw);
+    } catch (_) {}
+    try {
+      await listingsAPI.scanQr(token);
+      setQrModalStop(null);
+      setQrError(null);
+      setConfirmStep({ collectionId, stop });
+      setActualWeight('');
+      setDriverNotes('');
+      setProofFile(null);
+      setProofPreview(null);
+    } catch (e: unknown) {
+      const msg = (e as Error)?.message ?? String(e);
+      if (msg.includes('different driver') || msg.includes('not authorised') || msg.includes('403')) {
+        setQrError('This QR code belongs to a different driver. You are not authorised to scan it.');
+      } else if (msg.includes('Invalid QR') || msg.includes('404')) {
+        setQrError('Invalid QR code. Please scan the correct listing QR code.');
+      } else if (msg.includes('No collection')) {
+        setQrError('No collection has been assigned for this listing yet.');
+      } else {
+        setQrError(msg || 'QR scan failed. Please try again.');
+      }
+    }
+  };
+
+  const startQrScan = async (collectionId: number, stop: QrStop) => {
+    setQrModalStop({ collectionId, stop });
+    setQrError(null);
+    setQrCameraReady(false);
+    // Start camera after a tick so the modal can mount the <video> element
+    setTimeout(async () => {
+      if (!videoRef.current) return;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        streamRef.current = stream;
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+        setQrCameraReady(true);
+        if ('BarcodeDetector' in window) {
+          if (!detectorRef.current) {
+            detectorRef.current = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
+          }
+          const detect = async () => {
+            if (!videoRef.current || !streamRef.current) return;
+            try {
+              const barcodes: Array<{ rawValue: string }> = await detectorRef.current.detect(videoRef.current);
+              if (barcodes.length > 0) {
+                await handleQrDetected(barcodes[0].rawValue, collectionId, stop);
+                return;
+              }
+            } catch (_) {}
+            rafRef.current = requestAnimationFrame(detect);
+          };
+          rafRef.current = requestAnimationFrame(detect);
+        }
+      } catch (_) {
+        setQrError('Camera access denied. Please allow camera access or use file upload below.');
+      }
+    }, 150);
+  };
+
+  const handleQrFileUpload = async (file: File, collectionId: number, stop: QrStop) => {
+    if (!('BarcodeDetector' in window)) {
+      setQrError('QR detection is not supported in this browser. Try Chrome or Edge.');
+      return;
+    }
+    try {
+      const img = await createImageBitmap(file);
+      if (!detectorRef.current) {
+        detectorRef.current = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
+      }
+      const barcodes: Array<{ rawValue: string }> = await detectorRef.current.detect(img);
+      if (!barcodes.length) {
+        setQrError('No QR code found in the image. Please try again.');
+        return;
+      }
+      await handleQrDetected(barcodes[0].rawValue, collectionId, stop);
+    } catch (_) {
+      setQrError('Failed to read QR from image. Please try a clearer photo.');
+    }
+  };
+
+  const handleConfirmCollection = async () => {
+    if (!confirmStep) return;
+    setSubmitting(true);
+    try {
+      if (proofFile) {
+        await collectionsAPI.uploadProof(confirmStep.collectionId, proofFile).catch(() => {});
+      }
+      await collectionsAPI.updateStatus(confirmStep.collectionId, {
+        status: 'collected',
+        actual_weight: actualWeight ? parseFloat(actualWeight) : undefined,
+        notes: driverNotes || undefined,
+      });
+      setConfirmStep(null);
+      setFlash(`Collection confirmed for ${confirmStep.stop.hotel}!`);
+      setTimeout(() => setFlash(null), 3000);
+      load(); // refresh & auto-remove from active list
+    } catch (e: unknown) {
+      setFlash(`Error: ${(e as Error)?.message ?? 'Could not confirm collection.'}`);
+      setTimeout(() => setFlash(null), 4000);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-up">
       {/* Greeting */}
@@ -651,10 +794,10 @@ export default function DriverTodaysRoute() {
                     {(isActive || stop.status === 'scheduled') && (
                       <div className="mt-3 flex flex-wrap gap-2">
                         <button
-                          onClick={() => handleMarkCollected((stop as any)._dsId, stop.id)}
+                          onClick={() => startQrScan((stop as any)._dsId ?? stop.id as number, stop)}
                           className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 font-medium transition-colors"
                         >
-                          <CheckCircle size={12}/> Mark Collected
+                          <QrCode size={12}/> Scan QR Code
                         </button>
                         <button
                           onClick={() => handleNavigate(stop.address)}
@@ -683,6 +826,183 @@ export default function DriverTodaysRoute() {
           })}
         </div>
       </div>
+
+      {/* ── QR Scanner Modal ─────────────────────────────────────────────── */}
+      {qrModalStop && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <QrCode size={16} className="text-cyan-600"/>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Scan QR Code</h3>
+              </div>
+              <button onClick={closeQrModal} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition-colors">
+                <X size={16}/>
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="font-medium text-gray-700 dark:text-gray-300">{qrModalStop.stop.hotel}</span>
+                {' · '}{qrModalStop.stop.type} · {qrModalStop.stop.quantity}
+              </div>
+
+              {/* Camera preview */}
+              <div className="relative bg-black rounded-xl overflow-hidden" style={{ aspectRatio: '4/3' }}>
+                <video
+                  ref={videoRef}
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+                {!qrCameraReady && !qrError && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-white text-xs space-y-2">
+                      <Camera size={28} className="mx-auto opacity-60 animate-pulse"/>
+                      <p className="opacity-70">Starting camera…</p>
+                    </div>
+                  </div>
+                )}
+                {qrCameraReady && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-44 h-44 border-2 border-cyan-400 rounded-xl opacity-80" style={{ boxShadow: '0 0 0 9999px rgba(0,0,0,0.45)' }}/>
+                  </div>
+                )}
+              </div>
+
+              {qrError && (
+                <div className="flex items-start gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-3 py-2.5 rounded-xl text-xs">
+                  <AlertCircle size={14} className="flex-shrink-0 mt-0.5"/>
+                  <span>{qrError}</span>
+                </div>
+              )}
+
+              {/* File upload fallback */}
+              <div className="text-center">
+                <p className="text-xs text-gray-400 mb-2">Or upload a QR code image</p>
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs btn-secondary rounded-lg cursor-pointer">
+                  <Upload size={12}/> Upload Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="sr-only"
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (file) handleQrFileUpload(file, qrModalStop.collectionId, qrModalStop.stop);
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Collection Confirm Modal ──────────────────────────────────────── */}
+      {confirmStep && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CheckCircle size={16} className="text-cyan-600"/>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Confirm Collection</h3>
+              </div>
+              <button onClick={() => setConfirmStep(null)} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition-colors">
+                <X size={16}/>
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-xl px-4 py-3 text-xs space-y-1">
+                <p className="font-semibold text-gray-900 dark:text-white">{confirmStep.stop.hotel}</p>
+                <p className="text-gray-500 dark:text-gray-400">{confirmStep.stop.type} · Listed: {confirmStep.stop.quantity}</p>
+              </div>
+
+              {/* Actual weight */}
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Actual Weight / Volume Collected
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder="e.g. 195"
+                  value={actualWeight}
+                  onChange={e => setActualWeight(e.target.value)}
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              {/* Proof photo */}
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Proof Photo <span className="text-gray-400">(optional)</span>
+                </label>
+                {proofPreview ? (
+                  <div className="relative">
+                    <img src={proofPreview} alt="Proof" className="w-full rounded-xl object-cover max-h-36"/>
+                    <button
+                      onClick={() => { setProofFile(null); setProofPreview(null); }}
+                      className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80"
+                    >
+                      <X size={12}/>
+                    </button>
+                  </div>
+                ) : (
+                  <label className="flex items-center justify-center gap-2 w-full h-20 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl text-xs text-gray-400 hover:border-cyan-400 hover:text-cyan-500 transition-colors cursor-pointer">
+                    <Camera size={16}/> Take or upload photo
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="sr-only"
+                      onChange={e => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setProofFile(file);
+                        const reader = new FileReader();
+                        reader.onload = ev => setProofPreview(ev.target?.result as string);
+                        reader.readAsDataURL(file);
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Driver Notes <span className="text-gray-400">(optional)</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Any remarks about this collection…"
+                  value={driverNotes}
+                  onChange={e => setDriverNotes(e.target.value)}
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={() => setConfirmStep(null)}
+                  className="flex-1 px-4 py-2 text-sm btn-secondary rounded-xl font-medium"
+                  disabled={submitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmCollection}
+                  disabled={submitting}
+                  className="flex-1 px-4 py-2 text-sm bg-cyan-600 text-white rounded-xl font-semibold hover:bg-cyan-700 disabled:opacity-50 transition-colors"
+                >
+                  {submitting ? 'Confirming…' : 'Confirm Collection'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

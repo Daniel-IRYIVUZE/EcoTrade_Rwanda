@@ -62,6 +62,22 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
   }
 
   void _showBidModal(BuildContext context, WasteListing listing) {
+    // Check if user already has an active bid on this listing
+    final myBids = ref.read(bidsNotifierProvider);
+    final hasActiveBid = myBids.any(
+      (b) => b.listingId == listing.id && b.status == BidStatus.active,
+    );
+    if (hasActiveBid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('You already have an active bid on this listing. Go to My Bids to increase it.'),
+          backgroundColor: AppColors.warning,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     final minTotal = (listing.volume * listing.minBid).ceil();
     final controller = TextEditingController(text: minTotal.toString());
     showModalBottomSheet(
@@ -197,29 +213,47 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                 }
                 final auth = ref.read(authProvider);
                 if (auth.user != null) {
-                  await ref.read(bidsNotifierProvider.notifier).placeBid(
-                    listingId: listing.id,
-                    recyclerId: auth.user!.id,
-                    recyclerName: auth.user!.displayName,
-                    amount: amount,
-                  );
+                  try {
+                    await ref.read(bidsNotifierProvider.notifier).placeBid(
+                      listingId: listing.id,
+                      recyclerId: auth.user!.id,
+                      recyclerName: auth.user!.displayName,
+                      amount: amount,
+                    );
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.gavel, color: Colors.white, size: 16),
+                            SizedBox(width: 8),
+                            Text('Bid submitted successfully!'),
+                          ],
+                        ),
+                        backgroundColor: AppColors.primary,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    final errMsg = e.toString();
+                    final String msg;
+                    if (errMsg.contains('already have an active bid') || errMsg.contains('409')) {
+                      msg = 'You already have an active bid on this listing. Go to My Bids to increase it.';
+                    } else {
+                      msg = 'Failed to place bid. $errMsg';
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(msg),
+                        backgroundColor: Colors.red,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
                 }
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(Icons.gavel, color: Colors.white, size: 16),
-                        SizedBox(width: 8),
-                        Text('Bid submitted successfully!'),
-                      ],
-                    ),
-                    backgroundColor: AppColors.primary,
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
               },
               icon: Icons.gavel,
             ),

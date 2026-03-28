@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -237,9 +238,18 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
 
     if (token == null || !mounted) return;
 
+    // Support JSON-encoded QR (new rich format: {"t":"<token>", ...})
+    String extractedToken = token;
+    try {
+      final qrData = jsonDecode(token) as Map<String, dynamic>;
+      extractedToken = (qrData['t'] ?? qrData['token'] ?? token).toString();
+    } catch (_) {
+      // Not JSON — use raw token string (legacy format)
+    }
+
     setState(() => _isLoading = true);
     try {
-      final result = await ApiService.scanQrToken(token);
+      final result = await ApiService.scanQrToken(extractedToken);
       final returnedCollectionId = result['collection_id'] as int?;
 
       if (returnedCollectionId == collectionId) {
@@ -284,9 +294,17 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        final msg = e.toString().contains('not assigned')
-            ? 'This collection is not assigned to you.'
-            : 'QR scan failed. Please try again.';
+        final err = e.toString();
+        final String msg;
+        if (err.contains('not assigned') || err.contains('not authorised') || err.contains('403')) {
+          msg = 'This QR code belongs to a different driver\'s collection. You are not authorised to scan it.';
+        } else if (err.contains('Invalid QR') || err.contains('404')) {
+          msg = 'Invalid QR code. Please make sure you are scanning the correct listing code.';
+        } else if (err.contains('No collection')) {
+          msg = 'No collection has been assigned for this listing yet.';
+        } else {
+          msg = 'QR scan failed. Please try again.';
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(msg),
