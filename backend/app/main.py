@@ -6,8 +6,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+import logging
+
 from app.config import settings
-from app.database import engine, Base
+from app.database import engine, Base, check_db_integrity, try_recover_db
+
+logger = logging.getLogger(__name__)
 
 # ── Import all models so SQLAlchemy can see them before create_all ──────────
 import app.models.user          # noqa: F401
@@ -42,6 +46,22 @@ from app.routes import stats
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # ── Database integrity check ──────────────────────────────────────────────
+    # Runs before create_all so a corrupted file is detected immediately.
+    if not check_db_integrity():
+        logger.warning("Database integrity check failed — attempting WAL recovery…")
+        if try_recover_db():
+            logger.info("WAL recovery succeeded — database is healthy.")
+        else:
+            logger.critical(
+                "SQLite database is CORRUPTED and could not be auto-recovered.\n"
+                "Manual steps required on the server:\n"
+                "  1. Stop this service\n"
+                "  2. sqlite3 ecotrade.db '.recover' | sqlite3 ecotrade_recovered.db\n"
+                "  3. mv ecotrade.db ecotrade.db.bak && mv ecotrade_recovered.db ecotrade.db\n"
+                "  4. Restart this service\n"
+                "The server will continue in degraded mode — some requests may fail."
+            )
     # Create all database tables on startup
     Base.metadata.create_all(bind=engine)
     # Ensure upload directory exists
