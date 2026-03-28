@@ -259,9 +259,10 @@ class _EarningsScreenState extends ConsumerState<EarningsScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheet) {
-          bool loading = false;
+      builder: (ctx) {
+        bool loading = false;
+        return StatefulBuilder(
+          builder: (ctx, setSheet) {
           return Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, MediaQuery.of(ctx).viewInsets.bottom + 20),
             decoration: BoxDecoration(
@@ -358,8 +359,9 @@ class _EarningsScreenState extends ConsumerState<EarningsScreen> {
               ],
             ),
           );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 }

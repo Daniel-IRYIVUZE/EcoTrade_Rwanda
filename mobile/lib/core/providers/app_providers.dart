@@ -41,17 +41,31 @@ class AuthState {
   final AppUser? user;
   final bool isLoading;
   final String? error;
+  /// True when the backend signals the user must set a new password on first login.
+  final bool mustChangePassword;
 
-  const AuthState({this.user, this.isLoading = false, this.error});
+  const AuthState({
+    this.user,
+    this.isLoading = false,
+    this.error,
+    this.mustChangePassword = false,
+  });
 
   bool get isLoggedIn => user != null;
   UserRole? get role => user?.role;
 
-  AuthState copyWith({AppUser? user, bool? isLoading, String? error, bool clearError = false}) =>
+  AuthState copyWith({
+    AppUser? user,
+    bool? isLoading,
+    String? error,
+    bool clearError = false,
+    bool? mustChangePassword,
+  }) =>
       AuthState(
         user: user ?? this.user,
         isLoading: isLoading ?? this.isLoading,
         error: clearError ? null : (error ?? this.error),
+        mustChangePassword: mustChangePassword ?? this.mustChangePassword,
       );
 }
 
@@ -91,30 +105,54 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final me = await ApiService.getCurrentUser();
         userMap = me;
       }
+
+      // is_email_verified takes precedence; fall back to is_verified
+      final isVerified = userMap['is_email_verified'] as bool? ??
+          userMap['is_verified'] as bool? ?? false;
+
       var user = AppUser(
         id: (userMap['id'] as int).toString(),
         name: userMap['full_name'] as String? ?? email,
         email: userMap['email'] as String? ?? email,
         phone: userMap['phone'] as String? ?? '',
         role: _mapRole(userMap['role'] as String? ?? 'business'),
-        verified: userMap['is_verified'] as bool? ?? false,
-        greenScore: 0,
+        verified: isVerified,
+        greenScore: (userMap['green_score'] is Map
+            ? (userMap['green_score'] as Map)['total_score'] as num? ?? 0
+            : 0).toInt(),
       );
 
-      // Enrich user with role-specific profile data
+      final mustChangePwd = response['must_change_password'] as bool? ??
+          userMap['must_change_password'] as bool? ?? false;
+
+      // Enrich user with role-specific profile data.
+      // The login UserRead response already embeds hotel/recycler profile summaries,
+      // but we also fetch the full profile to get green_score and other fields.
       try {
         if (user.role == UserRole.business) {
-          final hotelData = await ApiService.getMyHotel();
-          user = user.copyWith(
-            businessName: hotelData['hotel_name'] as String?,
-            greenScore: (hotelData['green_score'] as num?)?.toInt() ?? 0,
-          );
+          // Prefer embedded hotel_profile from login response
+          final embeddedName = (userMap['hotel_profile'] as Map?)?['business_name'] as String?;
+          if (embeddedName != null && user.businessName == null) {
+            user = user.copyWith(businessName: embeddedName);
+          } else {
+            final hotelData = await ApiService.getMyHotel();
+            user = user.copyWith(
+              businessName: hotelData['hotel_name'] as String? ?? user.businessName,
+              greenScore: (hotelData['green_score'] as num?)?.toInt() ?? user.greenScore,
+            );
+          }
         } else if (user.role == UserRole.recycler) {
-          final recyclerData = await ApiService.getMyRecycler();
-          user = user.copyWith(
-            companyName: recyclerData['company_name'] as String?,
-            greenScore: (recyclerData['green_score'] as num?)?.toInt() ?? 0,
-          );
+          // Prefer embedded recycler_profile from login response
+          final embeddedName = (userMap['recycler_profile'] as Map?)?['company_name'] as String?;
+          if (embeddedName != null && user.companyName == null) {
+            user = user.copyWith(companyName: embeddedName);
+          } else {
+            final recyclerData = await ApiService.getMyRecycler();
+            user = user.copyWith(
+              companyName: recyclerData['company_name'] as String? ?? user.companyName,
+              greenScore: (recyclerData['green_score'] as num?)?.toInt() ?? user.greenScore,
+            );
+          }
         } else if (user.role == UserRole.driver) {
           final driverData = await ApiService.getMyDriver();
           user = user.copyWith(
@@ -132,7 +170,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // Replay any pending offline actions now that we are authenticated
       OfflineSyncService.syncNow();
 
-      state = AuthState(user: user);
+      state = AuthState(user: user, mustChangePassword: mustChangePwd);
       return true;
     } on ApiException catch (e) {
       final message = e.message.trim();
@@ -142,6 +180,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = const AuthState(error: 'Login failed. Check your credentials and connection.');
       return false;
     }
+  }
+
+  /// Clear the mustChangePassword flag after the user has successfully changed it.
+  void clearMustChangePassword() {
+    state = state.copyWith(mustChangePassword: false);
   }
 
   Future<bool> register({
@@ -230,6 +273,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    // Revoke the refresh token on the backend (best-effort; don't block UI on failure)
+    try {
+      await ApiService.logout();
+    } catch (_) {
+      // Ignore errors — local session is always cleared regardless
+    }
     await LocalStorageService.instance.clearUser();
     state = const AuthState();
   }
@@ -312,11 +361,8 @@ CollectionStatus _mapCollectionStatus(String s) {
   switch (s.toLowerCase()) {
     case 'scheduled':
       return CollectionStatus.scheduled;
-    case 'accepted':
-    case 'assigned':
     case 'en_route':
     case 'arrived':
-    case 'confirmed':
       return CollectionStatus.enRoute;
     case 'collected':
       return CollectionStatus.collected;
@@ -328,7 +374,7 @@ CollectionStatus _mapCollectionStatus(String s) {
     case 'cancelled':
       return CollectionStatus.missed;
     default:
-      return CollectionStatus.missed;
+      return CollectionStatus.scheduled;
   }
 }
 
@@ -1290,7 +1336,7 @@ class ListingsNotifier extends StateNotifier<List<WasteListing>> {
       final box = await Hive.openBox<String>('app_cache');
       await box.put('cached_open_listings', jsonEncode(listings));
       // Update in-memory state
-      state = listings.map((l) => WasteListing.fromJson(l)).toList();
+      state = listings.map((l) => _listingFromApi(l as Map<String, dynamic>)).toList();
     } catch (e) {
       // Optionally handle error (show toast, etc.)
     }

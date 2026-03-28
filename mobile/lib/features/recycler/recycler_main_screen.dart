@@ -830,9 +830,10 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheet) {
-          bool loading = false;
+      builder: (ctx) {
+        bool loading = false;
+        return StatefulBuilder(
+          builder: (ctx, setSheet) {
           return Padding(
             padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
             child: Column(
@@ -922,8 +923,9 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
               ],
             ),
           );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 
@@ -962,9 +964,10 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheet) {
-          bool loading = false;
+      builder: (ctx) {
+        bool loading = false;
+        return StatefulBuilder(
+          builder: (ctx, setSheet) {
           return Padding(
             padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
             child: SingleChildScrollView(
@@ -1077,8 +1080,9 @@ class _RecyclerProfileTabState extends ConsumerState<_RecyclerProfileTab> {
               ),
             ),
           );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 

@@ -3,7 +3,7 @@ config.py — Application configuration using pydantic-settings.
 """
 from pydantic_settings import BaseSettings
 from functools import lru_cache
-import secrets
+import os
 
 
 class Settings(BaseSettings):
@@ -18,7 +18,9 @@ class Settings(BaseSettings):
     DATABASE_ECHO: bool = False
 
     # ── JWT ───────────────────────────────────────────────────────────────────
-    SECRET_KEY: str = secrets.token_urlsafe(64)
+    # SECRET_KEY must be set in .env for production. A stable fallback is used
+    # for development so tokens survive server restarts.
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "ecotrade-dev-secret-key-change-in-production")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 240
     REFRESH_TOKEN_EXPIRE_DAYS: int = 60
@@ -36,14 +38,15 @@ class Settings(BaseSettings):
     PLATFORM_FEE_PERCENT: float = 5.0          # 5% platform fee on transactions
 
     # ── Email (SMTP) ────────────────────────────────────────────────────────────
-    SMTP_HOST: str = "webhost.dynadot.com"
-    SMTP_PORT: int = 587
-    SMTP_USER: str = "security@nexventures.net"
-    SMTP_PASSWORD: str = "63502013"
-    EMAIL_FROM: str = "security@nexventures.net"
+    # All credentials are read from .env — never hardcode passwords in source.
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "webhost.dynadot.com")
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER: str = os.getenv("SMTP_USER", "")
+    SMTP_PASSWORD: str = os.getenv("SMTP_PASSWORD", "")
+    EMAIL_FROM: str = os.getenv("EMAIL_FROM", "noreply@ecotrade-rwanda.com")
     EMAIL_FROM_NAME: str = "EcoTrade Rwanda"
     EMAIL_USE_TLS: bool = True
-    ADMIN_EMAIL: str = "security@nexventures.net"
+    ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "admin@ecotrade-rwanda.com")
 
     # ── Pagination defaults ───────────────────────────────────────────────────
     DEFAULT_PAGE_SIZE: int = 20

@@ -61,6 +61,10 @@ def _run_migrations() -> None:
         "ALTER TABLE recyclers ADD COLUMN tin_number VARCHAR(100)",
         "ALTER TABLE waste_listings ADD COLUMN qr_token VARCHAR(64)",
         "ALTER TABLE collections ADD COLUMN driver_fee REAL",
+        "ALTER TABLE reviews ADD COLUMN reviewed_id INTEGER REFERENCES users(id)",
+        "ALTER TABLE users ADD COLUMN notif_email BOOLEAN DEFAULT 1",
+        "ALTER TABLE users ADD COLUMN notif_push BOOLEAN DEFAULT 1",
+        "ALTER TABLE users ADD COLUMN notif_newsletter BOOLEAN DEFAULT 1",
     ]
     with engine.connect() as conn:
         for stmt in migrations:
@@ -152,9 +156,18 @@ app = FastAPI(
 )
 
 # ── CORS ─────────────────────────────────────────────────────────────────────
+# allow_origins=["*"] + allow_credentials=True is rejected by browsers for
+# credentialed requests (Authorization header). Use explicit origins instead.
+_cors_origins = settings.ALLOWED_ORIGINS if settings.ALLOWED_ORIGINS != ["*"] else [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8080",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

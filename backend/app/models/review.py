@@ -14,6 +14,7 @@ class Review(Base):
 
     id           = Column(Integer, primary_key=True, index=True)
     reviewer_id  = Column(Integer, ForeignKey("users.id"), nullable=False)
+    reviewed_id  = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
     hotel_id     = Column(Integer, ForeignKey("hotels.id"), nullable=True)
     recycler_id  = Column(Integer, ForeignKey("recyclers.id"), nullable=True)
     driver_id    = Column(Integer, ForeignKey("drivers.id"), nullable=True)

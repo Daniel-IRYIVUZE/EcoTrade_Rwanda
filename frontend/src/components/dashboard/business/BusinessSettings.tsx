@@ -123,7 +123,7 @@ export default function BusinessSettings() {
     } finally {
       setLoading(false);
     }
-  }, [contactPerson, phone, hotelName, address, email, tinNumber, hasHotelProfile, updateUser]);
+  }, [contactPerson, phone, hotelName, address, email, tinNumber, hasHotelProfile]); // updateUser is stable (useCallback in AuthContext)
 
   const handleDocumentUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

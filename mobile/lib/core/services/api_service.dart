@@ -2,7 +2,6 @@
 // Comprehensive API service for EcoTrade Rwanda backend
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,8 +22,8 @@ class ApiService {
     if (envBase.isNotEmpty) return envBase;
 
     // Always use local backend for all platforms during development
-    // return 'https://api.ecotrade-rwanda.com/api';
-    return 'http://127.0.0.1:8000/api';
+    return 'https://api.ecotrade-rwanda.com/api';
+    // return 'http://127.0.0.1:8000/api';
   }
   
   static String? _accessToken;
@@ -55,29 +54,71 @@ class ApiService {
   }
   
   // ── HTTP Helpers ────────────────────────────────────────────────────────────
-  
+
+  /// Whether an in-flight token refresh is already running.
+  static Future<bool>? _refreshInFlight;
+
+  /// Attempt a silent token refresh. Returns true if a new token was obtained.
+  static Future<bool> _tryRefreshToken() async {
+    if (_refreshToken == null) return false;
+    _refreshInFlight ??= () async {
+      try {
+        final response = await http.post(
+          Uri.parse('$baseUrl/auth/refresh'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'refresh_token': _refreshToken}),
+        ).timeout(const Duration(seconds: 20));
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          final data = jsonDecode(response.body) as Map<String, dynamic>;
+          final newAccess = data['access_token'] as String?;
+          final newRefresh = data['refresh_token'] as String?;
+          if (newAccess != null) {
+            // Always save the new refresh token returned by the backend (rotation).
+            await saveTokens(newAccess, newRefresh ?? _refreshToken!);
+            return true;
+          }
+        }
+        // Refresh failed — clear tokens so the user is prompted to log in.
+        await clearTokens();
+        return false;
+      } catch (_) {
+        await clearTokens();
+        return false;
+      } finally {
+        _refreshInFlight = null;
+      }
+    }();
+    return _refreshInFlight!;
+  }
+
+  static bool _isAuthPath(String path) =>
+      path.startsWith('/auth/login') ||
+      path.startsWith('/auth/register') ||
+      path.startsWith('/auth/refresh');
+
   static Future<dynamic> _request(
     String method,
     String path, {
     Map<String, dynamic>? body,
     Map<String, String>? queryParams,
     bool requiresAuth = true,
+    bool hasRetried = false,
   }) async {
     if (requiresAuth && _accessToken == null) {
       await loadTokens();
     }
-    
+
     final uri = Uri.parse('$baseUrl$path').replace(queryParameters: queryParams);
     final headers = <String, String>{
       'Content-Type': 'application/json',
     };
-    
+
     if (requiresAuth && _accessToken != null) {
       headers['Authorization'] = 'Bearer $_accessToken';
     }
-    
+
     late http.Response response;
-    
+
     try {
       switch (method.toUpperCase()) {
         case 'GET':
@@ -105,12 +146,25 @@ class ApiService {
     } catch (e) {
       throw ApiException('Network error: Please check your internet connection.');
     }
-    
+
+    // Auto-refresh: on 401 try once to get a new token and retry the request.
+    if (response.statusCode == 401 && !hasRetried && !_isAuthPath(path)) {
+      final refreshed = await _tryRefreshToken();
+      if (refreshed) {
+        return _request(method, path,
+            body: body,
+            queryParams: queryParams,
+            requiresAuth: requiresAuth,
+            hasRetried: true);
+      }
+      throw ApiException('Session expired. Please log in again.', statusCode: 401);
+    }
+
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) return {};
       return jsonDecode(response.body);
     }
-    
+
     // Handle errors
     String errorMessage = 'Request failed';
     try {
@@ -135,7 +189,7 @@ class ApiService {
     } else if (response.statusCode >= 500 && errorMessage == 'Request failed') {
       errorMessage = 'Server error. Please try again later.';
     }
-    
+
     throw ApiException(errorMessage, statusCode: response.statusCode);
   }
   
@@ -181,22 +235,24 @@ class ApiService {
   }
   
   static Future<Map<String, dynamic>> getCurrentUser() async {
-    return await _request('GET', '/auth/me');
+    // Use /users/me (same data as /auth/me, consistent with frontend)
+    return await _request('GET', '/users/me');
   }
-  
+
   static Future<Map<String, dynamic>> refreshAccessToken() async {
     if (_refreshToken == null) {
       throw ApiException('No refresh token available');
     }
-    
     final response = await _request(
       'POST',
       '/auth/refresh',
       body: {'refresh_token': _refreshToken},
       requiresAuth: false,
     );
-    
-    await saveTokens(response['access_token'], _refreshToken!);
+    // Backend rotates the refresh token — always save the new one from the response.
+    final newAccess = response['access_token'] as String;
+    final newRefresh = response['refresh_token'] as String? ?? _refreshToken!;
+    await saveTokens(newAccess, newRefresh);
     return response;
   }
   

@@ -49,11 +49,15 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
     setSubmitError('');
     try {
       const role = userType === 'hotel' ? 'business' : userType;
+      // Strip all non-digit characters so "+250 788 000 000" → "0788000000"
+      const rawPhone = formData.phone.replace(/\D/g, '');
+      const phone = rawPhone.length > 0 ? rawPhone : undefined;
+      const fullName = (formData.fullName || formData.contactPerson || '').trim() || 'User';
       await authAPI.register({
         email: formData.email,
-        full_name: formData.fullName || (userType === 'hotel' ? formData.contactPerson : '') || 'User',
+        full_name: fullName,
         password: formData.password,
-        phone: formData.phone || undefined,
+        phone,
         role,
       });
       setStep(5);
@@ -66,7 +70,13 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
 
   const canProceedStep2 = () => {
     if (!formData.email || !formData.password || formData.password !== formData.confirmPassword) return false;
-    if (formData.password.length < 6) return false;
+    // Backend requires at least 8 characters
+    if (formData.password.length < 8) return false;
+    // If phone is provided, strip formatting and ensure it's exactly 10 digits
+    if (formData.phone) {
+      const digits = formData.phone.replace(/\D/g, '');
+      if (digits.length > 0 && digits.length !== 10) return false;
+    }
     if (userType === 'hotel' && !formData.businessName) return false;
     if (userType === 'recycler' && !formData.companyName) return false;
     return true;
@@ -229,7 +239,10 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><Phone className="w-4 h-4 inline mr-1" />Phone</label>
                   <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-                    placeholder="+250 780 000 000" />
+                    placeholder="0788000000" />
+                  {formData.phone && formData.phone.replace(/\D/g, '').length !== 10 && formData.phone.replace(/\D/g, '').length > 0 && (
+                    <p className="text-xs text-red-500 mt-1">Phone must be exactly 10 digits (e.g. 0788000000)</p>
+                  )}
                 </div>
               </div>
               <div>
@@ -244,6 +257,7 @@ const SignupWizard = ({ onToggleMode, onComplete }: SignupWizardProps) => {
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
                       {passwordStrength <= 25 ? 'Weak' : passwordStrength <= 50 ? 'Fair' : passwordStrength <= 75 ? 'Good' : 'Strong'} password
+                      {formData.password.length < 8 && <span className="text-red-500"> — minimum 8 characters required</span>}
                     </p>
                   </div>
                 )}

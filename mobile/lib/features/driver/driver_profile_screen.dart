@@ -387,9 +387,10 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheet) {
-          bool loading = false;
+      builder: (ctx) {
+        bool loading = false;
+        return StatefulBuilder(
+          builder: (ctx, setSheet) {
           return Padding(
             padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
             child: Column(
@@ -500,8 +501,9 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
               ],
             ),
           );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 
@@ -516,9 +518,10 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheet) {
-          bool loading = false;
+      builder: (ctx) {
+        bool loading = false;
+        return StatefulBuilder(
+          builder: (ctx, setSheet) {
           return Padding(
             padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
             child: Column(
@@ -615,8 +618,9 @@ class _DriverProfileScreenState extends ConsumerState<DriverProfileScreen> {
               ],
             ),
           );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 
@@ -762,13 +766,11 @@ class _StatDivider extends StatelessWidget {
 class _ProfileSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
-  final Widget? trailing;
   final IconData? icon;
 
   const _ProfileSection({
     required this.title,
     required this.children,
-    this.trailing,
     this.icon,
   });
 
@@ -803,7 +805,6 @@ class _ProfileSection extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: context.cText),
                 ),
                 const Spacer(),
-                if (trailing != null) trailing!,
               ],
             ),
           ),

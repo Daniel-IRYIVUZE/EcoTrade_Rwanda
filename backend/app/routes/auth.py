@@ -1,4 +1,5 @@
 """routes/auth.py — Authentication endpoints."""
+import random as _random
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.exc import IntegrityError
@@ -196,6 +197,47 @@ def change_password(
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters.")
     crud_user.change_password(db, user=current_user, new_password=new_password)
     return {"message": "Password changed successfully."}
+
+
+@router.post("/forgot-password", status_code=200)
+def forgot_password(payload: dict, db: Session = Depends(get_db)):
+    """Send a 6-digit OTP reset code to the registered email address."""
+    email = (payload.get("email") or "").strip().lower()
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        otp = str(_random.randint(100000, 999999))
+        crud_user.set_reset_token(db, user_id=user.id, token=otp)
+        try:
+            from app.services.email_service import send_email
+            send_email(
+                to_email=email,
+                subject="EcoTrade Rwanda — Password Reset Code",
+                html_body=(
+                    "<p>Hello,</p>"
+                    f"<p>Your password reset code is: <strong style='font-size:24px;letter-spacing:4px'>{otp}</strong></p>"
+                    "<p>This code is valid for 1 hour.</p>"
+                    "<p>If you did not request this, please ignore this email.</p>"
+                ),
+                text_body=f"Your EcoTrade Rwanda password reset code is: {otp}\nValid for 1 hour.",
+            )
+        except Exception:
+            pass  # Email failure must not reveal whether the email exists
+    return {"message": "If that email is registered, a reset code has been sent."}
+
+
+@router.post("/reset-password", status_code=200)
+def reset_password_with_otp(payload: dict, db: Session = Depends(get_db)):
+    """Verify OTP and set a new password (no authentication required)."""
+    token = (payload.get("token") or "").strip()
+    new_password = payload.get("new_password", "")
+    if not token:
+        raise HTTPException(status_code=400, detail="Reset code is required.")
+    if len(new_password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters.")
+    success = crud_user.reset_password(db, token=token, new_password=new_password)
+    if not success:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset code.")
+    return {"message": "Password reset successfully. Please log in with your new password."}
 
 
 @router.get("/me", response_model=UserRead)

@@ -140,36 +140,37 @@ export interface APIUser {
   role: string;
   status: string;
   is_verified: boolean;
-  latitude?: number;
-  longitude?: number;
+  is_email_verified: boolean;
+  avatar_url?: string;
+  last_login?: string;
+  notif_email?: boolean;
+  notif_push?: boolean;
+  notif_newsletter?: boolean;
   created_at: string;
+  must_change_password?: boolean;
+  // Embedded profiles — populated by UserRead.model_validate on the backend.
+  // hotel_profile only contains {business_name} in the UserRead response;
+  // for full hotel data call GET /hotels/me separately.
   hotel_profile?: {
     business_name: string;
-    registration_number?: string;
-    tax_id?: string;
-    contact_person?: string;
-    position?: string;
   };
+  // recycler_profile only contains {company_name} in the UserRead response;
+  // for full recycler data call GET /recyclers/me separately.
   recycler_profile?: {
     company_name: string;
-    license_number?: string;
-    waste_types?: string[];
-    facility_address?: string;
-    processing_capacity?: number;
   };
-  driver_profile?: {
-    national_id?: string;
-    vehicle_type?: string;
-    vehicle_plate?: string;
-    service_radius?: number;
-    operating_hours?: string;
+  // green_score is embedded from the latest GreenScore record.
+  green_score?: {
+    total_score: number;
   };
 }
 
 export interface LoginResponse {
   access_token: string;
-  refresh_token?: string;
+  refresh_token: string;
   token_type: string;
+  expires_in: number;
+  role?: string;
   must_change_password?: boolean;
   user: APIUser;
 }
@@ -555,6 +556,18 @@ export const authAPI = {
       method: 'POST',
       body: JSON.stringify({ new_password: newPassword }),
     }),
+
+  forgotPassword: (email: string) =>
+    request<{ message: string }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+
+  resetPassword: (token: string, newPassword: string) =>
+    request<{ message: string }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
+    }),
 };
 
 // ─── Users ───────────────────────────────────────────────────────────────────
@@ -594,7 +607,7 @@ export const usersAPI = {
 
   me: () => request<APIUser>('/users/me'),
 
-  updateMe: (data: { full_name?: string; phone?: string; email?: string }) =>
+  updateMe: (data: { full_name?: string; phone?: string; email?: string; notif_email?: boolean; notif_push?: boolean; notif_newsletter?: boolean }) =>
     request<APIUser>('/users/me', { method: 'PATCH', body: JSON.stringify(data) }),
 
   uploadAvatar: (file: File) => {

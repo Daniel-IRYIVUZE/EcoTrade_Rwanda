@@ -60,6 +60,9 @@ class User(Base):
     reset_token_expires   = Column(DateTime(timezone=True), nullable=True)
     email_verify_token    = Column(String(255), nullable=True)
     last_login            = Column(DateTime(timezone=True), nullable=True)
+    notif_email           = Column(Boolean, default=True)
+    notif_push            = Column(Boolean, default=True)
+    notif_newsletter      = Column(Boolean, default=True)
     created_at            = Column(DateTime(timezone=True), default=utc_now)
     updated_at            = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now)
 

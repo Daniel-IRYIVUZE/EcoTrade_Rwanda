@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react';
 import { X, Mail, ArrowRight, Lock, Eye, EyeOff, CheckCircle, Sun, Moon, KeyRound, Check } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { authAPI } from '../../services/api';
 
 interface ForgotPasswordModalProps {
   onClose: () => void;
@@ -29,12 +30,19 @@ const ForgotPasswordModal = ({ onClose, onSubmit }: ForgotPasswordModalProps) =>
   const setErr = (msg: string) => setError(msg);
   const clearErr = () => setError('');
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErr();
     if (!email || !email.includes('@')) { setErr('Enter a valid email address'); return; }
     setLoading(true);
-    setTimeout(() => { setLoading(false); setStep(2); }, 800); // simulate send
+    try {
+      await authAPI.forgotPassword(email);
+      setStep(2);
+    } catch {
+      setErr('Failed to send reset code. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleOtpChange = (idx: number, val: string) => {
@@ -55,18 +63,25 @@ const ForgotPasswordModal = ({ onClose, onSubmit }: ForgotPasswordModalProps) =>
     clearErr();
     const code = otp.join('');
     if (code.length < 6) { setErr('Enter all 6 digits'); return; }
-    // Demo: accept any 6-digit OTP
-    setLoading(true);
-    setTimeout(() => { setLoading(false); setStep(3); }, 600);
+    setStep(3);
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErr();
-    if (newPassword.length < 6) { setErr('Password must be at least 6 characters'); return; }
+    if (newPassword.length < 8) { setErr('Password must be at least 8 characters'); return; }
     if (newPassword !== confirmPass) { setErr('Passwords do not match'); return; }
     setLoading(true);
-    setTimeout(() => { setLoading(false); setStep(4); onSubmit(email); }, 800);
+    try {
+      await authAPI.resetPassword(otp.join(''), newPassword);
+      setStep(4);
+      onSubmit(email);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Invalid or expired reset code.';
+      setErr(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputCls = 'w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-cyan-500/40 focus:border-cyan-500 outline-none transition-all bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-sm';
@@ -217,7 +232,7 @@ const ForgotPasswordModal = ({ onClose, onSubmit }: ForgotPasswordModalProps) =>
                     value={newPassword}
                     onChange={(e) => { setNewPassword(e.target.value); clearErr(); }}
                     className={`${inputCls} pr-10`}
-                    placeholder="Min. 6 characters"
+                    placeholder="Min. 8 characters"
                     autoFocus
                     required
                   />

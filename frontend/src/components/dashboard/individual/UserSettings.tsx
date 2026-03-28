@@ -21,11 +21,21 @@ export default function UserSettings() {
       setName(u.full_name || userProfile.name);
       setEmail(u.email || '');
       if (u.phone) setPhone(u.phone);
+      if (u.notif_email !== undefined) setEmailNotifs(u.notif_email);
+      if (u.notif_push !== undefined) setPushNotifs(u.notif_push);
+      if (u.notif_newsletter !== undefined) setNewsletter(u.notif_newsletter);
     }).catch(() => {});
   }, []);
 
   const handleSave = () => {
-    if (userId) usersAPI.update(userId, { full_name: name, email, phone }).catch(() => {});
+    usersAPI.updateMe({
+      full_name: name,
+      email,
+      phone,
+      notif_email: emailNotifs,
+      notif_push: pushNotifs,
+      notif_newsletter: newsletter,
+    }).catch(() => {});
     setSaved(true); setTimeout(() => setSaved(false), 2000);
   };
 

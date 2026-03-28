@@ -16,7 +16,8 @@ class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
-    expires_in: int = 3600
+    # expires_in matches ACCESS_TOKEN_EXPIRE_MINUTES (240 min = 14400 sec)
+    expires_in: int = 14400
     role: Optional[str] = None
     must_change_password: bool = False
     user: "UserRead"
@@ -66,10 +67,13 @@ class UserCreate(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    full_name: Optional[str] = None
-    phone:     Optional[str] = None
-    email:     Optional[EmailStr] = None
-    avatar_url: Optional[str] = None
+    full_name:         Optional[str] = None
+    phone:             Optional[str] = None
+    email:             Optional[EmailStr] = None
+    avatar_url:        Optional[str] = None
+    notif_email:       Optional[bool] = None
+    notif_push:        Optional[bool] = None
+    notif_newsletter:  Optional[bool] = None
 
 
 class UserAdminUpdate(BaseModel):
@@ -89,9 +93,12 @@ class UserRead(BaseModel):
     status:           UserStatus
     is_verified:      bool
     is_email_verified: bool
-    avatar_url:       Optional[str]
-    last_login:       Optional[datetime]
-    created_at:       datetime
+    avatar_url:           Optional[str]
+    last_login:           Optional[datetime]
+    notif_email:          bool = True
+    notif_push:           bool = True
+    notif_newsletter:     bool = True
+    created_at:           datetime
     must_change_password: bool = False
 
     # Embedded profile data — eliminates extra API calls on login/session restore

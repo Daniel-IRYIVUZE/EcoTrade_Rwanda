@@ -98,6 +98,13 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
     );
   }
 
+  // Explicit height wrapper ensures ResponsiveContainer always measures a
+  // positive-dimension parent, preventing the -1×-1 Recharts warning that
+  // occurs when the widget is still animating in (animate-fade-up).
+  const wrap = (chart: React.ReactNode) => (
+    <div style={{ width: '100%', height, minWidth: 0 }}>{chart}</div>
+  );
+
   // Build flat chart-friendly data: [{ name: 'Mon', A: 120, B: 80 }, ...]
   const chartData = data.labels.map((label, i) => {
     const point: Record<string, string | number> = { name: label };
@@ -122,8 +129,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
   switch (type) {
     case 'area':
-      return (
-        <ResponsiveContainer width="100%" height={height} minWidth={0}>
+      return wrap(
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <defs>
               {data.datasets.map((ds, di) => (
@@ -158,8 +165,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
       );
 
     case 'line':
-      return (
-        <ResponsiveContainer width="100%" height={height} minWidth={0}>
+      return wrap(
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <LineChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={grid} vertical={false} />
             <XAxis dataKey="name" {...axisProps} />
@@ -186,8 +193,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
 
     case 'bar':
     case 'multiBar':
-      return (
-        <ResponsiveContainer width="100%" height={height} minWidth={0}>
+      return wrap(
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} barGap={4}>
             <CartesianGrid strokeDasharray="3 3" stroke={grid} vertical={false} />
             <XAxis dataKey="name" {...axisProps} />
@@ -218,8 +225,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         value: firstDs.data[i] ?? 0,
       }));
       const innerRadius = type === 'donut' ? '55%' : 0;
-      return (
-        <ResponsiveContainer width="100%" height={height} minWidth={0}>
+      return wrap(
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <PieChart>
             <Pie
               data={pieData}
@@ -254,8 +261,8 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
         value: firstDs.data[i] ?? 0,
         fullMark: Math.max(...firstDs.data) * 1.2,
       }));
-      return (
-        <ResponsiveContainer width="100%" height={height} minWidth={0}>
+      return wrap(
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
             <PolarGrid stroke={grid} />
             <PolarAngleAxis dataKey="subject" tick={{ fill: axis, fontSize: 11 }} />

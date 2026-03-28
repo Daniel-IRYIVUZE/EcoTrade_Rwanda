@@ -1,6 +1,6 @@
 // pages/dashboard/admin/Settings.tsx
 import { useEffect, useState } from 'react';
-import { Save, Settings, Globe, Check } from 'lucide-react';
+import { Save, Settings, Globe, Check, CreditCard, Bell, Shield } from 'lucide-react';
 import { adminAPI, type AdminPlatformSettings } from '../../../services/api';
 
 // interface SmtpStatus {
@@ -103,29 +103,29 @@ export default function AdminSettings() {
     </div>
   );
 
-  // const Toggle = ({ label, desc, checked, onChange }: { 
-  //   label: string; 
-  //   desc: string; 
-  //   checked: boolean; 
-  //   onChange: (v: boolean) => void 
-  // }) => (
-  //   <div className="flex items-start justify-between py-3 border-b border-gray-200 dark:border-gray-700 last:border-0">
-  //     <div>
-  //       <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</p>
-  //       <p className="text-xs text-gray-400 dark:text-gray-500">{desc}</p>
-  //     </div>
-  //     <button 
-  //       onClick={() => onChange(!checked)} 
-  //       className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ml-4 ${
-  //         checked ? 'bg-cyan-600' : 'bg-gray-200 dark:bg-gray-600'
-  //       }`}
-  //     >
-  //       <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white dark:bg-gray-800 rounded-full shadow transition-transform ${
-  //         checked ? 'translate-x-5' : ''
-  //       }`} />
-  //     </button>
-  //   </div>
-  // );
+  const Toggle = ({ label, desc, checked, onChange }: {
+    label: string;
+    desc: string;
+    checked: boolean;
+    onChange: (v: boolean) => void
+  }) => (
+    <div className="flex items-start justify-between py-3 border-b border-gray-200 dark:border-gray-700 last:border-0">
+      <div>
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500">{desc}</p>
+      </div>
+      <button
+        onClick={() => onChange(!checked)}
+        className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ml-4 ${
+          checked ? 'bg-cyan-600' : 'bg-gray-200 dark:bg-gray-600'
+        }`}
+      >
+        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white dark:bg-gray-800 rounded-full shadow transition-transform ${
+          checked ? 'translate-x-5' : ''
+        }`} />
+      </button>
+    </div>
+  );
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -184,91 +184,91 @@ export default function AdminSettings() {
       </div>
 
       {/* Financial Settings */}
-      {/* <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-4">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-4">
         <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
           <CreditCard size={16} />
           Financial
         </h3>
         <div className="grid grid-cols-2 gap-4">
-          <Field 
-            label="Platform Fee (%)" 
-            id="fee" 
-            type="number" 
-            value={settings.platformFeePercent} 
+          <Field
+            label="Platform Fee (%)"
+            id="fee"
+            type="number"
+            value={settings.platformFeePercent}
             onChange={v => setSettings({...settings, platformFeePercent: v})}
           />
-          <Field 
-            label="Minimum Bid (RWF)" 
-            id="minbid" 
-            type="number" 
-            value={settings.minBidAmount} 
+          <Field
+            label="Minimum Bid (RWF)"
+            id="minbid"
+            type="number"
+            value={settings.minBidAmount}
             onChange={v => setSettings({...settings, minBidAmount: v})}
           />
-          <Field 
-            label="Listing Expiry (days)" 
-            id="expiry" 
-            type="number" 
-            value={settings.listingExpiryDays} 
+          <Field
+            label="Listing Expiry (days)"
+            id="expiry"
+            type="number"
+            value={settings.listingExpiryDays}
             onChange={v => setSettings({...settings, listingExpiryDays: v})}
           />
-          <Field 
-            label="Currency" 
-            id="currency" 
-            value={settings.currency} 
+          <Field
+            label="Currency"
+            id="currency"
+            value={settings.currency}
             onChange={v => setSettings({...settings, currency: v})}
           />
         </div>
-      </div> */}
+      </div>
 
       {/* Notifications */}
-      {/* <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
         <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
           <Bell size={16} />
           Notifications & Features
         </h3>
         <div>
-          <Toggle 
-            label="Email Notifications" 
-            desc="Send email alerts to users" 
-            checked={settings.emailNotifications} 
+          <Toggle
+            label="Email Notifications"
+            desc="Send email alerts to users"
+            checked={settings.emailNotifications}
             onChange={v => setSettings({...settings, emailNotifications: v})}
           />
-          <Toggle 
-            label="SMS Notifications" 
-            desc="Send SMS alerts for bids and collections" 
-            checked={settings.smsNotifications} 
+          <Toggle
+            label="SMS Notifications"
+            desc="Send SMS alerts for bids and collections"
+            checked={settings.smsNotifications}
             onChange={v => setSettings({...settings, smsNotifications: v})}
           />
         </div>
-      </div> */}
+      </div>
 
       {/* Security */}
-      {/* <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
         <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
           <Shield size={16} />
           Security & Compliance
         </h3>
         <div>
-          <Toggle 
-            label="Require ID Verification" 
-            desc="Require identity docs before account activation" 
-            checked={settings.requireIDVerification} 
+          <Toggle
+            label="Require ID Verification"
+            desc="Require identity docs before account activation"
+            checked={settings.requireIDVerification}
             onChange={v => setSettings({...settings, requireIDVerification: v})}
           />
-          <Toggle 
-            label="Auto-Approve Listings" 
-            desc="Automatically approve new waste listings" 
-            checked={settings.autoApproveListings} 
+          <Toggle
+            label="Auto-Approve Listings"
+            desc="Automatically approve new waste listings"
+            checked={settings.autoApproveListings}
             onChange={v => setSettings({...settings, autoApproveListings: v})}
           />
-          <Toggle 
-            label="Maintenance Mode" 
-            desc="Take the platform offline for maintenance" 
-            checked={settings.maintenanceMode} 
+          <Toggle
+            label="Maintenance Mode"
+            desc="Take the platform offline for maintenance"
+            checked={settings.maintenanceMode}
             onChange={v => setSettings({...settings, maintenanceMode: v})}
           />
         </div>
-      </div> */}
+      </div>
 
       {/* SMTP Status Panel */}
       {/* <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-4">

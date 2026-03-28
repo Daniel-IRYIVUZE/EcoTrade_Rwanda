@@ -108,7 +108,7 @@ export default function RecyclerSettings() {
       }
     }).catch(() => {});
     loadDocuments();
-  }, [updateUser, loadDocuments]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleWasteType = (key: string) =>
     setSelectedWasteTypes(prev =>

@@ -10,8 +10,16 @@ class CRUDReview(CRUDBase[Review, ReviewCreate, ReviewUpdate]):
 
     def get_by_target(self, db: Session, target_id: int, *,
                       skip: int = 0, limit: int = 20) -> list[Review]:
+        from sqlalchemy import or_
         return (db.query(Review)
-                .filter(Review.reviewed_id == target_id)
+                .filter(
+                    or_(
+                        Review.reviewed_id == target_id,
+                        Review.hotel_id == target_id,
+                        Review.recycler_id == target_id,
+                        Review.driver_id == target_id,
+                    )
+                )
                 .order_by(Review.created_at.desc())
                 .offset(skip).limit(limit).all())
 
@@ -22,9 +30,16 @@ class CRUDReview(CRUDBase[Review, ReviewCreate, ReviewUpdate]):
         return db.query(Review).filter(Review.collection_id == collection_id).all()
 
     def average_rating(self, db: Session, target_id: int) -> float:
-        from sqlalchemy import func
+        from sqlalchemy import func, or_
         result = (db.query(func.avg(Review.rating))
-                  .filter(Review.reviewed_id == target_id).scalar())
+                  .filter(
+                      or_(
+                          Review.reviewed_id == target_id,
+                          Review.hotel_id == target_id,
+                          Review.recycler_id == target_id,
+                          Review.driver_id == target_id,
+                      )
+                  ).scalar())
         return round(float(result), 2) if result else 0.0
 
     def recalculate_user_rating(self, db: Session, user_id: int) -> None:

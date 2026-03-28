@@ -1075,9 +1075,8 @@ class _StatDivider extends StatelessWidget {
 class _ProfileSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
-  final Widget? trailing;
   const _ProfileSection(
-      {required this.title, required this.children, this.trailing});
+      {required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -1099,7 +1098,6 @@ class _ProfileSection extends StatelessWidget {
                         fontSize: 15,
                         color: context.cText)),
                 const Spacer(),
-                if (trailing != null) trailing!,
               ],
             ),
           ),

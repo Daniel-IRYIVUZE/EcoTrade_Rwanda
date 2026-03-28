@@ -1,7 +1,7 @@
 // context/AuthContext.tsx — EcoTrade Rwanda
 // Backend-first auth with offline cache fallback.
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { authAPI, usersAPI, hotelsAPI, recyclersAPI, driversAPI, API_BASE_URL } from '../services/api';
 import { syncFromAPI } from '../utils/apiSync';
@@ -333,12 +333,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return code.length === 6 && /^\d{6}$/.test(code);
   };
 
-  const updateUser = (data: Partial<User>) => {
-    if (!user) return;
-    const updated = { ...user, ...data };
-    setUser(updated);
-    localStorage.setItem('ecotrade_user', JSON.stringify(updated));
-  };
+  const updateUser = useCallback((data: Partial<User>) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const updated = { ...prev, ...data };
+      localStorage.setItem('ecotrade_user', JSON.stringify(updated));
+      return updated;
+    });
+  }, []); // stable reference — uses functional setState, no closure over `user`
 
   const clearMustChangePassword = () => setMustChangePassword(false);
 

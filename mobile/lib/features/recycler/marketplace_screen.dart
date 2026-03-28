@@ -542,12 +542,11 @@ class _ListingCard extends StatelessWidget {
 }
 
 /// Reusable row of photo thumbnails for a WasteListing.
-/// Shows up to [maxPhotos] 60×60 thumbnails (horizontal scroll) or a
+/// Shows up to 4 60×60 thumbnails (horizontal scroll) or a
 /// single icon-placeholder when there are no photos.
 class _WasteImageRow extends StatelessWidget {
   final WasteListing listing;
-  final int maxPhotos;
-  const _WasteImageRow({required this.listing, this.maxPhotos = 4});
+  const _WasteImageRow({required this.listing});
 
   IconData get _icon {
     switch (listing.wasteType) {
@@ -561,7 +560,7 @@ class _WasteImageRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final urls = getAbsoluteImageUrls(listing.photos)
-        .take(maxPhotos)
+        .take(4)
         .toList();
 
     if (urls.isEmpty) {

@@ -1,7 +1,8 @@
 """schemas/recycler.py"""
+import json as _json
 from datetime import datetime
-from typing import Optional, List
-from pydantic import BaseModel
+from typing import Any, Optional, List
+from pydantic import BaseModel, field_validator
 
 
 class RecyclerCreate(BaseModel):
@@ -47,9 +48,10 @@ class RecyclerRead(BaseModel):
     phone:           Optional[str]
     website:         Optional[str]
     license_number:  Optional[str]
-    tin_number:      Optional[str] = None  # New field
+    tin_number:      Optional[str] = None
     is_verified:     bool
     logo_url:        Optional[str]
+    waste_types_handled: Optional[List[str]] = None
     green_score:     float
     total_collected: float
     fleet_size:      int
@@ -57,5 +59,20 @@ class RecyclerRead(BaseModel):
     rating:          float
     review_count:    int
     created_at:      datetime
+
+    @field_validator('waste_types_handled', mode='before')
+    @classmethod
+    def parse_waste_types(cls, v: Any) -> Optional[List[str]]:
+        if v is None:
+            return None
+        if isinstance(v, list):
+            return v
+        if isinstance(v, str):
+            try:
+                parsed = _json.loads(v)
+                return parsed if isinstance(parsed, list) else []
+            except (ValueError, TypeError):
+                return []
+        return []
 
     model_config = {"from_attributes": True}
