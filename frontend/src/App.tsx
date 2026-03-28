@@ -29,7 +29,6 @@ const AdminDashboard = lazy(() => import('./pages/Dashboard/AdminDashboard'));
 const BusinessDashboard = lazy(() => import('./pages/Dashboard/BusinessDashboard'));
 const RecyclerDashboard = lazy(() => import('./pages/Dashboard/RecyclerDashboard'));
 const DriverPage = lazy(() => import('./pages/Dashboard/DriverPage'));
-const UserDashboard = lazy(() => import('./pages/Dashboard/UserDashboard'));
 
 // Loading Component
 const LoadingSpinner = () => (
@@ -232,13 +231,6 @@ function App() {
               <Route path="driver/*" element={
                 <ProtectedRoute allowedRoles={['driver']}>
                   <DriverPage />
-                </ProtectedRoute>
-              } />
-              
-              {/* Individual/User Dashboard */}
-              <Route path="individual/*" element={
-                <ProtectedRoute allowedRoles={['individual']}>
-                  <UserDashboard />
                 </ProtectedRoute>
               } />
             </Route>
