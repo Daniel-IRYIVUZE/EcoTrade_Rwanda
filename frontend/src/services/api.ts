@@ -656,7 +656,7 @@ export const listingsAPI = {
   get: (id: number) => request<WasteListing>(`/listings/${id}`),
 
   create: (data: Partial<WasteListing>) =>
-    request<WasteListing>('/listings', { method: 'POST', body: JSON.stringify(data) }),
+    request<WasteListing>('/listings/', { method: 'POST', body: JSON.stringify(data) }),
 
   update: (id: number, data: Partial<WasteListing>) =>
     request<WasteListing>(`/listings/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),

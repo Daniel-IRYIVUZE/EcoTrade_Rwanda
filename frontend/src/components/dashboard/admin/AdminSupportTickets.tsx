@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Search, MessageSquare, Eye, Send, X, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { downloadCSV } from '../../../utils/dataStore';
 import { supportAPI, type SupportTicket } from '../../../services/api';
+import { useAuth } from '../../../context/AuthContext';
 
 const STATUS_COLORS: Record<string, string> = {
   open: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
@@ -19,6 +20,7 @@ const PRIORITY_COLORS: Record<string, string> = {
 };
 
 export default function AdminSupportTickets() {
+  const { user: authUser } = useAuth();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -44,7 +46,7 @@ export default function AdminSupportTickets() {
 
   const handleReply = () => {
     if (!selected || !reply.trim()) return;
-    supportAPI.respond(selected.id, { from_name: 'Admin', message: reply.trim() }).then(newResp => {
+    supportAPI.respond(selected.id, { from_name: authUser?.name || 'Admin', message: reply.trim() }).then(newResp => {
       const updated = { ...selected, responses: [...(selected.responses || []), newResp], status: 'in-progress' as const };
       setSelected(updated);
       setTickets(prev => prev.map(x => x.id === selected.id ? updated : x));
@@ -255,8 +257,8 @@ export default function AdminSupportTickets() {
                 <div 
                   key={idx} 
                   className={`rounded-lg p-3 text-sm ${
-                    r.from_name === 'Admin' 
-                      ? 'bg-cyan-50 dark:bg-cyan-900/20 ml-8 border border-cyan-200 dark:border-cyan-800' 
+                    r.from_name !== selected.user_name
+                      ? 'bg-cyan-50 dark:bg-cyan-900/20 ml-8 border border-cyan-200 dark:border-cyan-800'
                       : 'bg-gray-50 dark:bg-gray-900 mr-8 border border-gray-200 dark:border-gray-700'
                   }`}
                 >
