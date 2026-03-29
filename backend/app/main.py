@@ -68,6 +68,8 @@ async def lifespan(app: FastAPI):
     Path(settings.UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
     # Add any new columns that may not exist in older DB files
     _run_migrations()
+    # Seed required system accounts
+    _seed_users()
     yield
 
 
@@ -163,6 +165,72 @@ def _run_migrations() -> None:
                 conn.commit()
         except Exception:
             pass
+
+
+def _seed_users() -> None:
+    """Create required system accounts on first start if they don't already exist."""
+    from app.database import SessionLocal
+    from app.models.user import User, UserRole, UserStatus
+    from app.models.hotel import Hotel
+    from app.auth.password import hash_password
+
+    SEED_ACCOUNTS = [
+        {
+            "email": "d.iryivuze@alustudent.com",
+            "password": "Password123!",
+            "full_name": "Kigali Marriott Hotel",
+            "role": UserRole.business,
+            "hotel": {
+                "hotel_name": "Kigali Marriott Hotel",
+                "address": "KN 3 Avenue, Kigali",
+                "city": "Kigali",
+                "latitude": -1.9441,
+                "longitude": 30.0619,
+            },
+        },
+        {
+            "email": "admin@ecotrade.rw",
+            "password": "Password123!",
+            "full_name": "EcoTrade Admin",
+            "role": UserRole.admin,
+            "hotel": None,
+        },
+    ]
+
+    db = SessionLocal()
+    try:
+        for account in SEED_ACCOUNTS:
+            existing = db.query(User).filter(User.email == account["email"]).first()
+            if not existing:
+                user = User(
+                    email=account["email"],
+                    password_hash=hash_password(account["password"]),
+                    full_name=account["full_name"],
+                    role=account["role"],
+                    status=UserStatus.active,
+                    is_verified=True,
+                    is_email_verified=True,
+                )
+                db.add(user)
+                db.flush()  # get user.id before creating related profile
+                if account["hotel"]:
+                    h = account["hotel"]
+                    hotel = Hotel(
+                        user_id=user.id,
+                        hotel_name=h["hotel_name"],
+                        address=h["address"],
+                        city=h["city"],
+                        latitude=h.get("latitude"),
+                        longitude=h.get("longitude"),
+                        is_verified=True,
+                    )
+                    db.add(hotel)
+        db.commit()
+    except Exception as exc:
+        logger.warning("User seeding failed (non-fatal): %s", exc)
+        db.rollback()
+    finally:
+        db.close()
 
 
 app = FastAPI(

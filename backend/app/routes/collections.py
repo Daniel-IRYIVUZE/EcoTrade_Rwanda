@@ -126,12 +126,15 @@ def advance_status(collection_id: int, payload: dict, db: Session = Depends(get_
             recycler = crud_recycler.get(db, col.recycler_id)
             if recycler:
                 recycler.total_collected = (recycler.total_collected or 0.0) + vol_kg
-                # Green score: 0.5 pts per kg collected + 5 bonus per collection, capped at 100
-                recycler.green_score = min(
-                    100.0,
-                    (recycler.green_score or 0.0) + vol_kg * 0.5 + 5.0,
-                )
+                # Green score: 1% per every 100 kg/L recycled, capped at 100%
+                recycler.green_score = min(100.0, (recycler.total_collected or 0.0) / 100.0)
                 db.commit()
+        # Update hotel green score: 1% per every 100 kg/L sold, capped at 100%
+        hotel = col.listing.hotel
+        if hotel:
+            hotel.total_waste_listed = (hotel.total_waste_listed or 0.0) + vol_kg
+            hotel.green_score = min(100.0, (hotel.total_waste_listed or 0.0) / 100.0)
+            db.commit()
         # Compute driver fee: 10% of gross bid amount, minimum RWF 500 per collection
         if col.driver_id and col.driver_fee is None:
             gross = col.transaction.gross_amount if col.transaction else 0.0

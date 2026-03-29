@@ -23,7 +23,7 @@ const API_BASE = resolveApiBase();
  * Get the base server URL (without /api suffix)
  */
 function getServerBase(): string {
-  return API_BASE.replace('/api', '');
+  return API_BASE.replace(/\/api\/?$/, '');
 }
 
 /**

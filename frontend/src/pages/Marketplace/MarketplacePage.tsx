@@ -87,7 +87,18 @@ function getTimeLeft(expiresAt?: string): { text: string; minutes: number } {
   return { text: `${hours}h ${mins}m`, minutes };
 }
 
-function toListingViewModel(listing: WasteListing): ListingViewModel {
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const toRad = (v: number) => (v * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function toListingViewModel(listing: WasteListing, userLat?: number, userLng?: number): ListingViewModel {
   const category = CATEGORY_MAP[String(listing.waste_type || '').toLowerCase()] || 'Mixed';
   const { text: timeLeft, minutes: timeLeftMinutes } = getTimeLeft(listing.expires_at);
 
@@ -97,6 +108,12 @@ function toListingViewModel(listing: WasteListing): ListingViewModel {
 
   const currentBid = Math.round(listing.highest_bid || listing.min_bid || 0);
   const minBid = Math.round(listing.min_bid || 0);
+
+  const distance =
+    userLat != null && userLng != null
+      ? Math.round(haversineKm(userLat, userLng, lat, lng) * 10) / 10
+      : 0;
+
   const galleryImages = [
     ...(Array.isArray(listing.images) ? listing.images.map((image) => getAbsoluteImageUrl(image.url)) : []),
     ...(listing.image_url ? [getAbsoluteImageUrl(listing.image_url)] : []),
@@ -116,7 +133,7 @@ function toListingViewModel(listing: WasteListing): ListingViewModel {
     unit: listing.unit || 'kg',
     location: listing.address || listing.location || 'Kigali, Rwanda',
     coordinates: { lat, lng },
-    distance: 0,
+    distance,
     timeLeft,
     timeLeftMinutes,
     image: imageUrl,
@@ -154,6 +171,7 @@ const MarketplacePage = () => {
   });
   const [filteredListings, setFilteredListings] = useState<ListingViewModel[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
     const id = Date.now();
@@ -161,13 +179,13 @@ const MarketplacePage = () => {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4000);
   }, []);
 
-  const loadListings = useCallback(async () => {
+  const loadListings = useCallback(async (loc?: { lat: number; lng: number } | null) => {
     setIsLoading(true);
     try {
       const response = await listingsAPI.list({ limit: 200 });
       const mapped = response
         .filter((item) => String(item.status).toLowerCase() === 'open')
-        .map(toListingViewModel);
+        .map((item) => toListingViewModel(item, loc?.lat, loc?.lng));
 
       const withBids = await Promise.all(
         mapped.map(async (item) => {
@@ -217,9 +235,23 @@ const MarketplacePage = () => {
     }
   }, [showToast]);
 
+  // Obtain user's geolocation on mount; reload distances when it arrives
   useEffect(() => {
-    loadListings();
-  }, [loadListings]);
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setUserLocation(loc);
+        loadListings(loc);
+      },
+      () => {
+        // Permission denied or unavailable — load without distances
+        loadListings(null);
+      },
+      { timeout: 6000 }
+    );
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   useEffect(() => {
     let filtered = [...listings];
@@ -339,7 +371,7 @@ const MarketplacePage = () => {
       showToast(`Total bid price of RWF ${amount.toLocaleString()} placed successfully.`);
       
       // Reload marketplace listings
-      await loadListings();
+      await loadListings(userLocation);
       
       // Sync data from backend to localStorage so dashboards update
       await syncFromAPI(user.role);
