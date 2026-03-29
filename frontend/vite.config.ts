@@ -1,10 +1,9 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
 import { tmpdir } from 'os'
-/// <reference types="vitest" />
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const r = (p: string) => resolve(__dirname, 'node_modules', p)
