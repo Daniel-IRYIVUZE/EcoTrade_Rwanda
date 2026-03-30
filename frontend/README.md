@@ -3,7 +3,11 @@
 Production-ready React + TypeScript web application for the EcoTrade Rwanda circular-economy waste marketplace. Provides five role-specific dashboards (Admin, Business, Recycler, Driver, Individual), connects to the FastAPI backend for live data, supports offline fallback via localStorage, and features a fully responsive UI with dark mode.
 
 **Live Demo:** https://ecotrade-rwanda.netlify.app
-**Backend API:** https://api.ecotrade-rwanda.com/api/docs
+**Backend API:** https://api.ecotrade-rwanda.com/api
+
+**Project Report:** https://docs.google.com/document/d/1Kouxf8p8D40-Nn8H4EkhoHpnLBhfcDyF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true
+**Slides Deck:** https://docs.google.com/presentation/d/1-Jo_mrii-yioCeo_iM7OJzIDn9y2JrbF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true
+**GitHub Repository:** https://github.com/Daniel-IRYIVUZE/EcoTrade_Rwanda.git
 
 ---
 
@@ -34,7 +38,18 @@ npm run dev
 
 App → `http://localhost:5174`
 
-> To use a local backend instead of the deployed one, set `VITE_API_URL=http://localhost:8000/api` in `frontend/.env`.
+
+---
+
+## Environment Variables (.env template)
+
+Create a `.env` file in the `frontend` directory with the following template:
+
+```
+VITE_API_URL=http://localhost:8000/api
+```
+
+**Never commit real secrets or credentials to version control. Use this template as a guide.**
 
 ---
 

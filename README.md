@@ -14,9 +14,36 @@ EcoTrade Rwanda digitises waste collection — hotels and restaurants list their
 | **Backend API** | https://api.ecotrade-rwanda.com/api |
 | **API Docs (Swagger)** | https://api.ecotrade-rwanda.com/api/docs |
 | **GitHub Repository** | https://github.com/Daniel-IRYIVUZE/EcoTrade_Rwanda.git |
-| **Project Report** | _[Insert report link here]_ |
+| **Project Report** | https://docs.google.com/document/d/1Kouxf8p8D40-Nn8H4EkhoHpnLBhfcDyF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true |
 | **Demo Video** | _[Insert demo video link here]_ |
-| **Presentation Slides** | _[Insert slides link here]_ |
+| **Presentation Slides** | https://docs.google.com/presentation/d/1-Jo_mrii-yioCeo_iM7OJzIDn9y2JrbF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true |
+---
+
+## Environment Variables (.env template)
+
+Create a `.env` file in the appropriate directory (backend, frontend, etc.) with the following template:
+
+### Backend example (.env)
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/ecotrade
+SECRET_KEY=your-secret-key
+SMTP_SERVER=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your-email@example.com
+SMTP_PASSWORD=your-email-password
+```
+
+### Frontend example (.env)
+```
+VITE_API_URL=http://localhost:8000/api
+```
+
+### Mobile example (lib/core/constants.dart or .env)
+```dart
+const String apiUrl = "http://localhost:8000/api";
+```
+
+**Never commit real secrets or credentials to version control. Use these templates as a guide.**
 
 ---
 
@@ -205,13 +232,15 @@ flutter run -d windows         # Windows desktop
 
 All demo accounts use the same password after running `seed_comprehensive.py`.
 
-| Role | Email | Password | Notes |
-|---|---|---|---|
-| **Admin** | admin@ecotrade.rw | Password123! | Full platform control |
-| **Business / Hotel** | hotel@kigali.rw | Password123! | List waste, manage bids |
-| **Recycler** | recycler@greencycle.rw | Password123! | Browse marketplace, bid |
-| **Driver** | driver@greencycle.rw | Password123! | Route map, scan QR codes |
-| **Individual** | individual@example.com | Password123! | Personal listings |
+| Role | Email | Notes |
+|---|---|---|
+| **Admin** | admin@ecotrade.rw | Full platform control |
+| **Business / Hotel** | hotel@kigali.rw | List waste, manage bids |
+| **Recycler** | recycler@greencycle.rw | Browse marketplace, bid |
+| **Driver** | driver@greencycle.rw | Route map, scan QR codes |
+| **Individual** | individual@example.com | Personal listings |
+
+> Password for all demo accounts is set by `seed_comprehensive.py` — check that script for the value.
 
 ---
 

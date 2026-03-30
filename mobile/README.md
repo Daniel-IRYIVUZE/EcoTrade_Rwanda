@@ -3,6 +3,9 @@
 Full-featured Flutter application for the EcoTrade Rwanda circular-economy waste marketplace. Supports Android, Windows desktop, and web (Chrome) from a single codebase. Provides dedicated experiences for HORECA businesses, recyclers, and drivers — with real OpenStreetMap maps, QR code scanning, offline-first Hive caching, PDF report export, and CAT (Central African Time) display throughout.
 
 **Backend API:** https://api.ecotrade-rwanda.com/api
+**GitHub Repository:** https://github.com/Daniel-IRYIVUZE/EcoTrade_Rwanda.git
+**Project Report:** https://docs.google.com/document/d/1Kouxf8p8D40-Nn8H4EkhoHpnLBhfcDyF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true
+**Slides Deck:** https://docs.google.com/presentation/d/1-Jo_mrii-yioCeo_iM7OJzIDn9y2JrbF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true
 
 ---
 

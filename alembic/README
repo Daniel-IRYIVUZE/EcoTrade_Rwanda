@@ -1,1 +1,5 @@
 Generic single-database configuration.
+
+<!--
+Note: Do not store any sensitive information or secrets in this directory.
+-->
