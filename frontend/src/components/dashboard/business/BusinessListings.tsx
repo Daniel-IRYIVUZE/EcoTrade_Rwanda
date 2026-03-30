@@ -831,11 +831,10 @@ export default function BusinessListings() {
                 <img
                   src={qrModalDataUrl}
                   alt="Collection QR Code"
-                  className="rounded-lg"
-                  style={{ width: 220, height: 220 }}
+                  className="rounded-lg w-full max-w-[220px] h-auto mx-auto"
                 />
               ) : (
-                <div className="w-[220px] h-[220px] flex items-center justify-center">
+                <div className="w-full max-w-[220px] h-[180px] sm:h-[220px] mx-auto flex items-center justify-center">
                   <p className="text-xs text-cyan-500 animate-pulse">Generating…</p>
                 </div>
               )}

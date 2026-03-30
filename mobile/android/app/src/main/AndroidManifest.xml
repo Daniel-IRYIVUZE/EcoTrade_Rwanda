@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Internet: required for API calls, map tiles (OpenStreetMap), and OSRM routing -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- Location: required for GPS tracking, live navigation, and driver location updates -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!-- Camera: required for arrival photos, weigh photos, and QR scanning -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <!-- Storage: image_picker needs READ access on Android < 13 -->

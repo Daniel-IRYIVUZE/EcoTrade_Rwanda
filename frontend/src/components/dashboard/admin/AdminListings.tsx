@@ -373,7 +373,7 @@ export default function AdminListings() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-        <div className="relative flex-1 min-w-48">
+        <div className="relative flex-1 min-w-0">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
           <input 
             value={search} 

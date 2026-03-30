@@ -325,7 +325,7 @@ export default function BusinessListingFormDrawer({ open, onClose, onCreated }: 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Review & Submit</h3>
               <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 p-4 space-y-3">
-                <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   <div><p className="text-gray-500">Waste Type</p><p className="font-semibold text-gray-900 dark:text-white">{form.wasteType || '—'}</p></div>
                   <div><p className="text-gray-500">Quantity</p><p className="font-semibold text-gray-900 dark:text-white">{form.quantity ? `${form.quantity} ${form.unit}` : '—'}</p></div>
                   <div><p className="text-gray-500">Price per {form.unit || 'unit'}</p><p className="font-semibold text-gray-900 dark:text-white">{form.unitPrice ? `RWF ${Number.parseInt(form.unitPrice, 10).toLocaleString()}` : '—'}</p></div>

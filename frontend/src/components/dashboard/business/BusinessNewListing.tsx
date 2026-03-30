@@ -124,7 +124,7 @@ export default function BusinessNewListing() {
           <div className="space-y-4">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Review & Submit</h2>
             <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div><p className="text-xs text-gray-500 dark:text-gray-400">Waste Type</p><p className="font-medium text-gray-900 dark:text-white">{form.wasteType || '—'}</p></div>
                 <div><p className="text-xs text-gray-500 dark:text-gray-400">Quantity</p><p className="font-medium text-gray-900 dark:text-white">{form.quantity ? `${form.quantity} ${form.unit}` : '—'}</p></div>
                 <div><p className="text-xs text-gray-500 dark:text-gray-400">Minimum Price</p><p className="font-medium text-gray-900 dark:text-white">{form.minPrice ? `RWF ${parseInt(form.minPrice).toLocaleString()}` : '—'}</p></div>

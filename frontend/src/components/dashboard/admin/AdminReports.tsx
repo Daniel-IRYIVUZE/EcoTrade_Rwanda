@@ -173,7 +173,7 @@ export default function AdminReports() {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           ['Total Users',       stats.totalUsers,           'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'],
           ['Active Listings',   stats.activeListings,       'bg-cyan-50 dark:bg-cyan-900/20 border-cyan-200 dark:border-cyan-800'],

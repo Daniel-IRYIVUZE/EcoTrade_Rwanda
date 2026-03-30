@@ -47,7 +47,7 @@ export default function BusinessMessages() {
             <h3 className="font-semibold text-gray-900 dark:text-white">Inbox</h3>
             <span className="text-xs bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400 px-2 py-1 rounded-full">{msgs.filter(m => !m.is_read).length} unread</span>
           </div>
-          <div className="divide-y max-h-[500px] overflow-y-auto">
+          <div className="divide-y max-h-[300px] sm:max-h-[500px] overflow-y-auto">
             {msgs.map(msg => (
               <button key={msg.id} onClick={() => handleSelect(msg)} className={`w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 dark:bg-gray-900 transition ${selectedMsg?.id === msg.id ? 'bg-cyan-50 dark:bg-cyan-900/20' : ''}`}>
                 <div className="flex items-center justify-between mb-1">

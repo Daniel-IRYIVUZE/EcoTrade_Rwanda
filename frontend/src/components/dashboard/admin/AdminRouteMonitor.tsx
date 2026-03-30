@@ -183,7 +183,7 @@ export default function AdminRouteMonitor() {
       </div>
 
       {/* KPI Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Active Routes', value: activeRoutes.length, icon: <Truck size={18} />, color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20' },
           { label: 'Scheduled', value: scheduledRoutes.length, icon: <Map size={18} />, color: 'text-yellow-700 bg-yellow-50 dark:bg-yellow-900/20' },
@@ -230,7 +230,7 @@ export default function AdminRouteMonitor() {
           </div>
 
           {/* Leaflet Map */}
-          <div ref={mapRef} style={{ height: 380, width: '100%' }} />
+          <div ref={mapRef} style={{ height: 'min(380px, 55vw)', minHeight: '220px', width: '100%' }} />
         </div>
 
         {/* Alerts + Route Details Panel */}

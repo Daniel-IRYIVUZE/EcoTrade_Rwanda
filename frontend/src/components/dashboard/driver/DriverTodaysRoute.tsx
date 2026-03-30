@@ -412,6 +412,8 @@ export default function DriverTodaysRoute() {
   };
 
   const startQrScan = async (collectionId: number, stop: QrStop) => {
+    // Close any open Leaflet popups so they don't bleed through the modal overlay
+    leafletMapRef.current?.closePopup();
     setQrModalStop({ collectionId, stop });
     setQrError(null);
     setQrCameraReady(false);
@@ -599,7 +601,7 @@ export default function DriverTodaysRoute() {
             <Navigation size={16} className="text-cyan-600 dark:text-cyan-400" />
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Next Destination</h3>
           </div>
-          <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 text-center">
             <div>
               <p className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
                 {closestTracking.distance_m != null
@@ -675,7 +677,7 @@ export default function DriverTodaysRoute() {
           <div
             ref={mapRef}
             className={isFullscreen ? 'flex-1 min-h-0' : ''}
-            style={{ height: isFullscreen ? undefined : '280px', width: '100%' }}
+            style={{ height: isFullscreen ? undefined : 'min(280px, 55vw)', minHeight: '180px', width: '100%' }}
           />
         </div>
 
@@ -821,7 +823,7 @@ export default function DriverTodaysRoute() {
 
       {/* ── QR Scanner Modal ─────────────────────────────────────────────── */}
       {qrModalStop && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -892,7 +894,7 @@ export default function DriverTodaysRoute() {
 
       {/* ── Collection Confirm Modal ──────────────────────────────────────── */}
       {confirmStep && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div className="flex items-center gap-2">

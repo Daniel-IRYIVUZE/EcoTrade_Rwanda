@@ -24,13 +24,27 @@ class EcoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isOutlined) {
+      final outlineColor = backgroundColor ?? AppColors.primary;
       return SizedBox(
         width: double.infinity,
         height: height ?? 56,
         child: OutlinedButton.icon(
           onPressed: isLoading ? null : onPressed,
-          icon: icon != null ? Icon(icon, size: 18) : const SizedBox.shrink(),
-          label: Text(label),
+          icon: icon != null ? Icon(icon, size: 18, color: outlineColor) : const SizedBox.shrink(),
+          label: isLoading
+              ? SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(outlineColor),
+                  ),
+                )
+              : Text(label, style: TextStyle(color: outlineColor)),
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: outlineColor, width: 1.5),
+            foregroundColor: outlineColor,
+          ),
         ),
       );
     }

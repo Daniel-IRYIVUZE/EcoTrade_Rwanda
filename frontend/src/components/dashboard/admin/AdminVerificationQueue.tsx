@@ -121,7 +121,7 @@ export default function AdminVerificationQueue() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <button 
                   onClick={() => setSelected(u)} 
                   className="col-span-1 flex items-center justify-center gap-1 border border-gray-300 dark:border-gray-600 rounded-lg py-1.5 text-xs hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-gray-600 dark:text-gray-400"
@@ -163,7 +163,7 @@ export default function AdminVerificationQueue() {
             </div>
 
             <div className="p-5 space-y-3 text-sm">
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[
                   ['Name', selected.full_name],
                   ['Email', selected.email],

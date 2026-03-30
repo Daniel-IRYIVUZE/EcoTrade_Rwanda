@@ -131,7 +131,7 @@ export default function BusinessLocation() {
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div ref={mapRef} style={{ height: '320px', width: '100%' }} />
+        <div ref={mapRef} style={{ height: 'min(320px, 50vw)', minHeight: '200px', width: '100%' }} />
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Location details */}
           <div className="space-y-3">
@@ -191,7 +191,7 @@ export default function BusinessLocation() {
 
       {/* Add Location Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000] p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md">
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-bold text-gray-900 dark:text-white">Add Location</h2>
@@ -207,7 +207,7 @@ export default function BusinessLocation() {
                   placeholder="e.g. Satellite Office, Storage Unit"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent" />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Latitude *</label>
                   <input type="number" step="any" value={form.lat} onChange={e => setForm(f => ({ ...f, lat: e.target.value }))}

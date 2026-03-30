@@ -155,7 +155,7 @@ export default function AdminSettings() {
           <Globe size={16} />
           General
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field 
             label="Platform Name" 
             id="name" 
@@ -189,7 +189,7 @@ export default function AdminSettings() {
           <CreditCard size={16} />
           Financial
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
             label="Platform Fee (%)"
             id="fee"
@@ -297,7 +297,7 @@ export default function AdminSettings() {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               {[
                 ['SMTP Host', smtp.smtp_host],
                 ['SMTP User', smtp.smtp_user],

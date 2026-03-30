@@ -226,7 +226,7 @@ export default function AdminUserManagement() {
               <button onClick={() => setModal(null)} className="btn-icon"><X size={16}/></button>
             </div>
             <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
                   { label: 'Full Name *',  key: 'full_name', placeholder: 'John Karekezi' },
                   { label: 'Email *',      key: 'email',     placeholder: 'user@ecotrade.rw' },
@@ -285,7 +285,7 @@ export default function AdminUserManagement() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3 text-sm bg-gray-50 dark:bg-gray-900/40 rounded-xl p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm bg-gray-50 dark:bg-gray-900/40 rounded-xl p-4">
                 {[
                   ['Email', selected.email], ['Phone', selected.phone || '—'],
                   ['Role', selected.role], ['Status', selected.status],

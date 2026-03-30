@@ -42,7 +42,7 @@ export default function DriverVehicle() {
               <p className="text-sm text-gray-500 dark:text-gray-400">License Plate: {plate}</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               ['Make', vehicle?.make || '—'],
               ['Model', vehicle?.model || '—'],

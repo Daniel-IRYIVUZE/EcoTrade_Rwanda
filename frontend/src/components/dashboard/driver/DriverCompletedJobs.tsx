@@ -72,7 +72,7 @@ export default function DriverCompletedJobs() {
             { key: 'location',    label: 'Location', render: (v: string) => (
               <span className="flex items-center gap-1 text-gray-600 dark:text-gray-400 text-sm">
                 <MapPin size={12} className="text-cyan-500 flex-shrink-0" />
-                <span className="truncate max-w-[160px]">{v}</span>
+                <span className="truncate max-w-[100px] sm:max-w-[160px]">{v}</span>
               </span>
             )},
             { key: 'totalWeight', label: 'Weight' },

@@ -156,7 +156,7 @@ function TrackingModal({ collectionId, onClose }: { collectionId: number; onClos
 
         {/* ETA / Distance */}
         {tracking && (
-          <div className="grid grid-cols-3 gap-0 border-b border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-3 sm:grid-cols-3 gap-0 border-b border-gray-200 dark:border-gray-700">
             <div className="p-4 text-center border-r border-gray-200 dark:border-gray-700">
               <p className="text-xl font-bold text-cyan-600 dark:text-cyan-400">
                 {tracking.distance_m != null
@@ -189,7 +189,7 @@ function TrackingModal({ collectionId, onClose }: { collectionId: number; onClos
         )}
 
         {/* Map */}
-        <div ref={mapRef} style={{ height: '300px', width: '100%' }} />
+        <div ref={mapRef} style={{ height: 'min(300px, 50vw)', minHeight: '200px', width: '100%' }} />
 
         {/* Info footer */}
         <div className="px-5 py-3 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
