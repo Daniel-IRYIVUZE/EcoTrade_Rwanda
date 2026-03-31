@@ -15,7 +15,8 @@ String get _apiHost {
     final uri = Uri.parse(ApiService.baseUrl);
     return '${uri.scheme}://${uri.host}${uri.hasPort ? ":${uri.port}" : ""}';
   } catch (_) {
-    return 'http://localhost:8000';
+    return 'https://api.ecotrade-rwanda.com';
+    // return 'http://127.0.0.1:8000';
   }
 }
 

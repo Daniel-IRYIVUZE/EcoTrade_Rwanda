@@ -229,7 +229,7 @@ class _HotelHomeTab extends ConsumerWidget {
                             _HotelStatDivider(),
                             _HotelHeaderStat(
                               label: 'Listings',
-                              value: '${stats['activeListings'] ?? 0}',
+                              value: '${stats['totalListings'] ?? 0}',
                               icon: Icons.inventory_2_outlined,
                             ),
                             _HotelStatDivider(),
@@ -692,7 +692,7 @@ class _ManageListingsViewState extends ConsumerState<_ManageListingsView> {
       switch (_activeFilter) {
         case 'Open':      return l.status == ListingStatus.open;
         case 'Assigned':  return l.status == ListingStatus.assigned;
-        case 'Completed': return l.status == ListingStatus.completed;
+        case 'Completed': return l.status == ListingStatus.completed || l.status == ListingStatus.collected;
         case 'Expired':   return l.status == ListingStatus.expired;
         default:          return true;
       }
@@ -708,7 +708,7 @@ class _ManageListingsViewState extends ConsumerState<_ManageListingsView> {
       'All':       all.length,
       'Open':      all.where((l) => l.status == ListingStatus.open).length,
       'Assigned':  all.where((l) => l.status == ListingStatus.assigned).length,
-      'Completed': all.where((l) => l.status == ListingStatus.completed).length,
+      'Completed': all.where((l) => l.status == ListingStatus.completed || l.status == ListingStatus.collected).length,
       'Expired':   all.where((l) => l.status == ListingStatus.expired).length,
     };
 

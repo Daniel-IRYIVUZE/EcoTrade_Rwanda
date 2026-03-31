@@ -3,21 +3,8 @@
  * Converts relative image URLs to absolute URLs for display
  */
 
-const PROD_API_BASE = 'https://api.ecotrade-rwanda.com/api';
-
-function resolveApiBase(): string {
-  const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) return envUrl;
-
-  const host = window.location.hostname;
-  if (host === 'localhost' || host === '127.0.0.1') {
-    return 'http://localhost:8000/api';
-  }
-
-  return PROD_API_BASE;
-}
-
-const API_BASE = resolveApiBase();
+const API_BASE = import.meta.env.VITE_API_URL || 'https://api.ecotrade-rwanda.com/api';
+// const API_BASE = 'http://127.0.0.1:8000/api';
 
 /**
  * Get the base server URL (without /api suffix)

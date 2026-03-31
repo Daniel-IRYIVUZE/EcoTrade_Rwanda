@@ -22,7 +22,6 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
         .where((c) => [
               CollectionStatus.enRoute,
               CollectionStatus.scheduled,
-              CollectionStatus.collected,
             ].contains(c.status))
         .toList();
 

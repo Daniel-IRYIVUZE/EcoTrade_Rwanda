@@ -973,7 +973,7 @@ final driverRouteProvider = Provider<DriverRoute>(
         case CollectionStatus.enRoute:
           return RouteStopStatus.arrived;
         case CollectionStatus.collected:
-          return RouteStopStatus.collecting;
+          return RouteStopStatus.completed;
         case CollectionStatus.completed:
           return RouteStopStatus.completed;
         case CollectionStatus.verified:
@@ -1110,8 +1110,14 @@ final businessStatsProvider = Provider<Map<String, dynamic>>((ref) {
     final transactions = apiTransactions ?? [];
     return {
       'totalListings': apiListings.length,
-      'activeListings': apiListings.where((l) => l.status == ListingStatus.open).length,
-      'completedCollections': collections.where((c) => c.status == CollectionStatus.completed).length,
+      'activeListings': apiListings.where((l) =>
+          l.status == ListingStatus.open ||
+          l.status == ListingStatus.assigned ||
+          l.status == ListingStatus.collected).length,
+      'completedCollections': collections.where((c) =>
+          c.status == CollectionStatus.collected ||
+          c.status == CollectionStatus.verified ||
+          c.status == CollectionStatus.completed).length,
       'totalVolume': apiListings.fold<double>(0, (s, l) => s + l.volume),
       'totalEarnings': transactions.fold<double>(0, (s, t) => s + t.amount),
       'pendingBids': apiListings.fold<int>(0, (s, l) => s + l.activeBidCount),
@@ -1153,8 +1159,8 @@ final recyclerStatsProvider = Provider<Map<String, dynamic>>((ref) {
           : transactions.fold<double>(0, (s, t) => s + t.amount),
       'pendingCollections': apiCollections
           .where((c) =>
-              c.status != CollectionStatus.completed &&
-              c.status != CollectionStatus.missed)
+              c.status == CollectionStatus.scheduled ||
+              c.status == CollectionStatus.enRoute)
           .length,
     };
   }
@@ -1177,10 +1183,14 @@ final driverStatsProvider = Provider<Map<String, dynamic>>((ref) {
       final d = c.scheduledDate;
       return d.year == today.year && d.month == today.month && d.day == today.day;
     }).toList();
-    final completedCols = apiCollections.where((c) => c.status == CollectionStatus.completed).toList();
+    bool isDone(Collection c) =>
+        c.status == CollectionStatus.collected ||
+        c.status == CollectionStatus.verified ||
+        c.status == CollectionStatus.completed;
+    final completedCols = apiCollections.where(isDone).toList();
     final completed = completedCols.length;
-    final todayCompleted = todayCollections.where((c) => c.status == CollectionStatus.completed).length;
-    // Only count actual weight from truly completed collections
+    final todayCompleted = todayCollections.where(isDone).length;
+    // Count weight from all collected/verified/completed collections
     final totalVolume = completedCols.fold<double>(
       0, (s, c) => s + (c.actualWeight ?? c.volume));
     return {

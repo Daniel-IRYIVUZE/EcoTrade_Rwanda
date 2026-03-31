@@ -97,8 +97,7 @@ class _DriverHomeTab extends ConsumerWidget {
     final nextStop = route.stops
         .where((s) =>
             s.status == RouteStopStatus.pending ||
-            s.status == RouteStopStatus.arrived ||
-            s.status == RouteStopStatus.collecting)
+            s.status == RouteStopStatus.arrived)
         .firstOrNull;
     final initials = (user?.displayName ?? 'D').trim().split(' ').take(2)
         .map((w) => w.isNotEmpty ? w[0].toUpperCase() : '').join();
@@ -315,7 +314,7 @@ class _DriverHomeTab extends ConsumerWidget {
                       final isLast = e.key == route.stops.length - 1;
                       final statusStr = stop.status == RouteStopStatus.completed
                           ? 'done'
-                          : stop.status == RouteStopStatus.collecting
+                          : stop.status == RouteStopStatus.arrived
                               ? 'next'
                               : 'pending';
                       return _RouteStop(

@@ -41,9 +41,11 @@ class _CollectionsScreenState extends ConsumerState<CollectionsScreen>
   Widget build(BuildContext context) {
     final collections = ref.watch(businessCollectionsProvider);
     final scheduled = collections.where((c) =>
-        c.status != CollectionStatus.completed &&
-        c.status != CollectionStatus.missed).toList();
+        c.status == CollectionStatus.scheduled ||
+        c.status == CollectionStatus.enRoute).toList();
     final history = collections.where((c) =>
+        c.status == CollectionStatus.collected ||
+        c.status == CollectionStatus.verified ||
         c.status == CollectionStatus.completed ||
         c.status == CollectionStatus.missed).toList();
     return Scaffold(
