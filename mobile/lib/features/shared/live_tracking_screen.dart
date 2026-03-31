@@ -11,11 +11,14 @@ class LiveTrackingScreen extends StatefulWidget {
   final Collection collection;
   /// When true, the driver's GPS position is pushed to backend on each update.
   final bool pushDriverLocation;
+  /// All driver collections — used to show all stops on the map.
+  final List<Collection> allCollections;
 
   const LiveTrackingScreen({
     super.key,
     required this.collection,
     this.pushDriverLocation = false,
+    this.allCollections = const [],
   });
 
   @override
@@ -201,6 +204,95 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
     return '~${h}h ${m}min';
   }
 
+  /// Groups all collections by rounded lat/lng and builds map markers.
+  /// Active stops → green; completed stops → gray with checkmark.
+  /// Multiple stops at the same location get a count badge.
+  List<Marker> _buildCollectionMarkers(LatLng? selectedDestination) {
+    // Group collections by location key (rounded to ~11m precision)
+    final activeGroups = <String, _LocationGroup>{};
+    final doneGroups = <String, _LocationGroup>{};
+
+    bool isActive(Collection c) =>
+        c.status == CollectionStatus.scheduled ||
+        c.status == CollectionStatus.enRoute;
+
+    bool isDone(Collection c) =>
+        c.status == CollectionStatus.collected ||
+        c.status == CollectionStatus.verified ||
+        c.status == CollectionStatus.completed;
+
+    for (final c in widget.allCollections) {
+      final lat = c.destinationLat;
+      final lng = c.destinationLng;
+      if (lat == null || lng == null) continue;
+      final key =
+          '${lat.toStringAsFixed(4)},${lng.toStringAsFixed(4)}';
+      final point = LatLng(lat, lng);
+
+      if (isActive(c)) {
+        activeGroups.update(
+          key,
+          (g) => g..count++,
+          ifAbsent: () => _LocationGroup(point: point, count: 1),
+        );
+      } else if (isDone(c)) {
+        doneGroups.update(
+          key,
+          (g) => g..count++,
+          ifAbsent: () => _LocationGroup(point: point, count: 1),
+        );
+      }
+    }
+
+    // If selected collection has no lat/lng in model but was resolved via API
+    if (selectedDestination != null) {
+      final selLat = widget.collection.destinationLat;
+      final selLng = widget.collection.destinationLng;
+      if (selLat == null || selLng == null) {
+        // Add the selected destination as an active marker
+        final key =
+            '${selectedDestination.latitude.toStringAsFixed(4)},${selectedDestination.longitude.toStringAsFixed(4)}';
+        activeGroups.update(
+          key,
+          (g) => g..count++,
+          ifAbsent: () => _LocationGroup(point: selectedDestination, count: 1),
+        );
+      }
+    }
+
+    final markers = <Marker>[];
+
+    // Done markers (gray, behind active)
+    for (final g in doneGroups.values) {
+      markers.add(Marker(
+        point: g.point,
+        width: 52,
+        height: 52,
+        child: _CollectionPin(
+          icon: Icons.check_circle,
+          color: Colors.grey.shade500,
+          count: g.count,
+        ),
+      ));
+    }
+
+    // Active markers (green, in front of done)
+    for (final g in activeGroups.values) {
+      markers.add(Marker(
+        point: g.point,
+        width: 52,
+        height: 52,
+        child: _CollectionPin(
+          icon: Icons.recycling,
+          color: AppColors.success,
+          count: g.count,
+        ),
+      ));
+    }
+
+    return markers;
+  }
+
   @override
   Widget build(BuildContext context) {
     final current = _current;
@@ -327,10 +419,14 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                                 ),
                               ],
                             ),
-                          // Markers
+                          // All collection stop markers
                           MarkerLayer(
-                            markers: [
-                              if (current != null)
+                            markers: _buildCollectionMarkers(destination),
+                          ),
+                          // Driver "You" marker (on top)
+                          if (current != null)
+                            MarkerLayer(
+                              markers: [
                                 Marker(
                                   point: current,
                                   width: 56,
@@ -341,19 +437,8 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                                     label: 'You',
                                   ),
                                 ),
-                              if (destination != null)
-                                Marker(
-                                  point: destination,
-                                  width: 52,
-                                  height: 52,
-                                  child: _MapPin(
-                                    icon: Icons.location_on,
-                                    color: AppColors.error,
-                                    label: 'Drop',
-                                  ),
-                                ),
-                            ],
-                          ),
+                              ],
+                            ),
                           const RichAttributionWidget(
                             attributions: [
                               TextSourceAttribution(
@@ -462,6 +547,105 @@ class _MapPin extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Holds aggregated info for a map location group.
+class _LocationGroup {
+  final LatLng point;
+  int count;
+  _LocationGroup({required this.point, required this.count});
+}
+
+/// Map marker for a collection stop — shows count badge when > 1.
+class _CollectionPin extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final int count;
+  const _CollectionPin(
+      {required this.icon, required this.color, required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    return OverflowBox(
+      maxHeight: double.infinity,
+      alignment: Alignment.topCenter,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.4),
+                      blurRadius: 6,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: Colors.white, size: 18),
+              ),
+              // Small downward pointer
+              CustomPaint(
+                size: const Size(10, 6),
+                painter: _PointerPainter(color),
+              ),
+            ],
+          ),
+          // Count badge (top-right), only when > 1
+          if (count > 1)
+            Positioned(
+              top: -4,
+              right: -2,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade700,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.white, width: 1.5),
+                ),
+                child: Text(
+                  '$count',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PointerPainter extends CustomPainter {
+  final Color color;
+  const _PointerPainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    final path = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width, 0)
+      ..lineTo(size.width / 2, size.height)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_PointerPainter old) => old.color != color;
 }
 
 class _InfoTile extends StatelessWidget {

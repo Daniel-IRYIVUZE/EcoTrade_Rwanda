@@ -18,7 +18,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final collections = ref.watch(driverCollectionsProvider)
+    final allCollections = ref.watch(driverCollectionsProvider);
+    final collections = allCollections
         .where((c) => [
               CollectionStatus.enRoute,
               CollectionStatus.scheduled,
@@ -36,7 +37,11 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
       return Scaffold(
         body: Stack(
           children: [
-            LiveTrackingScreen(collection: _selected!, pushDriverLocation: true),
+            LiveTrackingScreen(
+              collection: _selected!,
+              pushDriverLocation: true,
+              allCollections: allCollections,
+            ),
             Positioned(
               top: 50,
               left: 16,
