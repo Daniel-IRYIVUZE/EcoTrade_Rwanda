@@ -435,7 +435,7 @@ netlify deploy --prod --dir=dist
 
 `netlify.toml` handles the SPA redirect rule (`/* → /index.html`) and build config automatically.
 
-Live URL: https://ecotrade-rwanda.netlify.app
+Live URL: https://ecotrade-rwanda.com/
 
 ### Backend — VPS / Server
 
@@ -467,10 +467,10 @@ flutter build web --release
 
 ## Contact
 
-- **Website**: https://ecotrade-rwanda.netlify.app
+- **Website**: https://ecotrade-rwanda.com/
 - **API**: https://api.ecotrade-rwanda.com
 - **GitHub**: https://github.com/Daniel-IRYIVUZE/EcoTrade_Rwanda.git
-- **Email**: contact@ecotrade.rw
+- **Email**: danieliryivuze4@gmail.com
 - **Phone**: +250 780 162 164
 - **Location**: Kigali, Rwanda
 
