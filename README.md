@@ -10,12 +10,12 @@ EcoTrade Rwanda digitises waste collection — hotels and restaurants list their
 
 | Resource | URL |
 |---|---|
-| **Live Web App** | https://ecotrade-rwanda.netlify.app |
+| **Live Web App** | https://ecotrade-rwanda.com |
 | **Backend API** | https://api.ecotrade-rwanda.com/api |
 | **API Docs (Swagger)** | https://api.ecotrade-rwanda.com/api/docs |
 | **GitHub Repository** | https://github.com/Daniel-IRYIVUZE/EcoTrade_Rwanda.git |
 | **Project Report** | https://docs.google.com/document/d/1Kouxf8p8D40-Nn8H4EkhoHpnLBhfcDyF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true |
-| **Demo Video** | _[Insert demo video link here]_ |
+| **Demo Video** | https://youtu.be/VwSANhqChHc|
 | **Presentation Slides** | https://docs.google.com/presentation/d/1-Jo_mrii-yioCeo_iM7OJzIDn9y2JrbF/edit?usp=sharing&ouid=108652004118988396657&rtpof=true&sd=true |
 ---
 
